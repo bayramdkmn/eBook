@@ -1,0 +1,25 @@
+.css-2u11ia-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 0.45rem;
+}
+
+.css-4bojcr-MuiInputBase-root-MuiOutlinedInput-root {
+  background-color: rgba(156, 163, 175, 0.6);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #357abd;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #94a3b8;
+  border-radius: 4px;
+}
