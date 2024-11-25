@@ -1,8 +1,12 @@
 import { Avatar, Button, Rating } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getSwapList } from "./SwapListAPI";
 
 const SwapContent = () => {
   const [rating, setRating] = useState<number | null>(4);
+  const [swapList, setSwapList] = useState([]); // API'den dönecek veri
+  const [loading, setLoading] = useState(true); // Yüklenme durumu
+  const [error, setError] = useState(null); // Hata durumu
 
   const [posts, setPosts] = useState([
     {
@@ -107,6 +111,34 @@ const SwapContent = () => {
   const handleShowMore = () => {
     setVisiblePosts((prev) => prev + 15);
   };
+  useEffect(() => {
+    console.log("useEffect başı");
+    // API'den swap listesi verilerini çekiyoruz
+    const fetchSwapList = async () => {
+      try {
+        const data = await getSwapList(); // Swap listesi verilerini çek
+        setSwapList(data); // State'e kaydet
+        console.log(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false); // Yüklenme tamamlandı
+      }
+    };
+
+    fetchSwapList();
+  }, []);
+
+  // Yüklenme göstergesi
+  if (loading) {
+    return <p>Yükleniyor...</p>;
+  }
+
+  // Hata mesajı
+  if (error) {
+    return <p>Bir hata oluştu: {error}</p>;
+  }
+
   return (
     <div className="flex flex-col h-full w-full bg-gray-100">
       <div className="h-16 bg-slate-400 flex items-center justify-center px-4 shadow-md ">
