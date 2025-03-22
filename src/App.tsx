@@ -22,6 +22,7 @@ import ReportProblemContent from "./pages/Home/contents/Report/ReportProblemCont
 import SuggestionContent from "./pages/Home/contents/Suggest/SuggestionContent";
 import { FaCog, FaShoppingCart, FaUser } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
+import MailIcon from "@mui/icons-material/Mail";
 import {
   MdOutlineBugReport,
   MdOutlineNightlight,
@@ -36,6 +37,10 @@ import { LoadScript } from "@react-google-maps/api";
 import AddPost from "./pages/Home/contents/AddPost/AddPost";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import ChatScreen from "./pages/Chat/ChatScreen";
+import { Badge } from "@mui/base/Badge";
+import { MenuItem, Typography } from "@mui/material";
+import { Dropdown } from "@mui/base/Dropdown";
+import { Menu, MenuButton } from "@mui/base";
 
 function App() {
   const [darkMode, setDarkMode] = useState<boolean>(false);
@@ -50,6 +55,11 @@ function App() {
     setOpen(false);
   };
 
+  const createHandleMenuClick = (menuItem: string) => {
+    return () => {
+      console.log(`Clicked on ${menuItem}`);
+    };
+  };
   const hideNavAndMenu = ["/signIn", "/signUp", "/resetPassword"].includes(
     location.pathname
   );
@@ -108,6 +118,12 @@ function App() {
                   >
                     Mesajlar
                   </Link>
+                  {/* <div className="flex bg-blue-600 rounded-xl w-6 h-6 items-center justify-center">
+                    3
+                  </div> */}
+                  <Badge color="primary">
+                    <Typography sx={{ fontSize: "xl" }}>s</Typography>
+                  </Badge>
                 </div>
 
                 <div
@@ -119,9 +135,24 @@ function App() {
                     className="hover:text-2xl transition-all duration-200 mr-24"
                     to="#"
                   >
-                    Hesabım
+                    <Dropdown>
+                      <MenuButton>Hesabım</MenuButton>
+                      <Menu className="fixed z-20">
+                        <MenuItem onClick={createHandleMenuClick("Profile")}>
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          onClick={createHandleMenuClick("Language settings")}
+                        >
+                          Language settings
+                        </MenuItem>
+                        <MenuItem onClick={createHandleMenuClick("Log out")}>
+                          Log out
+                        </MenuItem>
+                      </Menu>
+                    </Dropdown>
                   </Link>
-                  {showAccountMenu && (
+                  {/* {showAccountMenu && (
                     <div
                       className={`${
                         darkMode
@@ -159,7 +190,7 @@ function App() {
                         Çıkış Yap
                       </Link>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             ) : (

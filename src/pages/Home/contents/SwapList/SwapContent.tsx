@@ -1,110 +1,32 @@
 import { Avatar, Button, Rating } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getSwapList } from "./SwapListAPI";
+import { createSwap, getSwapList } from "./SwapListAPI";
+import AddSwap from "./AddSwap/addSwap";
+import { RxAvatar } from "react-icons/rx";
+
+interface Post {
+  id: number;
+  swapOwnerName: string;
+  swapOwnerAvatar: string;
+  bookName: string;
+  author: string;
+  content: string;
+  img?: string; // Görsel isteğe bağlı bir alan
+}
 
 const SwapContent = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+  };
   const [rating, setRating] = useState<number | null>(4);
   const [swapList, setSwapList] = useState([]); // API'den dönecek veri
   const [loading, setLoading] = useState(true); // Yüklenme durumu
   const [error, setError] = useState(null); // Hata durumu
 
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: "Bayram Dikmen",
-      content:
-        "İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.İlk gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 2,
-      author: "Bayram Dikmen",
-      content: "İkinci gönderi içerik örneği.",
-    },
-    {
-      id: 3,
-      author: "Bayram Dikmen",
-      content: "İlk gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 4,
-      author: "Bayram Dikmen",
-      content: "İlk gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 5,
-      author: "Bayram Dikmen",
-      content: "s gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 6,
-      author: "Bayram Dikmen",
-      content: "s gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 7,
-      author: "Bayram Dikmen",
-      content: "yedi gönderi içerik örneği.",
-    },
-    {
-      id: 8,
-      author: "Bayram Dikmen",
-      content: "sekizinci gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 9,
-      author: "Bayram Dikmen",
-      content: "dokuzuncu gönderi içerik örneği.",
-    },
-    {
-      id: 10,
-      author: "Bayram Dikmen",
-      content: "onuncu gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 11,
-      author: "Bayram Dikmen",
-      content: "on birinci gönderi içerik örneği.",
-    },
-    {
-      id: 12,
-      author: "Bayram Dikmen",
-      content: "on ikinci gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 13,
-      author: "Bayram Dikmen",
-      content: "on üçüncü gönderi içerik örneği.",
-    },
-    {
-      id: 14,
-      author: "Bayram Dikmen",
-      content: "on dördüncü gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 15,
-      author: "Bayram Dikmen",
-      content: "on beşinci gönderi içerik örneği.",
-    },
-    {
-      id: 16,
-      author: "Bayram Dikmen",
-      content: "on altıncı gönderi içerik örneği.",
-    },
-    {
-      id: 17,
-      author: "Bayram Dikmen",
-      content: "on yedinci gönderi içerik örneği.",
-    },
-  ]);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   const [visiblePosts, setVisiblePosts] = useState(15);
 
@@ -112,11 +34,19 @@ const SwapContent = () => {
     setVisiblePosts((prev) => prev + 15);
   };
   useEffect(() => {
-    console.log("useEffect başı");
-    // API'den swap listesi verilerini çekiyoruz
     const fetchSwapList = async () => {
       try {
         const data = await getSwapList(); // Swap listesi verilerini çek
+        const formattedPosts = data.map((item: any) => ({
+          id: item.id,
+          swapOwnerName: `${item.requester.name} ${item.requester.surname}`,
+          swapOwnerAvatar: item.requester.avatar,
+          bookName: item.offeredBook.title,
+          author: item.offeredBook.author || "Bilinmeyen Yazar",
+          content: item.content || "İçerik yok",
+          img: item.offeredBook.image || null, // Varsayılan olarak null olabilir
+        }));
+        setPosts(formattedPosts);
         setSwapList(data); // State'e kaydet
         console.log(data);
       } catch (err: any) {
@@ -129,22 +59,32 @@ const SwapContent = () => {
     fetchSwapList();
   }, []);
 
-  // Yüklenme göstergesi
-  if (loading) {
-    return <p>Yükleniyor...</p>;
-  }
-
-  // Hata mesajı
-  if (error) {
-    return <p>Bir hata oluştu: {error}</p>;
+  async function tikla() {
+    try {
+      const data = {
+        content: "Test swap request",
+        bookTitle: "saatleri ayarlama enstitüsü", // Bu veriyi backend'deki book ID'sine göre değiştirebilirsin
+      };
+      await createSwap(data);
+    } catch (err) {
+      console.log("hata", err);
+    }
   }
 
   return (
     <div className="flex flex-col h-full w-full bg-gray-100">
       <div className="h-16 bg-slate-400 flex items-center justify-center px-4 shadow-md ">
-        <span className="text-xl font-bold flex justify-center">
+        <span className="text-xl font-bold flex justify-center w-5/6">
           TAKAS İLANLARI
         </span>
+        {/* <Button  onClick={handleOpen} variant="contained">
+          Takas İlanı Ekle
+        </Button> */}
+        <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl  hover:bg-blue-600">
+          Takas İlanı Ekle
+        </button>
+
+        <AddSwap open={open} onClose={handleClose} />
       </div>
       <div className="h-full w-full">
         <div
@@ -161,12 +101,17 @@ const SwapContent = () => {
               <div className="flex flex-col w-full pr-20">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <Avatar
-                      className="mr-4"
-                      sx={{ width: 60, height: 60 }}
-                      src="/pp.jpeg"
-                    />
-                    <div className="font-bold text-lg">{post.author}</div>
+                    {post.swapOwnerAvatar ? (
+                      <Avatar
+                        sx={{ width: 60, height: 60 }}
+                        src={post.swapOwnerAvatar}
+                      />
+                    ) : (
+                      <RxAvatar size={60} />
+                    )}
+                    <div className="font-bold text-lg ml-2">
+                      {post.swapOwnerName}
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2 text-sm text-gray-700">{post.content}</div>
@@ -174,14 +119,13 @@ const SwapContent = () => {
                   <div className="mt-4 flex flex-row justify-between">
                     <div className="flex flex-row">
                       <img
-                        className="w-full rounded-md object-cover mx-4"
-                        style={{ height: 200, width: 200 }}
-                        src={post.img}
-                        alt="Post"
-                      />
-                      <img
-                        className="w-full rounded-md object-cover"
-                        style={{ height: 200, width: 200 }}
+                        className="w-full rounded-md object-contain mx-4"
+                        style={{
+                          maxHeight: "350px",
+                          maxWidth: "200px",
+                          height: "auto",
+                          width: "auto",
+                        }}
                         src={post.img}
                         alt="Post"
                       />
@@ -190,15 +134,17 @@ const SwapContent = () => {
                 )}
               </div>
               <div className="flex w-1/3 items-end">
-                <div className="flex w-full bg-slate-300 p-4 font-semibold text-xl flex-col justify-between h-60 rounded-2xl ">
+                <div className="flex w-full bg-slate-300 p-4 font-semibold text-xl flex-col justify-between h-auto rounded-2xl ">
                   <div className="flex flex-col gap-2">
                     <div className="text-xl font-semibold w-fit">
                       KİTAP ADI:
-                      <span className="text-lg font-normal"> Kitap.name</span>
+                      <span className="text-lg font-normal">
+                        {post.bookName}
+                      </span>
                     </div>
                     <div>
                       YAZAR:
-                      <span className="text-lg font-normal"> Author.name</span>
+                      <span className="text-lg font-normal">{post.author}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       KİTAP PUANI:
@@ -207,7 +153,9 @@ const SwapContent = () => {
                     <div>İL:</div>
                   </div>
                   <div className="flex  justify-end">
-                    <Button variant="contained">İletişime Geç</Button>
+                    <Button variant="contained" onClick={tikla}>
+                      İletişime Geç
+                    </Button>
                   </div>
                 </div>
               </div>

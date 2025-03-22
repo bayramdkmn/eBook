@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { addReadingBooks } from "./ReadingBookAPI";
 
 const initialBooks = [
   {
@@ -55,6 +56,7 @@ const ReadingBooksContent = () => {
   const [newBook, setNewBook] = useState({
     title: "",
     author: "",
+    genre: "roman",
     image: "",
   });
   const [isAdding, setIsAdding] = useState(false); // Kitap ekleme alanı kontrolü
@@ -63,27 +65,26 @@ const ReadingBooksContent = () => {
     setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
   };
 
-  const handleAddBook = () => {
+  async function handleAddBook() {
     if (!newBook.title || !newBook.author || !newBook.image) {
       alert("Lütfen tüm alanları doldurun!");
       return;
     }
-
-    const newId = books.length > 0 ? books[books.length - 1].id + 1 : 1;
-    setBooks((prevBooks) => [
-      ...prevBooks,
-      {
-        id: newId,
-        title: newBook.title,
+    try {
+      const data = {
+        bookTitle: newBook.title,
         author: newBook.author,
+        genre: newBook.genre,
         image: newBook.image,
-        createdDate: new Date(),
-      },
-    ]);
+      };
+      await addReadingBooks(data);
+    } catch (err) {
+      console.log("add reading book frontend hata");
+    }
 
-    setNewBook({ title: "", author: "", image: "" });
+    setNewBook({ title: "", author: "", image: "", genre: "" });
     setIsAdding(false); // Ekleme alanını gizle
-  };
+  }
 
   return (
     <div className="flex flex-col h-full w-full bg-gray-100">
