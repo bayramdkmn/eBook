@@ -132,7 +132,7 @@ const SignUp = () => {
         {toastSuccessMessage}
       </Snackbar>
 
-      <div className="custom-scrollbar flex h-full sm:h-10/12 md:h-8/12 lg:h-6/12 w-full sm:w-10/12 md:w-8/12 lg:w-6/12 flex-col bg-slate-400 items-center gap-4 rounded-xl p-5 overflow-y-auto">
+      <div className="custom-scrollbar flex h-[90%] sm:h-10/12 md:h-8/12 lg:h-6/12 w-full sm:w-10/12 md:w-8/12 lg:w-6/12 flex-col bg-slate-400 items-center gap-4 rounded-xl p-5 overflow-y-auto">
         <span className="p-7 font-bold text-xl">Kayıt Ol</span>
         <Input
           className="w-5/12"

@@ -60,9 +60,9 @@ function App() {
       console.log(`Clicked on ${menuItem}`);
     };
   };
-  const hideNavAndMenu = ["/signIn", "/signUp", "/resetPassword"].includes(
-    location.pathname
-  );
+  const normalizedPath = location.pathname.replace(/\/$/, "").toLowerCase();
+  const hideNavAndMenu = ["/signin", "/signup", "/resetpassword"].includes(normalizedPath);
+
 
   const handleMouseEnter = () => {
     clearTimeout(timer);
@@ -88,9 +88,8 @@ function App() {
       <div className="flex flex-1 flex-col">
         {!hideNavAndMenu && (
           <div
-            className={`${
-              darkMode ? "bg-black text-white " : "bg-white text-black"
-            } flex flex-row w-full h-16 justify-between items-center font-bold fixed z-50 top-0  `}
+            className={`${darkMode ? "bg-black text-white " : "bg-white text-black"
+              } flex flex-row w-full h-16 justify-between items-center font-bold fixed z-50 top-0  `}
           >
             <span className="ml-10 h-full flex justify-center items-center text-2xl">
               E-Kitap<span>.com</span>
@@ -207,16 +206,14 @@ function App() {
           {!hideNavAndMenu && (
             <div className="flex flex-row w-72 fixed z-50 h-full top-16 ">
               <div
-                className={`${
-                  darkMode ? "bg-black text-white " : "bg-white text-black"
-                } max-h-screen w-1/6 flex flex-1 flex-col `}
+                className={`${darkMode ? "bg-black text-white " : "bg-white text-black"
+                  } max-h-screen w-1/6 flex flex-1 flex-col `}
               >
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={handleOpen}
                 >
                   <MdPostAdd className="ml-10 text-3xl" />
@@ -225,110 +222,100 @@ function App() {
                 <AddPost open={open} onClose={handleClose} />
 
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/eventMap")}
                 >
                   <GrMapLocation className="ml-10 text-2xl" />
                   <span className="ml-7">Etkinlik Haritası</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/")}
                 >
                   <RiCompassDiscoverLine className="ml-10 text-2xl" />
                   <span className="ml-7">Keşfet</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/swap")}
                 >
                   <IoMdSwap className="ml-10 text-2xl" />
                   <span className="ml-7">Takas İlanları</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/readingBooks")}
                 >
                   <BiBookReader className="ml-10 text-2xl" />
                   <span className="ml-7">Okuduğum Kitaplar</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/wishList")}
                 >
                   <BiBookAdd className="ml-10 text-2xl" />
                   <span className="ml-7">İstek Listem</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/popularBooks")}
                 >
                   <TbBooks className="ml-10 text-2xl" />
                   <span className="ml-7">Popüler Kitaplar</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/advertise")}
                 >
                   <RiAdvertisementLine className="ml-10 text-2xl" />
                   <span className="ml-7">Reklam Ver</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/reportProblem")}
                 >
                   <MdOutlineBugReport className="ml-10 text-2xl" />
                   <span className="ml-7">Sorun Bildir</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/suggest")}
                 >
                   <BiCommentDetail className="ml-10 text-2xl" />
                   <span className="ml-7">Öneri / Şikayet</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
+                    } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={toggleDarkMode}
                 >
                   <MdOutlineNightlight
@@ -338,11 +325,10 @@ function App() {
                   <span className="ml-7">Gece Modu</span>
                 </div>
                 <div
-                  className={`${
-                    darkMode
+                  className={`${darkMode
                       ? "bg-black text-white "
                       : "bg-slate-200 text-black"
-                  }  w-full h-24 flex`}
+                    }  w-full h-24 flex`}
                 ></div>
               </div>
             </div>
