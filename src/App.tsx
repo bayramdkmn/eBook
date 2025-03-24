@@ -7,9 +7,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import "./App.css";
-import { BsChatRightDots } from "react-icons/bs";
 import SignUp from "./pages/SignUp/SignUp";
-import SignIn from "./pages/SignIn/SignIn"; // SignIn bileşenini de import edin
+import SignIn from "./pages/SignIn/SignIn";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import EventListContent from "./pages/Home/contents/EventList/EventListContent";
 import DiscoverContent from "./pages/Home/contents/Discover/DiscoverContent";
@@ -20,9 +19,6 @@ import PopularBooksContent from "./pages/Home/contents/PopularBooks/PopularBooks
 import AdvertiseContent from "./pages/Home/contents/Advertise/AdvertiseContent";
 import ReportProblemContent from "./pages/Home/contents/Report/ReportProblemContent";
 import SuggestionContent from "./pages/Home/contents/Suggest/SuggestionContent";
-import { FaCog, FaShoppingCart, FaUser } from "react-icons/fa";
-import { CgLogOut } from "react-icons/cg";
-import MailIcon from "@mui/icons-material/Mail";
 import {
   MdOutlineBugReport,
   MdOutlineNightlight,
@@ -211,8 +207,8 @@ function App() {
               >
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={handleOpen}
                 >
@@ -223,8 +219,8 @@ function App() {
 
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/eventMap")}
                 >
@@ -233,8 +229,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/")}
                 >
@@ -243,8 +239,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/swap")}
                 >
@@ -253,8 +249,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/readingBooks")}
                 >
@@ -263,8 +259,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/wishList")}
                 >
@@ -273,8 +269,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/popularBooks")}
                 >
@@ -283,8 +279,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/advertise")}
                 >
@@ -293,8 +289,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/reportProblem")}
                 >
@@ -303,8 +299,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/suggest")}
                 >
@@ -313,8 +309,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={toggleDarkMode}
                 >
@@ -326,8 +322,8 @@ function App() {
                 </div>
                 <div
                   className={`${darkMode
-                      ? "bg-black text-white "
-                      : "bg-slate-200 text-black"
+                    ? "bg-black text-white "
+                    : "bg-slate-200 text-black"
                     }  w-full h-24 flex`}
                 ></div>
               </div>
