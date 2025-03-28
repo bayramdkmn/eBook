@@ -1,5 +1,4 @@
-import { Image } from "@mui/icons-material";
-import { Avatar, Button, Rating } from "@mui/material";
+import { Button, Rating } from "@mui/material";
 import React, { useState } from "react";
 
 const PopularBooksContent = () => {
@@ -41,7 +40,11 @@ const PopularBooksContent = () => {
         >
           <div className="flex w-full bg-slate-400 flex-row h-full rounded-2xl py-8">
             <div className="flex  h-full w-1/6 justify-center items-center">
-              <img src={""} className="w-36 h-48 object-cover rounded-md" />{" "}
+              <img
+                src={""}
+                alt="bos"
+                className="w-36 h-48 object-cover rounded-md"
+              />{" "}
             </div>
             <div className="flex flex-col w-1/6 mt-8 gap-3">
               <div className="font-bold text-xl">Book Name:</div>

@@ -25,7 +25,6 @@ export async function loginUser(email: string, password: string) {
       throw new Error("Login failed, no token received.");
     }
   } catch (err: AxiosError | any) {
-    // Hata durumunda
     if (axios.isAxiosError(err)) {
       console.error("Axios error: ", err.response?.data);
     } else {

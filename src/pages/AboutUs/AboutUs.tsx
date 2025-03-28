@@ -1,4 +1,3 @@
-import { Image } from "@mui/icons-material";
 import React from "react";
 
 const AboutUs = () => {
@@ -47,6 +46,7 @@ const AboutUs = () => {
           </span>
           <div className="flex border-2 flex-row rounded-2xl">
             <img
+              alt="e-kitap-logo"
               src={"/e-kitap-logo.jpg"}
               className="w-72 h-4/5 object-contain rounded-xl p-4 mt-2"
             />
