@@ -107,7 +107,9 @@ const SwapContent = () => {
                         src={post.swapOwnerAvatar}
                       />
                     ) : (
-                      <RxAvatar size={60} />
+                      <span className="text-gray-500 w-[60px] h-[60px]">
+                        <RxAvatar className="w-full h-full" />
+                      </span>
                     )}
                     <div className="font-bold text-lg ml-2">
                       {post.swapOwnerName}
