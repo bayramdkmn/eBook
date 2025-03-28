@@ -1,25 +1,24 @@
 import axios, { AxiosError } from "axios";
 import { API_URL } from "../../constants/index";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function loginUser(email: string, password: string) {
   try {
     const response = await axios.post(`${API_URL}/api/user/login`, {
-      email: email, 
+      email,
       password,
     });
-    if (response.data.token) {
-      await AsyncStorage.setItem('authToken', response.data.token);
-      console.log("Login successful, token saved.", response.data.token);
-      await AsyncStorage.setItem('requesterId', response.data.requesterId);
-      console.log("req id.", response.data.requesterId);
 
-      
-      // Kaydedilen token'ı hemen kontrol etmek
-      const tokenCheck = await AsyncStorage.getItem('authToken');
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token);
+      console.log("Login successful, token saved.", response.data.token);
+
+      localStorage.setItem('requesterId', response.data.requesterId);
+      console.log("Requester ID saved:", response.data.requesterId);
+
+      const tokenCheck = localStorage.getItem('authToken');
       console.log("Token kaydedildikten sonra:", tokenCheck);
-      
-      return response.data; 
+
+      return response.data;
     } else {
       console.error("Login failed, no token received.");
       throw new Error("Login failed, no token received.");
@@ -30,7 +29,6 @@ export async function loginUser(email: string, password: string) {
     } else {
       console.error("Error: ", err.message);
     }
-    throw err; 
+    throw err;
   }
 }
-

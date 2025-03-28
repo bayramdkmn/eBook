@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext, ReactNode } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContextType } from "../types/AuthContext.type";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -11,13 +10,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [userToken, setUserToken] = useState<string | null>(null);
 
-  const loadToken = async () => {
-    let token = await AsyncStorage.getItem("userToken");
+  const loadToken = () => {
+    const token = localStorage.getItem("userToken");
     setUserToken(token);
   };
 
-  const setToken = async (token: string) => {
-    await AsyncStorage.setItem("userToken", token);
+  const setToken = (token: string) => {
+    localStorage.setItem("userToken", token);
+    setUserToken(token); // State'i güncellemek önemli
   };
 
   useEffect(() => {

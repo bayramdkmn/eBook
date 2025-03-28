@@ -1,49 +1,54 @@
 import axios, { AxiosError } from "axios";
 import { API_URL } from "../../../../constants/index";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function getSwapList() {
   try {
-      const token = await AsyncStorage.getItem('authToken');
-      console.log("token",token)
-      if (!token) {
-          throw new Error('Token bulunamadı');
-      }
+    const token = localStorage.getItem('authToken');
+    console.log("token", token);
 
-      const response = await axios.get(`${API_URL}/api/swapRequest`, {
-          headers: {
-              Authorization: `Bearer ${token}`
-          }
-      });
-      return response.data;
-  } catch (err: AxiosError | any) {
-      if (axios.isAxiosError(err)) {
-          console.error("Axios error: ", err.response?.data);
-      } else {
-          console.error("Error: ", err.message);
+    if (!token) {
+      throw new Error('Token bulunamadı');
+    }
+
+    const response = await axios.get(`${API_URL}/api/swapRequest`, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-      throw err;
+    });
+
+    return response.data;
+  } catch (err: AxiosError | any) {
+    if (axios.isAxiosError(err)) {
+      console.error("Axios error: ", err.response?.data);
+    } else {
+      console.error("Error: ", err.message);
+    }
+    throw err;
   }
 }
 
 export async function createSwap(data: any) {
   try {
-    const token = await AsyncStorage.getItem('authToken'); // Auth token
-    const requesterId = await AsyncStorage.getItem('requesterId'); // requesterId
+    const token = localStorage.getItem('authToken');
+    const requesterId = localStorage.getItem('requesterId');
+
     if (!token) {
       throw new Error('Token bulunamadı');
     }
+
     if (!requesterId) {
       throw new Error('Requester ID bulunamadı');
     }
-    console.log("token",token)
-    console.log("request id",requesterId)
+
+    console.log("token", token);
+    console.log("request id", requesterId);
 
     const swapData = {
       ...data,
       requesterId,
     };
-    console.log(swapData)
+
+    console.log(swapData);
 
     const response = await axios.post(`${API_URL}/api/swapRequest/createSwap`, swapData, {
       headers: {
@@ -51,7 +56,7 @@ export async function createSwap(data: any) {
         Authorization: `Bearer ${token}`
       }
     });
-    
+
     return response.data;
   } catch (err) {
     console.error("Error: ", err);
