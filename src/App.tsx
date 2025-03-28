@@ -213,7 +213,7 @@ function App() {
                   onClick={handleOpen}
                 >
                   <span className="ml-10 text-3xl">
-                    <MdPostAdd />
+                    {/* <MdPostAdd /> */}
                   </span>
                   <span className="ml-7">Gönderi Ekle</span>
                 </div>
@@ -228,7 +228,7 @@ function App() {
                   onClick={() => handleMenuClick("/eventMap")}
                 >
                   <span className="ml-10 text-2xl">
-                    <GrMapLocation />
+                    {/* <GrMapLocation /> */}
                   </span>
                   <span className="ml-7">Etkinlik Haritası</span>
                 </div>
@@ -241,7 +241,7 @@ function App() {
                   onClick={() => handleMenuClick("/")}
                 >
                   <span className="ml-10 text-2xl">
-                    <RiCompassDiscoverLine />
+                    {/* <RiCompassDiscoverLine /> */}
                   </span>
                   <span className="ml-7">Keşfet</span>
                 </div>
@@ -254,7 +254,7 @@ function App() {
                   onClick={() => handleMenuClick("/swap")}
                 >
                   <span className="ml-10 text-2xl">
-                    <IoMdSwap />
+                    {/* <IoMdSwap /> */}
                   </span>
                   <span className="ml-7">Takas İlanları</span>
                 </div>
@@ -267,7 +267,7 @@ function App() {
                   onClick={() => handleMenuClick("/readingBooks")}
                 >
                   <span className="ml-10 text-2xl">
-                    <BiBookReader />
+                    {/* <BiBookReader /> */}
                   </span>
                   <span className="ml-7">Okuduğum Kitaplar</span>
                 </div>
@@ -280,7 +280,7 @@ function App() {
                   onClick={() => handleMenuClick("/wishList")}
                 >
                   <span className="ml-10 text-2xl">
-                    <BiBookAdd />
+                    {/* <BiBookAdd /> */}
                   </span>
                   <span className="ml-7">İstek Listem</span>
                 </div>
@@ -293,7 +293,7 @@ function App() {
                   onClick={() => handleMenuClick("/popularBooks")}
                 >
                   <span className="ml-10 text-2xl">
-                    <TbBooks />
+                    {/* <TbBooks /> */}
                   </span>
                   <span className="ml-7">Popüler Kitaplar</span>
                 </div>
@@ -306,7 +306,7 @@ function App() {
                   onClick={() => handleMenuClick("/advertise")}
                 >
                   <span className="ml-10 text-2xl">
-                    <RiAdvertisementLine />
+                    {/* <RiAdvertisementLine /> */}
                   </span>
                   <span className="ml-7">Reklam Ver</span>
                 </div>
@@ -319,7 +319,7 @@ function App() {
                   onClick={() => handleMenuClick("/reportProblem")}
                 >
                   <span className="ml-10 text-2xl">
-                    <MdOutlineBugReport />
+                    {/* <MdOutlineBugReport /> */}
                   </span>
                   <span className="ml-7">Sorun Bildir</span>
                 </div>
@@ -332,7 +332,7 @@ function App() {
                   onClick={() => handleMenuClick("/suggest")}
                 >
                   <span className="ml-10 text-2xl">
-                    <BiCommentDetail />
+                    {/* <BiCommentDetail /> */}
                   </span>
                   <span className="ml-7">Öneri / Şikayet</span>
                 </div>
@@ -345,9 +345,9 @@ function App() {
                   onClick={toggleDarkMode}
                 >
                   <span className="ml-10 text-2xl">
-                    <MdOutlineNightlight
+                    {/* <MdOutlineNightlight
                       style={{ color: darkMode ? "white" : "black" }}
-                    />
+                    /> */}
                   </span>
 
                   <span className="ml-7">Gece Modu</span>
