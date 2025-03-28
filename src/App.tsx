@@ -212,7 +212,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={handleOpen}
                 >
-                  <MdPostAdd className="ml-10 text-3xl" />
+                  <span className="ml-10 text-3xl">
+                    <MdPostAdd />
+                  </span>
                   <span className="ml-7">Gönderi Ekle</span>
                 </div>
                 <AddPost open={open} onClose={handleClose} />
@@ -225,7 +227,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/eventMap")}
                 >
-                  <GrMapLocation className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <GrMapLocation />
+                  </span>
                   <span className="ml-7">Etkinlik Haritası</span>
                 </div>
                 <div
@@ -236,7 +240,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/")}
                 >
-                  <RiCompassDiscoverLine className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <RiCompassDiscoverLine />
+                  </span>
                   <span className="ml-7">Keşfet</span>
                 </div>
                 <div
@@ -247,7 +253,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/swap")}
                 >
-                  <IoMdSwap className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <IoMdSwap />
+                  </span>
                   <span className="ml-7">Takas İlanları</span>
                 </div>
                 <div
@@ -258,7 +266,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/readingBooks")}
                 >
-                  <BiBookReader className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <BiBookReader />
+                  </span>
                   <span className="ml-7">Okuduğum Kitaplar</span>
                 </div>
                 <div
@@ -269,7 +279,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/wishList")}
                 >
-                  <BiBookAdd className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <BiBookAdd />
+                  </span>
                   <span className="ml-7">İstek Listem</span>
                 </div>
                 <div
@@ -280,7 +292,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/popularBooks")}
                 >
-                  <TbBooks className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <TbBooks />
+                  </span>
                   <span className="ml-7">Popüler Kitaplar</span>
                 </div>
                 <div
@@ -291,7 +305,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/advertise")}
                 >
-                  <RiAdvertisementLine className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <RiAdvertisementLine />
+                  </span>
                   <span className="ml-7">Reklam Ver</span>
                 </div>
                 <div
@@ -302,7 +318,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/reportProblem")}
                 >
-                  <MdOutlineBugReport className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <MdOutlineBugReport />
+                  </span>
                   <span className="ml-7">Sorun Bildir</span>
                 </div>
                 <div
@@ -313,7 +331,9 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/suggest")}
                 >
-                  <BiCommentDetail className="ml-10 text-2xl" />
+                  <span className="ml-10 text-2xl">
+                    <BiCommentDetail />
+                  </span>
                   <span className="ml-7">Öneri / Şikayet</span>
                 </div>
                 <div
@@ -324,10 +344,12 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={toggleDarkMode}
                 >
-                  <MdOutlineNightlight
-                    className="ml-10 text-2xl"
-                    style={{ color: darkMode ? "white" : "black" }}
-                  />
+                  <span className="ml-10 text-2xl">
+                    <MdOutlineNightlight
+                      style={{ color: darkMode ? "white" : "black" }}
+                    />
+                  </span>
+
                   <span className="ml-7">Gece Modu</span>
                 </div>
                 <div
