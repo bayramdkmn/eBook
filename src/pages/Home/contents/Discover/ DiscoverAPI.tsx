@@ -21,6 +21,7 @@ export async function addNewPost(userId: number, content: string) {
       userId,
       content,
     });
+    console.log(response.data);
     return response.data;
   } catch (err: AxiosError | any) {
     console.log("Axios error:", err.response?.data);

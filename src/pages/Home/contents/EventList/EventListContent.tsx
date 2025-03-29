@@ -14,23 +14,22 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import "./customs.css";
 import Button from "@mui/material/Button";
+import "./customs.css";
 
 dayjs.locale("tr");
 
-// 20 dakikalık aralıklarla zaman dilimlerini oluşturuyoruz
 const generateTimeSlots = () => {
   const slots = [];
-  let startTime = dayjs().set("hour", 8).set("minute", 0); // Başlangıç saati 08:00
-  const endTime = dayjs().set("hour", 20).set("minute", 0); // Bitiş saati 20:00
-
+  let startTime = dayjs().set("hour", 8).set("minute", 0);
+  const endTime = dayjs().set("hour", 20).set("minute", 0);
   while (startTime.isBefore(endTime)) {
     slots.push(startTime);
     startTime = startTime.add(20, "minute");
   }
   return slots;
 };
+
 const timeSlots = generateTimeSlots();
 
 const defaultCenter = {
@@ -56,15 +55,15 @@ const libraryData = [
   {
     id: 3,
     name: "Kütüphane C",
-    lat: 41.059,
-    lng: 28.99,
+    lat: 41.06,
+    lng: 28.991,
     books: ["Kitap A", "Kitap D"],
   },
   {
     id: 4,
     name: "Kütüphane D",
-    lat: 41.059,
-    lng: 28.99,
+    lat: 41.057,
+    lng: 28.986,
     books: ["Kitap E", "Kitap F"],
   },
 ];
@@ -76,39 +75,40 @@ const EventListContent = () => {
     useState<google.maps.LatLng | null>(null);
   const [selectedLocation, setSelectedLocation] =
     useState<google.maps.LatLng | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const [address, setAddress] = useState<string | null>(null);
   const [bookName, setBookName] = useState<string>("");
-  const [date, setDate] = useState<string>("");
   const [availableLibraries, setAvailableLibraries] = useState<string[]>([]);
   const [bookFound, setBookFound] = useState<boolean>(true);
-  const [isBooking, setIsBooking] = useState<boolean>(false);
   const [filteredBooks, setFilteredBooks] = useState<string[]>([]);
   const [libraryMarkers, setLibraryMarkers] = useState<any[]>([]);
-  const [showSecondContent, setShowSecondContent] = useState(false);
-  const location = useLocation();
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [showFirstForm, setShowFirstForm] = useState(true);
+  const [hasSearched, setHasSearched] = useState(false); // ✅ Arama yapıldı mı?
+  const location = useLocation();
 
-  const handleSubmit = () => {
-    setIsTransitioning(true); // Transition başlat
-    setTimeout(() => {
-      setShowFirstForm(false);
-      setIsTransitioning(false); // Transition bitti
-    }, 300); // Geçiş süresi (300ms)
+  const getUserLocation = (retryCount = 0) => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentPosition(new google.maps.LatLng(latitude, longitude));
+      },
+      () => {
+        if (retryCount < 5) {
+          setTimeout(() => getUserLocation(retryCount + 1), 4000);
+        } else {
+          alert(
+            "Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin."
+          );
+        }
+      },
+      { timeout: 10000, enableHighAccuracy: true, maximumAge: 0 }
+    );
   };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCurrentPosition(new google.maps.LatLng(latitude, longitude));
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-        }
-      );
-    }
+    getUserLocation();
   }, []);
 
   const getAddress = (lat: number, lng: number) => {
@@ -121,21 +121,19 @@ const EventListContent = () => {
     });
   };
 
-  const searchBook = () => {
+  const searchBook = (book: string) => {
+    setHasSearched(true); // ✅ İlk arama yapıldı
     let found = false;
     let markers: any[] = [];
     let libraryNames: string[] = [];
 
     libraryData.forEach((library) => {
-      if (library.books.includes(bookName)) {
+      if (library.books.includes(book)) {
         found = true;
-        markers.push({
-          id: library.id,
-          location: new google.maps.LatLng(library.lat, library.lng),
-          name: library.name,
-        });
+        const location = new google.maps.LatLng(library.lat, library.lng);
+        markers.push({ id: library.id, location, name: library.name });
         libraryNames.push(library.name);
-        setSelectedLocation(new google.maps.LatLng(library.lat, library.lng));
+        setSelectedLocation(location);
         getAddress(library.lat, library.lng);
       }
     });
@@ -151,6 +149,30 @@ const EventListContent = () => {
     }
   };
 
+  const handleBookClick = (book: string) => {
+    setBookName(book);
+    searchBook(book);
+  };
+
+  const handleLibraryClick = (
+    libraryName: string,
+    lat: number,
+    lng: number
+  ) => {
+    const location = new google.maps.LatLng(lat, lng);
+    setSelectedLocation(location);
+    getAddress(lat, lng);
+    setSelectedMarker({ name: libraryName, location });
+    if (mapRef) {
+      mapRef.panTo(location);
+      mapRef.setZoom(15);
+    }
+  };
+
+  const handleSubmit = () => {
+    setShowFirstForm(false);
+  };
+
   useEffect(() => {
     if (bookName.trim() !== "") {
       const suggestions = libraryData
@@ -162,247 +184,234 @@ const EventListContent = () => {
     }
   }, [bookName]);
 
-  const handleBookClick = (book: string) => {
-    setBookName(book);
-    setTimeout(() => {
-      searchBook();
-    }, 0);
-  };
-
-  const handleLibraryClick = (
-    libraryName: string,
-    lat: number,
-    lng: number
-  ) => {
-    const newSelectedLocation = new google.maps.LatLng(lat, lng);
-    setSelectedLocation(newSelectedLocation);
-    getAddress(lat, lng);
-  };
-
-  const handleBooking = () => {
-    setIsBooking(true);
-    setTimeout(() => {
-      setIsBooking(false); // Reset the loading state
-      alert(
-        `Randevu başarıyla oluşturuldu!\nTarih: ${date}\nKitap: ${bookName}\nKütüphane: ${availableLibraries.join(
-          ", "
-        )}`
-      );
-    }, 2000);
+  const resetState = () => {
+    setShowFirstForm(true);
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setBookName("");
+    setAvailableLibraries([]);
+    setFilteredBooks([]);
+    setHasSearched(false);
+    setLibraryMarkers([]);
+    setSelectedLocation(null);
+    setSelectedMarker(null);
   };
 
   return (
-    <div className="flex flex-1 w-full h-full flex-col">
-      <div className="fixed top-20 left-0 right-0 z-10">
-        <GoogleMap
-          key={location.pathname}
-          mapContainerStyle={{
-            width: "100%",
-            height: "500px",
-          }}
-          center={currentPosition || defaultCenter}
-          zoom={12}
-        >
-          {currentPosition && (
-            <>
-              <Circle
-                center={currentPosition}
-                radius={50}
-                options={{
-                  fillColor: "#4285F4",
-                  fillOpacity: 0.3,
-                  strokeColor: "#4285F4",
-                  strokeOpacity: 1,
-                  strokeWeight: 2,
-                }}
-              />
-              <Marker
-                position={currentPosition}
-                icon={{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 6,
-                  fillColor: "#4285F4",
-                  fillOpacity: 1,
-                  strokeColor: "#FFFFFF",
-                  strokeWeight: 2,
-                }}
-              />
-            </>
-          )}
-
-          {selectedLocation && address && (
-            <InfoWindow position={selectedLocation}>
-              <div>
-                <h3>Adres: {address}</h3>
-              </div>
-            </InfoWindow>
-          )}
-
-          {libraryMarkers.map((marker) => (
-            <Marker
-              key={marker.id}
-              position={marker.location}
-              onClick={() =>
-                handleLibraryClick(
-                  marker.name,
-                  marker.location.lat(),
-                  marker.location.lng()
-                )
-              }
+    <div className="flex flex-col w-full h-full">
+      {/* HARİTA */}
+      <GoogleMap
+        key={location.pathname}
+        onLoad={(map) => setMapRef(map)}
+        mapContainerStyle={{ width: "100%", height: "500px" }}
+        center={currentPosition || defaultCenter}
+        zoom={12}
+      >
+        {currentPosition && (
+          <>
+            <Circle
+              center={currentPosition}
+              radius={50}
+              options={{
+                fillColor: "#4285F4",
+                fillOpacity: 0.3,
+                strokeColor: "#4285F4",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+              }}
             />
-          ))}
-        </GoogleMap>
-      </div>
+            <Marker
+              position={currentPosition}
+              icon={{
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 6,
+                fillColor: "#4285F4",
+                fillOpacity: 1,
+                strokeColor: "#FFFFFF",
+                strokeWeight: 2,
+              }}
+            />
+          </>
+        )}
+        {selectedMarker && (
+          <InfoWindow
+            position={selectedMarker.location}
+            onCloseClick={() => setSelectedMarker(null)}
+          >
+            <div>
+              <h3>{selectedMarker.name}</h3>
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${selectedMarker.location.lat()},${selectedMarker.location.lng()}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                Yol Tarifi Al
+              </a>
+            </div>
+          </InfoWindow>
+        )}
+        {libraryMarkers.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.location}
+            onClick={() => setSelectedMarker(marker)}
+          />
+        ))}
+      </GoogleMap>
 
-      <div className="flex m-5 bg-slate-400 h-450 rounded-xl flex-col mt-[520px]">
-        <span className="flex items-center justify-center mt-5 font-bold text-2xl mb-4">
-          Kitap Arama Ekranı
-        </span>
-        <div className="flex flex-row h-full">
-          {showFirstForm ? (
-            <div className="flex flex-row w-full">
-              <div className="flex w-4/6 h-72 rounded-xl pt-5 border-2 items-center ml-14 flex-col mr-5 border-red-500 overflow-y-auto">
-                <Input
-                  className="w-1/2"
-                  type="text"
-                  placeholder="Kitap Arayın"
-                  value={bookName}
-                  onChange={(e) => setBookName(e.target.value)}
-                />
-                <List className="overflow-y-scroll max-h-96 w-1/2 scroll-container">
-                  {filteredBooks.map((book, index) => (
-                    <ListItem key={index}>
-                      <ListItemButton onClick={() => handleBookClick(book)}>
-                        <ListItemText primary={book} />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </div>
-              {bookFound ? (
-                <div className="flex flex-row w-full h-750 ">
-                  <div className="flex flex-col w-3/5 border-2 rounded-xl border-red-500 p-4 h-72">
-                    <h2 className="text-xl font-semibold mb-4 flex justify-center border-b-2 w-full pb-2 border-red-500">
-                      Bulunan Kütüphaneler
-                    </h2>
-                    <div className="max-h-64 overflow-y-auto mt-4">
-                      <div className="grid grid-cols-1 gap-4">
-                        {availableLibraries.map((library, index) => (
-                          <div
-                            key={index}
-                            className="cursor-pointer p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out hover:bg-red-100 text-center"
-                          >
-                            {library}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex  ml-10 w-24  h-16 mt-56">
-                    <Button
-                      className="h-full w-full"
-                      onClick={handleSubmit}
-                      variant="contained"
+      {/* KONTROLLER */}
+      <div className="m-5 bg-slate-100 rounded-xl p-6 shadow">
+        {showFirstForm ? (
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Kitap Arama */}
+            <div className="flex flex-col w-full md:w-2/3 border-2 border-red-400 rounded-xl p-4 bg-white shadow">
+              <h2 className="text-xl font-bold mb-4 text-center">
+                📘 Kitap Ara
+              </h2>
+              <Input
+                className="w-full mb-4 border rounded px-3 py-2 shadow-sm bg-white"
+                type="text"
+                placeholder="Kitap ismi girin..."
+                value={bookName}
+                onChange={(e) => setBookName(e.target.value)}
+              />
+              <List className="overflow-y-auto max-h-60 border-t">
+                {filteredBooks.map((book, index) => (
+                  <ListItem key={index} disablePadding>
+                    <ListItemButton
+                      onClick={() => handleBookClick(book)}
+                      className="hover:bg-red-100 transition"
                     >
-                      İlerle
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col w-1/4 border-2 rounded-xl border-red-500 p-4 h-72">
-                  <p>Kitap bulunamadı. Lütfen tekrar deneyin.</p>
-                </div>
-              )}
+                      <ListItemText primary={book} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
             </div>
-          ) : (
-            <div className="flex flex-col w-full  border-2 mx-5 rounded-xl h-350 border-red-500">
-              {/* <input
-                  className="flex w-1/2"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                /> */}
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Grid
-                  container
-                  spacing={2}
-                  direction="column"
-                  alignItems="center"
-                >
-                  {/* Tarih Seçici */}
-                  <Grid
-                    item
-                    className="flex flex-col justify-center items-center w-full h-24"
-                  >
-                    <h3 className="text-lg font-semibold text-center mb-2">
-                      Randevu Tarihini Seçin:
-                    </h3>
-                    <DatePicker
-                      value={selectedDate}
-                      onChange={(newDate) => setSelectedDate(newDate)}
-                      disablePast
-                    />
-                  </Grid>
 
-                  {/* Tarih seçildiyse saat seçeneklerini göster */}
-                  {selectedDate && (
-                    <Grid item className="w-full mt-6">
-                      <h3 className="text-lg font-semibold text-center mb-2">
-                        Randevu Saatini Seçin:
-                      </h3>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {timeSlots.map((slot, index) => (
-                          <button
-                            key={index}
-                            className={`py-2 px-4 rounded ${
-                              selectedTime && selectedTime.isSame(slot)
-                                ? "bg-blue-500 text-white"
-                                : "bg-gray-200"
-                            }`}
-                            onClick={() => setSelectedTime(slot)}
-                          >
-                            {slot.format("HH:mm")}
-                          </button>
-                        ))}
-                      </div>
-                    </Grid>
-                  )}
-                </Grid>
-              </LocalizationProvider>
-              <div className="flex w-full h-40  items-center justify-center">
-                <button
-                  onClick={() => {
-                    if (selectedDate && selectedTime) {
-                      alert(
-                        `Randevu Başarıyla Ayarlandı!\nTarih: ${selectedDate.format(
-                          "DD-MM-YYYY"
-                        )}\nSaat: ${selectedTime.format("HH:mm")}`
-                      );
-                    } else {
-                      alert("Lütfen bir tarih ve saat seçiniz.");
-                    }
-                  }}
-                  className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-                >
-                  Randevuyu Onayla
-                </button>
-                {/* <Button
-                    variant="contained"
-                    className="flex bg-blue-400 w-1/2 rounded-lg"
-                  >
-                    Rezervasyon Yap
-                  </Button> */}
+            {/* Kütüphaneler */}
+            {hasSearched && !bookFound ? (
+              <div className="flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 bg-white shadow justify-center text-center">
+                <p className="text-red-600 font-medium">❌ Kitap bulunamadı.</p>
               </div>
-              {/* <button
-                  onClick={handleBooking}
-                  disabled={isBooking || !date}
-                  className="booking-button"
-                >
-                  {isBooking ? "Rezervasyon Yapılıyor..." : "Rezervasyon Yap"}
-                </button> */}
+            ) : (
+              bookFound &&
+              availableLibraries.length > 0 && (
+                <div className="flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 bg-white shadow">
+                  <h2 className="text-xl font-semibold mb-4 text-center">
+                    📍 Bulunan Kütüphaneler
+                  </h2>
+                  <div className="flex flex-col gap-3 overflow-y-auto max-h-60">
+                    {availableLibraries.map((lib, index) => {
+                      const data = libraryData.find((l) => l.name === lib);
+                      return (
+                        <div
+                          key={index}
+                          className="cursor-pointer border rounded-lg p-3 text-center hover:bg-red-50 transition shadow"
+                          onClick={() =>
+                            handleLibraryClick(
+                              lib,
+                              data?.lat || 0,
+                              data?.lng || 0
+                            )
+                          }
+                        >
+                          🏛️ {lib}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    className="mt-4 bg-gradient-to-r from-red-500 to-pink-500 text-white"
+                    disabled={!bookFound || availableLibraries.length === 0}
+                  >
+                    İlerle
+                  </Button>
+                </div>
+              )
+            )}
+          </div>
+        ) : (
+          // Randevu Ekranı
+          <div className="w-full border-2 border-red-400 rounded-xl p-6 bg-white shadow">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                alignItems="center"
+              >
+                <Grid item className="w-full text-center">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-2 rounded">
+                    📅 Randevu Seçim Ekranı
+                  </h2>
+                </Grid>
+
+                <Grid item>
+                  <h3 className="text-lg font-semibold text-center mt-4">
+                    Tarih Seçin:
+                  </h3>
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    disablePast
+                  />
+                </Grid>
+
+                {selectedDate && (
+                  <Grid item className="w-full mt-4">
+                    <h3 className="text-lg font-semibold text-center mb-2">
+                      Saat Seçin:
+                    </h3>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {timeSlots.map((slot, index) => (
+                        <button
+                          key={index}
+                          className={`py-2 px-4 rounded-lg shadow ${
+                            selectedTime && selectedTime.isSame(slot)
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100"
+                          } hover:scale-105 transition`}
+                          onClick={() => setSelectedTime(slot)}
+                        >
+                          {slot.format("HH:mm")}
+                        </button>
+                      ))}
+                    </div>
+                  </Grid>
+                )}
+              </Grid>
+            </LocalizationProvider>
+
+            <div className="mt-6">
+              <button
+                onClick={() => {
+                  if (selectedDate && selectedTime) {
+                    alert(
+                      `✅ Randevu Ayarlandı:\n📅 ${selectedDate.format(
+                        "DD-MM-YYYY"
+                      )} - ⏰ ${selectedTime.format("HH:mm")}`
+                    );
+                    resetState(); // 🔁 Geri dön & sıfırla
+                  } else {
+                    alert("⚠️ Lütfen tarih ve saat seçin.");
+                  }
+                }}
+                className={`w-full mt-4 py-3 rounded-lg font-semibold text-white shadow transition ${
+                  selectedDate && selectedTime
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                    : "bg-gray-300 cursor-not-allowed"
+                }`}
+                disabled={!selectedDate || !selectedTime}
+              >
+                ✅ Randevuyu Onayla
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

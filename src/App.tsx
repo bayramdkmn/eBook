@@ -124,66 +124,36 @@ function App() {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <Link
-                    className="hover:text-2xl transition-all duration-200 mr-24"
-                    to="#"
-                  >
-                    <Dropdown>
-                      <MenuButton>Hesabım</MenuButton>
-                      <Menu className="fixed z-20">
-                        <MenuItem onClick={createHandleMenuClick("Profile")}>
-                          Profile
-                        </MenuItem>
-                        <MenuItem
-                          onClick={createHandleMenuClick("Language settings")}
-                        >
-                          Language settings
-                        </MenuItem>
-                        <MenuItem onClick={createHandleMenuClick("Log out")}>
-                          Log out
-                        </MenuItem>
-                      </Menu>
-                    </Dropdown>
-                  </Link>
-                  {/* {showAccountMenu && (
+                  <span className="cursor-pointer hover:text-2xl transition-all duration-200 mr-24">
+                    Hesabım
+                  </span>
+
+                  {showAccountMenu && (
                     <div
                       className={`${
-                        darkMode
-                          ? "bg-black text-white opacity-100"
-                          : "bg-white text-black opacity-100"
-                      } z-50 absolute right-0 mt-2 w-60 border border-gray-300 rounded-lg shadow-lg`}
+                        darkMode ? "bg-black text-white" : "bg-white text-black"
+                      } absolute right-0 mt-2 w-60 border border-gray-300 rounded-lg shadow-lg z-50`}
                     >
-                      <Link
-                        to="/account-info"
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 transition-colors"
+                      <div
+                        onClick={createHandleMenuClick("Profile")}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        <FaUser className="mr-2" />
                         Profil
-                      </Link>
-
-                      <Link
-                        to="/orders"
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 transition-colors"
+                      </div>
+                      <div
+                        onClick={createHandleMenuClick("Language settings")}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        <FaShoppingCart className="mr-2" />
-                        İşlemlerim
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 transition-colors"
+                        Dil Ayarları
+                      </div>
+                      <div
+                        onClick={createHandleMenuClick("Log out")}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        <FaCog className="mr-2" />
-                        Ayarlar
-                      </Link>
-                      <Link
-                        to="/logout"
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 transition-colors"
-                      >
-                        <CgLogOut className="mr-2" />
                         Çıkış Yap
-                      </Link>
+                      </div>
                     </div>
-                  )} */}
+                  )}
                 </div>
               </div>
             ) : (
@@ -212,9 +182,7 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={handleOpen}
                 >
-                  <span className="ml-10 text-3xl">
-                    {/* <MdPostAdd /> */}
-                  </span>
+                  <span className="ml-10 text-3xl">{/* <MdPostAdd /> */}</span>
                   <span className="ml-7">Gönderi Ekle</span>
                 </div>
                 <AddPost open={open} onClose={handleClose} />
@@ -253,9 +221,7 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/swap")}
                 >
-                  <span className="ml-10 text-2xl">
-                    {/* <IoMdSwap /> */}
-                  </span>
+                  <span className="ml-10 text-2xl">{/* <IoMdSwap /> */}</span>
                   <span className="ml-7">Takas İlanları</span>
                 </div>
                 <div
@@ -279,9 +245,7 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/wishList")}
                 >
-                  <span className="ml-10 text-2xl">
-                    {/* <BiBookAdd /> */}
-                  </span>
+                  <span className="ml-10 text-2xl">{/* <BiBookAdd /> */}</span>
                   <span className="ml-7">İstek Listem</span>
                 </div>
                 <div
@@ -292,9 +256,7 @@ function App() {
                   } cursor-pointer w-full h-24 flex items-center hover:text-2xl transition-all duration-200 p-2`}
                   onClick={() => handleMenuClick("/popularBooks")}
                 >
-                  <span className="ml-10 text-2xl">
-                    {/* <TbBooks /> */}
-                  </span>
+                  <span className="ml-10 text-2xl">{/* <TbBooks /> */}</span>
                   <span className="ml-7">Popüler Kitaplar</span>
                 </div>
                 <div
