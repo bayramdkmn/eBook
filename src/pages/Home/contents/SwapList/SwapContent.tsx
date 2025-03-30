@@ -73,14 +73,8 @@ const SwapContent = () => {
 
   return (
     <div className="flex flex-col h-full w-full bg-gray-100">
-      <div className="h-16 bg-slate-400 flex items-center justify-center px-4 shadow-md ">
-        <span className="text-xl font-bold flex justify-center w-5/6">
-          TAKAS İLANLARI
-        </span>
-        {/* <Button  onClick={handleOpen} variant="contained">
-          Takas İlanı Ekle
-        </Button> */}
-        <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl  hover:bg-blue-600">
+      <div className="h-16 flex items-center justify-center px-4 shadow-md ">
+        <button className="ml-auto bg-blue-500 text-white px-6 mr-4 py-1 rounded-xl  hover:bg-blue-600">
           Takas İlanı Ekle
         </button>
 

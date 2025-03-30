@@ -108,21 +108,21 @@ const DiscoverContent = () => {
   return (
     <div className="flex flex-col h-full w-full bg-gray-100">
       {/* Navbar */}
-      <div className="h-16 bg-slate-400 flex items-center px-4 shadow-md">
+      {/* <div className="h-16 bg-slate-400 flex items-center px-4 shadow-md">
         <span className="text-xl font-bold flex w-4/5 justify-center">
           Keşfet
         </span>
         <span className="flex w-1/5 justify-center text-xl font-bold">
           Önerilen Yazarlar
         </span>
-      </div>
+      </div> */}
 
       {/* Main Content with Flexbox */}
       <div className="flex flex-col lg:flex-row gap-4 flex-grow px-4 py-6">
         {/* Left content */}
         <div
-          className="flex-1 bg-white shadow-md rounded-md p-4 overflow-y-auto"
-          style={{ maxHeight: "calc(87vh - 64px)" }}
+          className="flex-1 bg-white shadow-md rounded-md p-4 overflow-y-auto max-h-[88svh]"
+          // style={{ maxHeight: "calc(87vh - 64px)" }}
         >
           {posts.slice(0, visiblePosts).map((post, index) => (
             <div
@@ -168,7 +168,7 @@ const DiscoverContent = () => {
         </div>
 
         {/* Right sidebar */}
-        <div className="lg:w-1/4 bg-slate-200 shadow-md rounded-md p-4 max-h-800 hidden xl:block">
+        <div className="lg:w-1/4 bg-slate-200 shadow-md rounded-md p-4 hidden xl:block">
           <div className="flex items-center mb-6">
             <Avatar sx={{ width: 60, height: 60 }} src="/pp.jpeg" />
             <div className="ml-4">
