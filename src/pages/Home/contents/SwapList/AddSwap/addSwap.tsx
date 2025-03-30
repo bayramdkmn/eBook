@@ -1,6 +1,7 @@
 import { Input, Button, Typography, Box, Modal } from "@mui/material";
 import React, { useState } from "react";
 import { getSwapList, createSwap } from "../SwapListAPI";
+import { useTheme } from "../../../../../context/ThemeContext";
 
 interface AddSwapModalProps {
   open: boolean;
@@ -8,21 +9,17 @@ interface AddSwapModalProps {
 }
 
 const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
+  const { darkMode } = useTheme();
+
   const [step, setStep] = useState(1);
   const [bookName, setBookName] = useState("");
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
   const maxPhotos = 2;
 
-  const handleNextStep = () => {
-    setStep((prevStep) => prevStep + 1);
-  };
-
-  const handlePreviousStep = () => {
-    if (step > 1) {
-      setStep((prevStep) => prevStep - 1);
-    }
-  };
+  const handleNextStep = () => setStep((prevStep) => prevStep + 1);
+  const handlePreviousStep = () =>
+    step > 1 && setStep((prevStep) => prevStep - 1);
 
   const handleClose = () => {
     setBookName("");
@@ -41,26 +38,9 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
     }
   };
 
-  // const handleShare = () => {
-  //   const data = {
-  //     content: description,
-  //     offeredBookId: bookName,
-  //   };
-  //   console.log(data);
-  //   try {
-  //     createSwapButton(data).then((response) => {
-  //       console.log("swap request successful:", response);
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   onClose();
-  // };
-
   async function createSwapButton() {
     try {
       const data = { content: description, bookTitle: bookName };
-      console.log("data", data);
       await createSwap(data);
     } catch (err) {
       console.log("create swap error", err);
@@ -84,10 +64,12 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
             transform: "translate(-50%, -50%)",
             width: step === 1 ? 500 : step === 2 ? 600 : 500,
             height: step === 1 ? 300 : step === 2 ? 500 : 400,
-            bgcolor: "background.paper",
+            bgcolor: darkMode ? "#1e1e1e" : "background.paper",
+            color: darkMode ? "#fff" : "#000",
             borderRadius: "8px",
             boxShadow: 24,
             p: 4,
+            transition: "all 0.3s ease",
           }}
         >
           <Typography variant="h5" component="h2" align="center" gutterBottom>
@@ -102,6 +84,11 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
                 value={bookName}
                 onChange={(e) => setBookName(e.target.value)}
                 fullWidth
+                sx={{
+                  input: {
+                    color: darkMode ? "white" : "black",
+                  },
+                }}
               />
 
               <Button
@@ -125,6 +112,11 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
                 multiline
                 rows={4}
                 fullWidth
+                sx={{
+                  input: {
+                    color: darkMode ? "white" : "black",
+                  },
+                }}
               />
               <Button
                 variant="contained"
@@ -167,7 +159,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
             </>
           )}
 
-          <div className="flex w-full  fixed bottom-2 left-0">
+          <div className="flex w-full fixed bottom-2 left-0">
             <Button
               variant="text"
               color="error"

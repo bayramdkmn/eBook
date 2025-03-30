@@ -16,6 +16,7 @@ import ReportProblemContent from "../pages/Home/contents/Report/ReportProblemCon
 import SuggestionContent from "../pages/Home/contents/Suggest/SuggestionContent";
 import ChatScreen from "../pages/Chat/ChatScreen";
 import AboutUs from "../pages/AboutUs/AboutUs";
+import Profile from "../pages/Profile/Profile";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
       <Route path="/reportProblem" element={<ReportProblemContent />} />
       <Route path="/suggest" element={<SuggestionContent />} />
       <Route path="/chat" element={<ChatScreen />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 };

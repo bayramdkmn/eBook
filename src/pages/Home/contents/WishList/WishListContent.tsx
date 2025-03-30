@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTheme } from "../../../../context/ThemeContext"; // 👈 context
 
 const initialBooks = [
   {
@@ -27,8 +28,14 @@ const BookCard = ({
   onRemove: (id: number) => void;
   isBuy: (id: number) => void;
 }) => {
+  const { darkMode } = useTheme();
+
   return (
-    <div className="flex flex-col items-center justify-between bg-white shadow-xl rounded-2xl p-5 m-4 w-72 h-[440px] transition hover:scale-105 select-none">
+    <div
+      className={`flex flex-col items-center justify-between rounded-2xl p-5 m-4 w-72 h-[440px] transition hover:scale-105 select-none shadow-xl ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+      }`}
+    >
       <div className="w-full h-48 flex items-center justify-center mb-4">
         <img
           src={image}
@@ -37,9 +44,9 @@ const BookCard = ({
         />
       </div>
       <div className="text-center">
-        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-        <p className="text-gray-600 text-sm">{author}</p>
-        <p className="text-gray-400 text-xs mt-1">
+        <h3 className="text-xl font-semibold">{title}</h3>
+        <p className="text-sm">{author}</p>
+        <p className="text-xs mt-1 text-gray-400">
           {createdDate.toLocaleDateString()}
         </p>
       </div>
@@ -62,6 +69,7 @@ const BookCard = ({
 };
 
 const WishListContent = () => {
+  const { darkMode } = useTheme();
   const [books, setBooks] = useState(initialBooks);
   const [newBook, setNewBook] = useState({
     title: "",
@@ -102,7 +110,12 @@ const WishListContent = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-[#f5f7fa] p-6">
+    <div
+      className={`flex flex-col min-h-screen w-full p-6 transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-[#f5f7fa] text-black"
+      }`}
+    >
+      {/* Ekle butonu */}
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setIsAdding((prev) => !prev)}
@@ -112,31 +125,46 @@ const WishListContent = () => {
         </button>
       </div>
 
+      {/* Kitap ekleme formu */}
       {isAdding && (
-        <div className="flex flex-col items-center bg-white shadow-md rounded-xl p-6 mb-6 w-full md:w-2/3 lg:w-1/2 mx-auto">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Yeni Kitap Ekle
-          </h3>
+        <div
+          className={`flex flex-col items-center rounded-xl p-6 mb-6 w-full md:w-2/3 lg:w-1/2 mx-auto shadow-md transition-colors duration-300 ${
+            darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+          }`}
+        >
+          <h3 className="text-xl font-semibold mb-4">Yeni Kitap Ekle</h3>
           <input
             type="text"
             placeholder="Kitap Başlığı"
             value={newBook.title}
             onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-            className="border border-gray-300 rounded p-2 w-full mb-3"
+            className={`rounded p-2 w-full mb-3 border ${
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300"
+            }`}
           />
           <input
             type="text"
             placeholder="Yazar"
             value={newBook.author}
             onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-            className="border border-gray-300 rounded p-2 w-full mb-3"
+            className={`rounded p-2 w-full mb-3 border ${
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300"
+            }`}
           />
           <input
             type="text"
             placeholder="Resim URL'si"
             value={newBook.image}
             onChange={(e) => setNewBook({ ...newBook, image: e.target.value })}
-            className="border border-gray-300 rounded p-2 w-full mb-4"
+            className={`rounded p-2 w-full mb-4 border ${
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300"
+            }`}
           />
           <button
             onClick={handleAddBook}

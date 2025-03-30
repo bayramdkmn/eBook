@@ -7,8 +7,10 @@ import {
   Alert,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const SuggestionContent = () => {
+  const { darkMode } = useTheme(); // 👈 dark mode hook
   const [selected, setSelected] = useState<"öneri" | "şikayet">("öneri");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -20,15 +22,23 @@ const SuggestionContent = () => {
       return;
     }
 
-    // API vs olsa buraya gelir
+    // API işlemi olsaydı burada yapılırdı
     setOpenSnackbar(true);
     setEmail("");
     setMessage("");
   };
 
   return (
-    <div className="flex flex-col h-full items-center justify-center w-full bg-[#f4f6f8] p-6 select-none">
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-5xl mx-auto w-full h-3/5">
+    <div
+      className={`flex flex-col h-full items-center justify-center w-full p-6 select-none transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-[#f4f6f8] text-black"
+      }`}
+    >
+      <div
+        className={`rounded-2xl shadow-lg p-8 max-w-5xl mx-auto w-full h-3/5 transition-colors duration-300 ${
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+        }`}
+      >
         <div className="flex justify-center mb-6">
           <ToggleButtonGroup
             value={selected}
@@ -48,6 +58,16 @@ const SuggestionContent = () => {
             className="w-full md:w-2/3"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              style: {
+                color: darkMode ? "white" : "inherit",
+              },
+            }}
+            InputLabelProps={{
+              style: {
+                color: darkMode ? "#ccc" : "inherit",
+              },
+            }}
           />
           <TextField
             label={
@@ -60,6 +80,16 @@ const SuggestionContent = () => {
             className="w-full md:w-2/3"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            InputProps={{
+              style: {
+                color: darkMode ? "white" : "inherit",
+              },
+            }}
+            InputLabelProps={{
+              style: {
+                color: darkMode ? "#ccc" : "inherit",
+              },
+            }}
           />
           <div className="w-full md:w-2/3 flex justify-end">
             <Button variant="contained" color="primary" onClick={handleSubmit}>

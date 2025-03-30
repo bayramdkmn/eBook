@@ -1,31 +1,44 @@
 import { Input } from "@mui/joy";
 import { Button } from "@mui/material";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const AdvertiseContent = () => {
+  const { darkMode } = useTheme();
+
   return (
-    <div className="flex flex-col h-full w-full bg-gray-100">
+    <div
+      className={`flex flex-col h-full w-full transition-colors duration-300 ${
+        darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
+      }`}
+    >
       <div className="flex flex-col lg:flex-row gap-4 flex-grow px-4 py-6 items-center justify-center">
-        <div className="border-2 w-3/5 h-4/6 flex items-center justify-center rounded-xl shadow-md">
+        <div
+          className={`border-2 w-3/5 h-4/6 flex items-center justify-center rounded-xl shadow-md ${
+            darkMode ? "border-gray-700" : "border-gray-300"
+          }`}
+        >
           <div
-            className="flex flex-col justify-center items-center h-full w-full bg-white rounded-xl shadow-md"
-            // style={{ height: "calc(60vh - 64px)" }}
+            className={`flex flex-col justify-center items-center h-full w-full rounded-xl shadow-md transition-colors duration-300 ${
+              darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+            }`}
           >
             <div className="flex h-full flex-col w-4/5 items-center justify-center">
               <Input
                 className="w-3/4 mb-10 h-12"
                 placeholder="Lütfen e-mail adresinizi giriniz."
-                // value={}
-                // onChange={(val) => setUsername(val.target.value)}
+                variant="soft"
+                color={darkMode ? "neutral" : "primary"}
               />
               <textarea
-                className="w-3/4 h-2/5 p-3 mb-10 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+                className={`w-3/4 h-2/5 p-3 mb-10 border rounded-md resize-none focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors duration-300 ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-300"
+                    : "bg-white border-gray-300 text-black focus:ring-blue-500"
+                }`}
                 placeholder="Lütfen teklifinizi yazınız. Size en kısa sürede dönüş sağlayacağız."
-                // value={}
-                // onChange={(val) => setUsername(val.target.value)}
               />
-
               <div className="w-full md:w-3/4 flex justify-end">
-                <Button className="w-24" variant="contained">
+                <Button className="w-24" variant="contained" color="primary">
                   GÖNDER
                 </Button>
               </div>

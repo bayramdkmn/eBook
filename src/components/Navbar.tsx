@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext"; // 👈 Context importu
 
 const Navbar = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode } = useTheme(); // 👈 Context'ten gece modu bilgisi alındı
   const [isUserJoin, setIsUserJoin] = useState(true);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-
+  const navigate = useNavigate();
   const location = useLocation();
   let timer: NodeJS.Timeout;
 
@@ -24,11 +25,9 @@ const Navbar = () => {
     console.log(`Clicked on ${menuItem}`);
   };
 
-  // Dinamik başlık eşleştirme
   const pathTitleMap: Record<string, string> = {
     "/": "Keşfet",
     "/eventMap": "Etkinlik Haritası",
-    // "/swap": "Takas İlanları",
     "/readingBooks": "Okuduğum Kitaplar",
     "/wishList": "İstek Listem",
     "/popularBooks": "Popüler Kitaplar",
@@ -43,15 +42,15 @@ const Navbar = () => {
     <div
       className={`${
         darkMode ? "bg-black text-white" : "bg-white text-black"
-      } flex flex-row w-full h-16 font-bold shadow bg-gradient-to-r from-gray-200 via-blue-200 to-gray-300 `}
+      } flex flex-row w-full h-16 font-bold shadow transition-colors duration-300`}
     >
-      <h1 className="w-5/6 text-3xl flex items-center justify-center text-gray-700 font-semibold py-4  ">
+      <h1 className="w-5/6 text-3xl flex items-center justify-center font-semibold py-4">
         {pageTitle}
       </h1>
 
       {isUserJoin ? (
         <div
-          className="flex justify-center items-center w-1/6"
+          className="flex justify-center items-center w-1/6 relative"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -66,20 +65,20 @@ const Navbar = () => {
               } absolute right-0 top-14 mt-2 w-60 border border-gray-300 rounded-lg shadow-lg z-50`}
             >
               <div
-                onClick={createHandleMenuClick("Profile")}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                onClick={() => navigate("/profile")}
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
               >
                 Profil
               </div>
               <div
                 onClick={createHandleMenuClick("Language settings")}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
               >
                 Dil Ayarları
               </div>
               <div
                 onClick={createHandleMenuClick("Log out")}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
               >
                 Çıkış Yap
               </div>

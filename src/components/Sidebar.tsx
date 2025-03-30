@@ -11,21 +11,18 @@ import { BiBookAdd, BiBookReader, BiCommentDetail } from "react-icons/bi";
 import { RiAdvertisementLine, RiCompassDiscoverLine } from "react-icons/ri";
 import { TbBooks } from "react-icons/tb";
 import { GrMapLocation } from "react-icons/gr";
+import { useTheme } from "../context/ThemeContext";
 
 const IconRenderer = (Icon: any) => (props: IconBaseProps) =>
   React.createElement(Icon, props);
 
 const Sidebar = () => {
-  const [darkMode, setDarkMode] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { darkMode, toggleDarkMode } = useTheme(); // 👈 Context'ten veriyi ve fonksiyonu al
 
   const handleMenuClick = (path: string) => {
     navigate(path);
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
   };
 
   const menuItems = [
@@ -68,7 +65,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`group relative h-screen border-r transition-all duration-300 ${
+      className={`group relative h-screen border-r transition-all duration-300 select-none ${
         darkMode ? "bg-black text-white" : "bg-white text-black"
       } w-[4.5rem] hover:w-72`}
     >
@@ -109,7 +106,7 @@ const Sidebar = () => {
       {/* Gece Modu */}
       <div
         className="cursor-pointer h-16 flex items-center hover:text-xl transition-all duration-200 px-6 absolute bottom-6 w-full"
-        onClick={toggleDarkMode}
+        onClick={toggleDarkMode} // 👈 Context üzerinden toggle işlemi
       >
         <span className="text-2xl">
           <NightModeIcon size={22} color={darkMode ? "white" : "black"} />

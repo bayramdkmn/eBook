@@ -1,7 +1,9 @@
 import { Avatar } from "@mui/material";
 import React, { useState } from "react";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const DiscoverContent = () => {
+  const { darkMode } = useTheme();
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -106,30 +108,27 @@ const DiscoverContent = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-gray-100">
-      {/* Navbar */}
-      {/* <div className="h-16 bg-slate-400 flex items-center px-4 shadow-md">
-        <span className="text-xl font-bold flex w-4/5 justify-center">
-          Keşfet
-        </span>
-        <span className="flex w-1/5 justify-center text-xl font-bold">
-          Önerilen Yazarlar
-        </span>
-      </div> */}
-
-      {/* Main Content with Flexbox */}
+    <div
+      className={`flex flex-col h-full w-full transition-colors duration-300 ${
+        darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
+      }`}
+    >
+      {/* Main Content */}
       <div className="flex flex-col lg:flex-row gap-4 flex-grow px-4 py-6">
-        {/* Left content */}
+        {/* Gönderiler */}
         <div
-          className="flex-1 bg-white shadow-md rounded-md p-4 overflow-y-auto max-h-[88svh]"
-          // style={{ maxHeight: "calc(87vh - 64px)" }}
+          className={`flex-1 shadow-md rounded-md p-4 overflow-y-auto max-h-[88svh] transition-colors duration-300 ${
+            darkMode ? "bg-gray-800" : "bg-white"
+          }`}
         >
           {posts.slice(0, visiblePosts).map((post, index) => (
             <div
               key={post.id}
-              className={`mb-6 p-4 bg-slate-100 shadow rounded-md ${
-                index === visiblePosts - 1 ? "pb-12" : ""
-              }`}
+              className={`mb-6 p-4 shadow rounded-md transition-colors duration-300 ${
+                darkMode
+                  ? "bg-gray-700 text-white"
+                  : "bg-slate-100 text-gray-800"
+              } ${index === visiblePosts - 1 ? "pb-12" : ""}`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -142,7 +141,7 @@ const DiscoverContent = () => {
                 </div>
                 <div className="text-gray-500">...</div>
               </div>
-              <div className="mt-2 text-sm text-gray-700">{post.content}</div>
+              <div className="mt-2 text-sm">{post.content}</div>
               {post.img && (
                 <div className="mt-4">
                   <img
@@ -167,8 +166,12 @@ const DiscoverContent = () => {
           )}
         </div>
 
-        {/* Right sidebar */}
-        <div className="lg:w-1/4 bg-slate-200 shadow-md rounded-md p-4 hidden xl:block">
+        {/* Sağ Sidebar */}
+        <div
+          className={`lg:w-1/4 shadow-md rounded-md p-4 hidden xl:block transition-colors duration-300 ${
+            darkMode ? "bg-gray-700 text-white" : "bg-slate-200 text-black"
+          }`}
+        >
           <div className="flex items-center mb-6">
             <Avatar sx={{ width: 60, height: 60 }} src="/pp.jpeg" />
             <div className="ml-4">

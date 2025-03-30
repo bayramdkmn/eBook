@@ -1,7 +1,9 @@
 import { Button, Rating, Snackbar, Alert } from "@mui/material";
 import React, { useState } from "react";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const PopularBooksContent = () => {
+  const { darkMode } = useTheme();
   const [rating, setRating] = useState<number | null>(4);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -37,12 +39,18 @@ const PopularBooksContent = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-[#f7f9fc] p-6">
+    <div
+      className={`flex flex-col min-h-screen w-full p-6 transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-[#f7f9fc] text-black"
+      }`}
+    >
       <div className="flex flex-col gap-6">
         {posts.slice(0, visiblePosts).map((post) => (
           <div
             key={post.id}
-            className="bg-white rounded-xl shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-300 p-5 flex flex-row items-center justify-between select-none"
+            className={`rounded-xl shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-300 p-5 flex flex-row items-center justify-between select-none ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            }`}
           >
             <div className="w-40 h-56 flex items-center justify-center">
               <img
@@ -53,11 +61,27 @@ const PopularBooksContent = () => {
             </div>
 
             <div className="flex flex-col flex-grow px-6">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-1">
+              <h2
+                className={`text-2xl font-semibold mb-1 ${
+                  darkMode ? "text-white" : "text-gray-800"
+                }`}
+              >
                 {post.bookName}
               </h2>
-              <p className="text-md text-gray-600 mb-1">Yazar: {post.author}</p>
-              <p className="text-sm text-gray-500 mb-4">{post.content}</p>
+              <p
+                className={`text-md mb-1 ${
+                  darkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
+                Yazar: {post.author}
+              </p>
+              <p
+                className={`text-sm mb-4 ${
+                  darkMode ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                {post.content}
+              </p>
               <Rating name="book-rating" value={rating} readOnly />
             </div>
 

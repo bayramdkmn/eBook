@@ -1,4 +1,11 @@
-import { Input, Button, Typography, Box, Modal } from "@mui/material";
+import {
+  Input,
+  Button,
+  Typography,
+  Box,
+  Modal,
+  useTheme as useMuiTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Rating, { IconContainerProps } from "@mui/material/Rating";
@@ -7,6 +14,8 @@ import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import { useTheme } from "../../../../context/ThemeContext";
+
 interface AddPostModalProps {
   open: boolean;
   onClose: () => void;
@@ -52,6 +61,7 @@ function IconContainer(props: IconContainerProps) {
 }
 
 const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
+  const { darkMode } = useTheme(); // 👈 Dark mode bilgisi
   const [step, setStep] = useState(1);
   const [bookName, setBookName] = useState("");
   const [description, setDescription] = useState("");
@@ -59,16 +69,9 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
   const [ratingLabel, setRatingLabel] = useState<string>("");
   const maxPhotos = 2;
 
-  const handleNextStep = () => {
-    setStep((prevStep) => prevStep + 1);
-  };
-
-  const handlePreviousStep = () => {
-    if (step > 1) {
-      setStep((prevStep) => prevStep - 1);
-    }
-  };
-
+  const handleNextStep = () => setStep((prevStep) => prevStep + 1);
+  const handlePreviousStep = () =>
+    step > 1 && setStep((prevStep) => prevStep - 1);
   const handleClose = () => {
     setBookName("");
     setDescription("");
@@ -107,7 +110,8 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
             transform: "translate(-50%, -50%)",
             width: step === 1 ? 500 : step === 2 ? 600 : 500,
             height: step === 1 ? 300 : step === 2 ? 500 : 400,
-            bgcolor: "background.paper",
+            bgcolor: darkMode ? "#1e1e1e" : "background.paper", // 👈 Tema rengi
+            color: darkMode ? "#fff" : "#000", // 👈 Yazı rengi
             borderRadius: "8px",
             boxShadow: 24,
             p: 4,
@@ -205,7 +209,7 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
             </>
           )}
 
-          <div className="flex w-full  fixed bottom-2 left-0">
+          <div className="flex w-full fixed bottom-2 left-0">
             <Button
               variant="text"
               color="error"

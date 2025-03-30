@@ -1,17 +1,33 @@
 import React from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 const AboutUs = () => {
+  const { darkMode } = useTheme();
+
   return (
-    <div className="flex flex-col h-full w-full bg-gray-100">
+    <div
+      className={`flex flex-col h-full w-full transition-colors duration-300 ${
+        darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
+      }`}
+    >
       {/* Header */}
-      <div className="h-16 bg-slate-400 flex items-center justify-center px-4 shadow-md">
+      <div
+        className={`h-16 flex items-center justify-center px-4 shadow-md ${
+          darkMode ? "bg-gray-800 text-white" : "bg-slate-400 text-black"
+        }`}
+      >
         <span className="text-xl font-bold">ABOUT US</span>
       </div>
+
       <div
         className="mt-2 flex w-full h-full items-center justify-center"
         style={{ maxHeight: "calc(94vh - 65px)" }}
       >
-        <div className="flex w-11/12 h-850 rounded-2xl p-10 bg-slate-300 flex-col gap-6 text-xl font-sans">
+        <div
+          className={`flex w-11/12 h-850 rounded-2xl p-10 flex-col gap-6 text-xl font-sans transition-colors duration-300 ${
+            darkMode ? "bg-gray-800 text-white" : "bg-slate-300 text-black"
+          }`}
+        >
           <span>
             <span className="font-bold">E-Kitap</span>, 1 Eylül 2024'de
             Türkiye'de kurulmuş, kitap odaklı bir sosyal kataloglama ve sosyal
@@ -32,7 +48,7 @@ const AboutUs = () => {
             oluşur. <span className="font-bold">E-Kitap</span>'ta okurlar
             sosyalleşip, gönderi paylaştıkça kitap ve yazar profilleri daha
             fazla bilgi ile dolar. Bu sayede de o kitap ve yazarları incelemek
-            isteyen okurlar için daha fazla bilgi oluşur.{" "}
+            isteyen okurlar için daha fazla bilgi oluşur.
           </span>
           <span>
             <span className="font-bold">E-Kitap</span>'ın ilk sürümü İlk olarak
@@ -40,11 +56,16 @@ const AboutUs = () => {
             <span className="font-bold">E-Kitap</span>'ın şuan için amacı
             yukarıda bahsedildiği gibi kullanıcıları kitap okumaya teşvik etme,
             alınacak kitap hakkında ön bilgi sahibi olma, kitap takası yaparak
-            fazladan ücret ödemekten kaçınma gibi birçok alandak kullanıcı dostu
-            olmaktır. Ancak ilerleyen zamanlarda kullanıcıların isteklerine göre
-            geliştirmeler sağlanacaktır.
+            fazladan ücret ödemekten kaçınma gibi birçok alandaki kullanıcı
+            dostu olmaktır. Ancak ilerleyen zamanlarda kullanıcıların
+            isteklerine göre geliştirmeler sağlanacaktır.
           </span>
-          <div className="flex border-2 flex-row rounded-2xl">
+
+          <div
+            className={`flex border-2 flex-row rounded-2xl ${
+              darkMode ? "border-gray-600" : "border-gray-300"
+            }`}
+          >
             <img
               alt="e-kitap-logo"
               src={"/e-kitap-logo.jpg"}

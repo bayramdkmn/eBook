@@ -2,7 +2,7 @@ import { Avatar, Button, Rating } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { createSwap, getSwapList } from "./SwapListAPI";
 import AddSwap from "./AddSwap/addSwap";
-import { RxAvatar } from "react-icons/rx";
+import { useTheme } from "../../../../context/ThemeContext";
 
 interface Post {
   id: number;
@@ -11,32 +11,27 @@ interface Post {
   bookName: string;
   author: string;
   content: string;
-  img?: string; // Görsel isteğe bağlı bir alan
+  img?: string;
 }
 
 const SwapContent = () => {
+  const { darkMode } = useTheme(); // 👈 Tema bilgisi
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
+
   const [rating, setRating] = useState<number | null>(4);
-  const [swapList, setSwapList] = useState([]); // API'den dönecek veri
-  const [loading, setLoading] = useState(true); // Yüklenme durumu
-  const [error, setError] = useState(null); // Hata durumu
-
   const [posts, setPosts] = useState<Post[]>([]);
-
   const [visiblePosts, setVisiblePosts] = useState(15);
 
   const handleShowMore = () => {
     setVisiblePosts((prev) => prev + 15);
   };
+
   useEffect(() => {
     const fetchSwapList = async () => {
       try {
-        const data = await getSwapList(); // Swap listesi verilerini çek
+        const data = await getSwapList();
         const formattedPosts = data.map((item: any) => ({
           id: item.id,
           swapOwnerName: `${item.requester.name} ${item.requester.surname}`,
@@ -44,15 +39,11 @@ const SwapContent = () => {
           bookName: item.offeredBook.title,
           author: item.offeredBook.author || "Bilinmeyen Yazar",
           content: item.content || "İçerik yok",
-          img: item.offeredBook.image || null, // Varsayılan olarak null olabilir
+          img: item.offeredBook.image || null,
         }));
         setPosts(formattedPosts);
-        setSwapList(data); // State'e kaydet
-        console.log(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false); // Yüklenme tamamlandı
+      } catch (err) {
+        console.error("Swap listesi alınırken hata:", err);
       }
     };
 
@@ -63,7 +54,7 @@ const SwapContent = () => {
     try {
       const data = {
         content: "Test swap request",
-        bookTitle: "saatleri ayarlama enstitüsü", // Bu veriyi backend'deki book ID'sine göre değiştirebilirsin
+        bookTitle: "saatleri ayarlama enstitüsü",
       };
       await createSwap(data);
     } catch (err) {
@@ -72,83 +63,107 @@ const SwapContent = () => {
   }
 
   return (
-    <div className="flex flex-col h-full w-full bg-gray-100">
-      <div className="h-16 flex items-center justify-center px-4 shadow-md ">
-        <button className="ml-auto bg-blue-500 text-white px-6 mr-4 py-1 rounded-xl  hover:bg-blue-600">
+    <div
+      className={`flex flex-col h-full w-full transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+      }`}
+    >
+      {/* Üst bar */}
+      <div
+        className={`h-16 flex items-center justify-end px-6 shadow-md ${
+          darkMode ? "bg-gray-800" : "bg-white"
+        }`}
+      >
+        <button
+          onClick={handleOpen}
+          className="bg-blue-500 text-white px-6 py-2 rounded-xl hover:bg-blue-600 transition"
+        >
           Takas İlanı Ekle
         </button>
-
         <AddSwap open={open} onClose={handleClose} />
       </div>
+
+      {/* İçerik */}
       <div className="h-full w-full">
         <div
-          className="col-span-9 bg-white shadow-md rounded-md p-4 overflow-y-auto"
+          className={`col-span-9 rounded-md p-4 overflow-y-auto transition-colors duration-300 ${
+            darkMode ? "bg-gray-800" : "bg-white shadow-md"
+          }`}
           style={{ maxHeight: "calc(88vh - 64px)" }}
         >
           {posts.slice(0, visiblePosts).map((post, index) => (
             <div
               key={post.id}
-              className={` mb-6 p-4 bg-slate-100 shadow rounded-md flex flex-row justify-between ${
-                index === visiblePosts - 1 ? "pb-12" : ""
-              }`}
+              className={`mb-6 p-4 rounded-md flex flex-row justify-between transition-colors duration-300 ${
+                darkMode
+                  ? "bg-gray-700 text-white"
+                  : "bg-slate-100 text-gray-900 shadow"
+              } ${index === visiblePosts - 1 ? "pb-12" : ""}`}
             >
+              {/* Sol kısım */}
               <div className="flex flex-col w-full pr-20">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    {post.swapOwnerAvatar ? (
-                      <Avatar
-                        sx={{ width: 60, height: 60 }}
-                        src={post.swapOwnerAvatar}
-                      />
-                    ) : (
-                      <span className="text-gray-500 w-[60px] h-[60px]">
-                        {/* <RxAvatar className="w-full h-full" /> */}
-                      </span>
-                    )}
+                    <Avatar
+                      sx={{ width: 60, height: 60 }}
+                      src={post.swapOwnerAvatar}
+                    />
                     <div className="font-bold text-lg ml-2">
                       {post.swapOwnerName}
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 text-sm text-gray-700">{post.content}</div>
+                <div
+                  className={`mt-2 text-sm ${
+                    darkMode ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  {post.content}
+                </div>
                 {post.img && (
                   <div className="mt-4 flex flex-row justify-between">
-                    <div className="flex flex-row">
-                      <img
-                        className="w-full rounded-md object-contain mx-4"
-                        style={{
-                          maxHeight: "350px",
-                          maxWidth: "200px",
-                          height: "auto",
-                          width: "auto",
-                        }}
-                        src={post.img}
-                        alt="Post"
-                      />
-                    </div>
+                    <img
+                      className="w-full rounded-md object-contain mx-4"
+                      style={{
+                        maxHeight: "350px",
+                        maxWidth: "200px",
+                        height: "auto",
+                        width: "auto",
+                      }}
+                      src={post.img}
+                      alt="Post"
+                    />
                   </div>
                 )}
               </div>
+
+              {/* Sağ bilgi kutusu */}
               <div className="flex w-1/3 items-end">
-                <div className="flex w-full bg-slate-300 p-4 font-semibold text-xl flex-col justify-between h-auto rounded-2xl ">
+                <div
+                  className={`flex w-full p-4 font-semibold text-xl flex-col justify-between h-auto rounded-2xl transition-colors duration-300 ${
+                    darkMode ? "bg-gray-600" : "bg-slate-300"
+                  }`}
+                >
                   <div className="flex flex-col gap-2">
                     <div className="text-xl font-semibold w-fit">
                       KİTAP ADI:
-                      <span className="text-lg font-normal">
+                      <span className="text-lg font-normal ml-1">
                         {post.bookName}
                       </span>
                     </div>
                     <div>
                       YAZAR:
-                      <span className="text-lg font-normal">{post.author}</span>
+                      <span className="text-lg font-normal ml-1">
+                        {post.author}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       KİTAP PUANI:
                       <Rating name="book-rating" value={rating} readOnly />
                     </div>
-                    <div>İL:</div>
+                    <div>İL: (Örnek İl)</div>
                   </div>
-                  <div className="flex  justify-end">
+                  <div className="flex justify-end mt-3">
                     <Button variant="contained" onClick={tikla}>
                       İletişime Geç
                     </Button>
@@ -157,11 +172,12 @@ const SwapContent = () => {
               </div>
             </div>
           ))}
+
           {visiblePosts < posts.length && (
             <div className="text-center mt-4">
               <button
                 onClick={handleShowMore}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
               >
                 Daha Fazla Göster
               </button>

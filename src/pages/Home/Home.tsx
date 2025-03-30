@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTheme } from "../../context/ThemeContext";
 import EventListContent from "./contents/EventList/EventListContent";
 import DiscoverContent from "./contents/Discover/DiscoverContent";
 import SwapContent from "./contents/SwapList/SwapContent";
@@ -10,11 +11,15 @@ import ReportProblemContent from "./contents/Report/ReportProblemContent";
 import SuggestionContent from "./contents/Suggest/SuggestionContent";
 
 const Home = () => {
+  const { darkMode } = useTheme();
   const [selectedContent, setSelectedContent] = useState<string>("home");
-  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   return (
-    <div className={`${darkMode ? "bg-black " : "bg-gray-400"}`}>
+    <div
+      className={`transition-colors duration-300 min-h-screen ${
+        darkMode ? "bg-black text-white" : "bg-gray-400 text-black"
+      }`}
+    >
       <div className="flex flex-row">
         {selectedContent === "eventList" && <EventListContent />}
         {selectedContent === "discoverContent" && <DiscoverContent />}

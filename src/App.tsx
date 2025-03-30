@@ -4,9 +4,12 @@ import { LoadScript } from "@react-google-maps/api";
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import { ThemeProvider, useTheme } from "./context/ThemeContext"; // 👈 useTheme import edildi
 import "./App.css";
 
-function App() {
+// Ayrı bir component olarak içeriği taşıyoruz
+const Layout = () => {
+  const { darkMode } = useTheme();
   const location = useLocation();
   const normalizedPath = location.pathname.replace(/\/$/, "").toLowerCase();
   const hideNavAndMenu = ["/signin", "/signup", "/resetpassword"].includes(
@@ -14,24 +17,32 @@ function App() {
   );
 
   if (hideNavAndMenu) {
-    return (
-      <LoadScript googleMapsApiKey="AIzaSyDRHhcR_1wef7UhABZGnuuzvA7sGvqq82M">
-        <AppRoutes />
-      </LoadScript>
-    );
+    return <AppRoutes />;
   }
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyDRHhcR_1wef7UhABZGnuuzvA7sGvqq82M">
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="flex flex-col flex-1">
-          <Navbar />
-          <main className="flex-1 overflow-y-auto">
-            <AppRoutes />
-          </main>
-        </div>
+    <div
+      className={`flex min-h-screen transition-colors duration-300 ${
+        darkMode ? "bg-black text-white" : "bg-white text-black"
+      }`}
+    >
+      <Sidebar />
+      <div className="flex flex-col flex-1">
+        <Navbar />
+        <main className="flex-1 overflow-y-auto">
+          <AppRoutes />
+        </main>
       </div>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <LoadScript googleMapsApiKey="AIzaSyDRHhcR_1wef7UhABZGnuuzvA7sGvqq82M">
+      <ThemeProvider>
+        <Layout />
+      </ThemeProvider>
     </LoadScript>
   );
 }

@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import "./customs.css";
+import { useTheme } from "../../../../context/ThemeContext";
 
 dayjs.locale("tr");
 
@@ -69,6 +70,7 @@ const libraryData = [
 ];
 
 const EventListContent = () => {
+  const { darkMode } = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedTime, setSelectedTime] = useState<Dayjs | null>(null);
   const [currentPosition, setCurrentPosition] =
@@ -260,28 +262,43 @@ const EventListContent = () => {
         ))}
       </GoogleMap>
 
-      {/* KONTROLLER */}
-      <div className="m-5 bg-slate-100 rounded-xl p-6 shadow">
+      <div
+        className={`m-5 rounded-xl p-6 shadow transition-colors duration-300 ${
+          darkMode ? "bg-gray-900 text-white" : "bg-slate-100 text-black"
+        }`}
+      >
         {showFirstForm ? (
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Kitap Arama */}
-            <div className="flex flex-col w-full md:w-2/3 border-2 border-red-400 rounded-xl p-4 bg-white shadow">
-              <h2 className="text-xl font-bold mb-4 text-center">
+            <div
+              className={`${
+                darkMode ? "bg-gray-800" : "bg-white"
+              } w-full md:w-2/3 p-4 rounded-xl shadow`}
+            >
+              <h2
+                className={`${
+                  darkMode ? "text-white" : "text-black"
+                } text-xl font-bold mb-4 text-center  py-2 rounded`}
+              >
                 📘 Kitap Ara
               </h2>
               <Input
-                className="w-full mb-4 border rounded px-3 py-2 shadow-sm bg-white"
+                className={`w-full mb-4 border rounded px-3 py-2 shadow-sm ${
+                  darkMode ? "bg-gray-700 text-white" : "bg-white text-black"
+                }`}
                 type="text"
                 placeholder="Kitap ismi girin..."
                 value={bookName}
                 onChange={(e) => setBookName(e.target.value)}
               />
+
               <List className="overflow-y-auto max-h-60 border-t">
                 {filteredBooks.map((book, index) => (
                   <ListItem key={index} disablePadding>
                     <ListItemButton
                       onClick={() => handleBookClick(book)}
-                      className="hover:bg-red-100 transition"
+                      className={`transition ${
+                        darkMode ? "hover:bg-gray-700" : "hover:bg-red-100"
+                      }`}
                     >
                       <ListItemText primary={book} />
                     </ListItemButton>
@@ -292,13 +309,21 @@ const EventListContent = () => {
 
             {/* Kütüphaneler */}
             {hasSearched && !bookFound ? (
-              <div className="flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 bg-white shadow justify-center text-center">
-                <p className="text-red-600 font-medium">❌ Kitap bulunamadı.</p>
+              <div
+                className={`flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 shadow justify-center text-center ${
+                  darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+                }`}
+              >
+                <p className="text-red-500 font-medium">❌ Kitap bulunamadı.</p>
               </div>
             ) : (
               bookFound &&
               availableLibraries.length > 0 && (
-                <div className="flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 bg-white shadow">
+                <div
+                  className={`${
+                    darkMode ? "bg-gray-800" : "bg-white"
+                  } flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 shadow`}
+                >
                   <h2 className="text-xl font-semibold mb-4 text-center">
                     📍 Bulunan Kütüphaneler
                   </h2>
@@ -307,8 +332,11 @@ const EventListContent = () => {
                       const data = libraryData.find((l) => l.name === lib);
                       return (
                         <div
-                          key={index}
-                          className="cursor-pointer border rounded-lg p-3 text-center hover:bg-red-50 transition shadow"
+                          className={`cursor-pointer border rounded-lg p-3 text-center transition shadow ${
+                            darkMode
+                              ? "bg-gray-800 text-white hover:bg-gray-700"
+                              : "bg-white hover:bg-red-50"
+                          }`}
                           onClick={() =>
                             handleLibraryClick(
                               lib,
@@ -335,8 +363,11 @@ const EventListContent = () => {
             )}
           </div>
         ) : (
-          // Randevu Ekranı
-          <div className="w-full border-2 border-red-400 rounded-xl p-6 bg-white shadow">
+          <div
+            className={`${
+              darkMode ? "bg-gray-800" : "bg-white"
+            } w-full border-2 border-red-400 rounded-xl p-6 shadow`}
+          >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid
                 container
@@ -370,7 +401,7 @@ const EventListContent = () => {
                       {timeSlots.map((slot, index) => (
                         <button
                           key={index}
-                          className={`py-2 px-4 rounded-lg shadow ${
+                          className={`text-black py-2 px-4 rounded-lg shadow ${
                             selectedTime && selectedTime.isSame(slot)
                               ? "bg-blue-600 text-white"
                               : "bg-gray-100"
@@ -395,12 +426,14 @@ const EventListContent = () => {
                         "DD-MM-YYYY"
                       )} - ⏰ ${selectedTime.format("HH:mm")}`
                     );
-                    resetState(); // 🔁 Geri dön & sıfırla
+                    resetState();
                   } else {
                     alert("⚠️ Lütfen tarih ve saat seçin.");
                   }
                 }}
-                className={`w-full mt-4 py-3 rounded-lg font-semibold text-white shadow transition ${
+                className={`w-full mt-4 py-3 rounded-lg font-semibold ${
+                  darkMode ? "text-black" : "text-white"
+                } shadow transition ${
                   selectedDate && selectedTime
                     ? "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
                     : "bg-gray-300 cursor-not-allowed"
