@@ -1,5 +1,6 @@
+// ResetPassword.tsx
 import { Input } from "@mui/joy";
-import { Button } from "@mui/material";
+import { Button, Snackbar, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { sendMail, checkCode, resetPassword } from "./ResetPasswordAPI";
 
@@ -9,6 +10,9 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [step, setStep] = useState<"mail" | "code" | "password">("mail");
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error">("success");
 
   async function handleSubmit() {
     if (step === "mail") {
@@ -16,54 +20,67 @@ const ResetPassword = () => {
         await sendMail(mail);
         setStep("code");
       } catch (err) {
-        console.log(err);
+        setToastMessage("Mail gönderilemedi.");
+        setToastType("error");
+        setToastOpen(true);
       }
     } else if (step === "code") {
       try {
         await checkCode(mail, code);
         setStep("password");
       } catch (err) {
-        console.log(err);
+        setToastMessage("Kod doğrulanamadı.");
+        setToastType("error");
+        setToastOpen(true);
       }
     } else if (step === "password") {
       if (password !== confirmPassword) {
-        alert("Şifreler eşleşmiyor!");
+        setToastMessage("Şifreler eşleşmiyor!");
+        setToastType("error");
+        setToastOpen(true);
         return;
       }
       try {
-        await resetPassword(password);
-        alert("Şifreniz başarıyla değiştirildi!");
-        // İstersen yönlendirme yap veya step'i sıfırla
+        await resetPassword({ email: mail, newPassword: password });
+        setToastMessage("Şifreniz başarıyla güncellendi!");
+        setToastType("success");
+        setToastOpen(true);
         setStep("mail");
         setMail("");
         setCode("");
         setPassword("");
         setConfirmPassword("");
       } catch (err) {
-        console.log(err);
+        setToastMessage("Şifre güncellenemedi.");
+        setToastType("error");
+        setToastOpen(true);
       }
     }
   }
 
   return (
-    <div className="flex flex-1 fixed top-0 left-0 w-screen justify-center items-center h-screen flex-col bg-slate-600">
-      <div className="flex w-1/3 flex-col bg-slate-400 items-center gap-4 rounded-xl p-5 justify-center">
-        <span className="font-bold text-xl mb-4">Parola Sıfırlama Ekranı</span>
+    <div className="min-h-screen w-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1740&q=60')] bg-cover bg-center">
+      <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-md px-10 py-12 m-6 flex flex-col items-center space-y-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Parola Sıfırlama Ekranı
+        </h2>
 
         <Input
-          className="w-3/4 mb-5"
+          className="w-full"
           placeholder="E-mail adresinizi girin"
           value={mail}
           onChange={(e) => setMail(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           disabled={step !== "mail"}
         />
 
         {step === "code" && (
           <Input
-            className="w-3/4 mb-5"
-            placeholder="Kodu girin"
+            className="w-full"
+            placeholder="Doğrulama kodunu girin"
             value={code}
             onChange={(e) => setCode(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           />
         )}
 
@@ -71,30 +88,44 @@ const ResetPassword = () => {
           <>
             <Input
               type="password"
-              className="w-3/4 mb-3"
+              className="w-full"
               placeholder="Yeni şifre"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             />
             <Input
               type="password"
-              className="w-3/4 mb-5"
+              className="w-full"
               placeholder="Yeni şifre (tekrar)"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             />
           </>
         )}
 
-        <div className="w-3/4 flex justify-end">
-          <Button onClick={handleSubmit} variant="contained">
-            {step === "mail"
-              ? "Mail Yolla"
-              : step === "code"
-              ? "Kodu Kontrol Et"
-              : "Şifreyi Güncelle"}
-          </Button>
-        </div>
+        <Button fullWidth variant="contained" onClick={handleSubmit}>
+          {step === "mail"
+            ? "Mail Yolla"
+            : step === "code"
+            ? "Kodu Kontrol Et"
+            : "Şifreyi Güncelle"}
+        </Button>
+
+        <Snackbar
+          open={toastOpen}
+          autoHideDuration={3000}
+          onClose={() => setToastOpen(false)}
+          message={toastMessage}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          ContentProps={{
+            sx: {
+              backgroundColor: toastType === "success" ? "#2e7d32" : "#d32f2f",
+              color: "white",
+            },
+          }}
+        />
       </div>
     </div>
   );

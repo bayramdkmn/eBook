@@ -1,105 +1,105 @@
-import { Box, Button, TextField } from "@mui/material";
+// SignIn.tsx
+import {
+  Box,
+  Button,
+  TextField,
+  Snackbar,
+  Typography,
+  Link,
+} from "@mui/material";
 import React, { useState } from "react";
 import { loginUser } from "./SignInAPI";
-import { Link } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showToast, setShowToast] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("error");
+  const [toastType, setToastType] = useState<"success" | "error">("error");
 
   async function handleSignIn() {
     try {
       await loginUser(username, password);
       setToastMessage("Giriş başarılı.");
       setToastType("success");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 1000);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      setToastOpen(true);
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
       setToastMessage("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
       setToastType("error");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      setToastOpen(true);
       console.log(err);
     }
   }
 
   return (
-    <div className="flex flex-1 justify-center items-center h-screen w-screen flex-col bg-slate-600 fixed top-0 left-0">
-      <div className="flex w-full sm:w-10/12 md:w-8/12 lg:w-6/12 flex-col bg-slate-400 items-center gap-4 rounded-xl p-5 h-auto justify-center">
-        <span className="font-bold w-2/5 h-8 bg-slate-500 items-center justify-center flex rounded-xl mb-5 ">
-          GİRİŞ YAP
-        </span>
+    <div className="min-h-screen w-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1740&q=60')] bg-cover bg-center">
+      <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-md px-10 py-12 m-6 flex flex-col justify-center items-center space-y-6">
+        <h2 className="text-3xl font-bold text-center text-gray-800">
+          Giriş Yap
+        </h2>
 
-        <Box
-          sx={{
-            display: "flex",
-            width: "50%",
-            justifyContent: "center",
-          }}
-        >
+        <div className="w-full space-y-4">
           <TextField
-            style={{ width: "100%" }}
-            id="input-with-sx"
+            fullWidth
             label="Kullanıcı adı veya E-mail"
             variant="outlined"
-            onChange={(val) => setUsername(val.target.value)}
             value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSignIn()}
           />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            width: "50%",
-            justifyContent: "center",
-          }}
-        >
+
           <TextField
-            style={{ width: "100%" }}
+            fullWidth
             label="Şifre"
             type="password"
             variant="outlined"
-            onChange={(val) => setPassword(val.target.value)}
             value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSignIn()}
           />
-        </Box>
-        <Button onClick={handleSignIn} variant="contained">
+        </div>
+
+        <Button
+          fullWidth
+          onClick={handleSignIn}
+          variant="contained"
+          className="mt-4"
+        >
           Giriş Yap
         </Button>
+
         <Link
           component={RouterLink}
-          className="font-bold text-l mt-3"
-          to={"/resetPassword"}
+          to="/resetPassword"
+          className="text-blue-600 underline"
         >
-          <span className="text-slate-700 text-xl">
-            Şifrenizi mi Unuttunuz?
-          </span>
+          Şifrenizi mi Unuttunuz?
         </Link>
 
-        <Link component={RouterLink} to={"/signUp"}>
-          <span className="text-black font-bold text-xl">
-            Henüz Hesabınız Yok mu? Hemen Kaydolun.
-          </span>
-        </Link>
+        <Typography variant="body2" className="text-center">
+          Henüz hesabınız yok mu?{" "}
+          <Link component={RouterLink} to="/signUp" underline="hover">
+            Hemen kaydolun
+          </Link>
+        </Typography>
+
+        <Snackbar
+          open={toastOpen}
+          autoHideDuration={toastType === "success" ? 1000 : 3000}
+          onClose={() => setToastOpen(false)}
+          message={toastMessage}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          ContentProps={{
+            sx: {
+              backgroundColor: toastType === "success" ? "#2e7d32" : "#d32f2f",
+              color: "white",
+            },
+          }}
+        />
       </div>
-
-      {showToast && (
-        <div
-          className={`fixed bottom-10 right-10 p-3 rounded-lg shadow-lg ${
-            toastType === "success" ? "bg-green-500" : "bg-red-500"
-          } text-white`}
-          style={{ zIndex: 9999 }}
-        >
-          {toastMessage}
-        </div>
-      )}
     </div>
   );
 };

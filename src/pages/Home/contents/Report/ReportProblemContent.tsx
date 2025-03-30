@@ -31,7 +31,6 @@ const ReportProblemContent = () => {
         </span>
       </div>
 
-      {/* FORM CONTAINER */}
       <div className="flex flex-col lg:flex-row gap-4 flex-grow px-4 py-6 items-center justify-center">
         <div className="border-2 w-4/5 h-3/4 flex items-center justify-center rounded-xl border-indigo-500">
           <div className="flex flex-col justify-center items-center h-full w-full bg-white rounded-xl shadow-md">
@@ -44,7 +43,6 @@ const ReportProblemContent = () => {
                 placeholder="Lütfen Mail Adresinizi Giriniz"
               />
 
-              {/* TEXTAREA */}
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -52,7 +50,6 @@ const ReportProblemContent = () => {
                 placeholder="Lütfen yaşadığınız problemi detaylı bir şekilde yazınız."
               ></textarea>
 
-              {/* BUTON */}
               <div className="flex mt-6">
                 <Button variant="contained" onClick={sendButton}>
                   Gönder

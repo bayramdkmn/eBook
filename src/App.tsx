@@ -324,7 +324,11 @@ function App() {
               </div>
             </div>
           )}
-          <div className="flex flex-1 w-full ml-72 mt-16 h-full">
+          <div
+            className={`flex w-full ${
+              hideNavAndMenu ? "" : "ml-72 mt-16"
+            } h-full`}
+          >
             <Routes>
               <Route path="/" element={<DiscoverContent />} />
               <Route path="/aboutUs" element={<AboutUs />} />

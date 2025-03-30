@@ -1,295 +1,340 @@
+// SignUpStepper.tsx
 import React, { useState } from "react";
-import Input from "@mui/material/Input";
-import { MuiTelInput } from "mui-tel-input";
-import "./custom.css";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Button from "@mui/material/Button";
-import { createUser } from "./SignUpAPI";
-import Snackbar from "@mui/joy/Snackbar";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import { Link } from "@mui/material";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import {
+  Button,
+  Input,
+  InputAdornment,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  LinearProgress,
+  Typography,
+  Link,
+  Snackbar,
+} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import InputAdornment from "@mui/material/InputAdornment";
+import { MuiTelInput } from "mui-tel-input";
+import { AnimatePresence, motion } from "framer-motion";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { createUser } from "./SignUpAPI";
 
-const SignUp = () => {
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("male");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [showToastError, setShowToastError] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [showToastSuccess, setShowToastSuccess] = useState(false);
-  const [toastSuccessMessage, setToastSuccessMessage] = useState("");
+const SignUpStepper = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    username: "",
+    password: "",
+    password2: "",
+    phone: "",
+    address: "",
+    gender: "male",
+  });
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successOpen, setSuccessOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleChangePhone = (newValue: string) => {
-    setPhone(newValue);
+  const isStepOneValid = () => {
+    return (
+      formData.name.trim() !== "" &&
+      formData.surname.trim() !== "" &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    );
   };
 
-  const isEmailValid = (email: string) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
+  const handleNext = () => {
+    if (step === 1 && !isStepOneValid()) return;
+    if (step < 3) setStep(step + 1);
   };
 
-  const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGender((event.target as HTMLInputElement).value);
-    console.log(gender);
+  const handleBack = () => {
+    if (step > 1) setStep(step - 1);
   };
 
-  async function handleSignUp() {
-    const missingFields: string[] = [];
+  const handleChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+  };
 
-    if (!name) missingFields.push("İsim");
-    if (!surname) missingFields.push("Soyisim");
-    if (!email) missingFields.push("E-mail");
-    if (!username) missingFields.push("Kullanıcı Adı");
-    if (!address) missingFields.push("Adres Bilgisi");
-    if (!phone) missingFields.push("Telefon");
-    if (!gender) missingFields.push("Cinsiyet");
-    if (!password) missingFields.push("Şifre");
-
-    if (missingFields.length > 0) {
-      setToastMessage(
-        `Lütfen kırmızı ile işaretli alanları doldurun: ${missingFields.join(
-          ", "
-        )}`
-      );
-      setShowToastError(true);
-    } else if (password !== password2) {
-      setToastMessage("Şifreler eşleşmiyor");
-      setShowToastError(true);
-    } else {
-      const data = {
-        name,
-        surname,
-        email,
-        gender,
-        phone,
-        username,
-        address,
-        password,
-      };
-      try {
-        await createUser(data);
-        setToastSuccessMessage(
-          "Kayıt başarılı, giriş sayfasına yönlendiriliyorsunuz"
-        );
-        setShowToastSuccess(true);
-        setTimeout(() => {
-          navigate("/signIn");
-        }, 2500);
-      } catch (error) {
-        setToastMessage("Kayıt işlemi sırasında bir hata oluştu");
-        setShowToastError(true);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (step < 3) {
+        handleNext();
+      } else {
+        handleSubmit();
       }
     }
-  }
+  };
+
+  const handleSubmit = async () => {
+    const missingFields = [];
+    if (!formData.username) missingFields.push("Kullanıcı adı");
+    if (!formData.password || !formData.password2) missingFields.push("Şifre");
+    if (formData.password !== formData.password2) {
+      setErrorMessage("Şifreler uyuşmuyor");
+      setErrorOpen(true);
+      return;
+    }
+    if (!formData.phone) missingFields.push("Telefon");
+    if (!formData.address) missingFields.push("Adres");
+
+    if (missingFields.length > 0) {
+      setErrorMessage(`Eksik alanlar: ${missingFields.join(", ")}`);
+      setErrorOpen(true);
+      return;
+    }
+
+    try {
+      await createUser(formData);
+      setSuccessOpen(true);
+      setTimeout(() => navigate("/signIn"), 1000);
+    } catch (error) {
+      setErrorMessage("Kayıt sırasında hata oluştu");
+      setErrorOpen(true);
+    }
+  };
+
+  const progress = (step / 3) * 100;
 
   return (
-    <div className="flex flex-1 fixed top-0 left-0 w-screen justify-center items-center h-screen flex-col bg-slate-600">
-      <Snackbar
-        autoHideDuration={2000}
-        open={showToastError}
-        color="danger"
-        size="lg"
-        variant="solid"
-        startDecorator={<ErrorOutlineIcon />}
-        onClose={(event, reason) => {
-          if (reason === "clickaway") {
-            return;
-          }
-          setShowToastError(false);
-        }}
-      >
-        {toastMessage}
-      </Snackbar>
+    <div className="min-h-screen w-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1740&q=80')] bg-cover bg-center">
+      <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-2xl p-10 m-6 flex flex-col justify-center">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Kayıt Ol ({step}/3)
+        </h2>
+        <LinearProgress
+          variant="determinate"
+          value={progress}
+          className="mb-6"
+        />
 
-      <Snackbar
-        autoHideDuration={2000}
-        open={showToastSuccess}
-        color="success"
-        size="lg"
-        variant="solid"
-        startDecorator={<CheckCircleIcon />}
-        onClose={(event, reason) => {
-          if (reason === "clickaway") {
-            return;
-          }
-          setShowToastSuccess(false);
-        }}
-      >
-        {toastSuccessMessage}
-      </Snackbar>
+        <AnimatePresence mode="wait">
+          {step === 1 && (
+            <motion.div
+              key="step1"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              className="space-y-4"
+            >
+              <Input
+                fullWidth
+                placeholder="İsim"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                onKeyDown={handleKeyDown}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {formData.name ? (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "red" }} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+              <Input
+                fullWidth
+                placeholder="Soyisim"
+                value={formData.surname}
+                onChange={(e) => handleChange("surname", e.target.value)}
+                onKeyDown={handleKeyDown}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {formData.surname ? (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "red" }} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+              <Input
+                fullWidth
+                placeholder="E-mail"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                onKeyDown={handleKeyDown}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "red" }} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+            </motion.div>
+          )}
 
-      <div className="custom-scrollbar flex h-[90%] sm:h-10/12 md:h-8/12 lg:h-6/12 w-full sm:w-10/12 md:w-8/12 lg:w-6/12 flex-col bg-slate-400 items-center gap-4 rounded-xl p-5 overflow-y-auto">
-        <span className="p-7 font-bold text-xl">Kayıt Ol</span>
-        <Input
-          className="w-5/12"
-          placeholder="İsim"
-          value={name}
-          onChange={(val) => setName(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {name === "" ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <Input
-          className="w-5/12"
-          placeholder="Soyisim"
-          value={surname}
-          onChange={(val) => setSurname(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {surname === "" ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <Input
-          className="w-5/12"
-          placeholder="E-mail"
-          value={email}
-          onChange={(val) => setEmail(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {email === "" || !isEmailValid(email) ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <Input
-          className="w-5/12"
-          placeholder="Kullanıcı Adı"
-          value={username}
-          onChange={(val) => setUsername(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {username === "" ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <Input
-          className="w-5/12"
-          placeholder="Adres Bilgisi"
-          value={address}
-          onChange={(val) => setAddress(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {address === "" ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <Input
-          className="w-5/12"
-          placeholder="Şifre"
-          type="password"
-          value={password}
-          onChange={(val) => setPassword(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {password.length < 4 ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <Input
-          className="w-5/12"
-          placeholder="Şifre Tekrar"
-          type="password"
-          value={password2}
-          onChange={(val) => setPassword2(val.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              {password2.length < 4 ? (
-                <CancelIcon style={{ color: "red" }} />
-              ) : (
-                <CheckCircleIcon style={{ color: "green" }} />
-              )}
-            </InputAdornment>
-          }
-        />
-        <MuiTelInput
-          className="w-5/12 bg-white rounded-xl"
-          value={phone}
-          onChange={handleChangePhone}
-          defaultCountry="TR"
-        />
-        <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">
-            <span className="font-bold text-lg justify-center flex ">
-              Cinsiyet
-            </span>
-          </FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="male"
-            name="radio-buttons-group"
-            value={gender}
-            onChange={handleChangeGender}
-          >
-            <FormControlLabel value="male" control={<Radio />} label="Erkek" />
-            <FormControlLabel
-              value="female"
-              control={<Radio />}
-              label="Kadın"
-            />
-            <FormControlLabel value="other" control={<Radio />} label="Diğer" />
-          </RadioGroup>
-        </FormControl>
+          {step === 2 && (
+            <motion.div
+              key="step2"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              className="space-y-4"
+            >
+              <Input
+                fullWidth
+                placeholder="Kullanıcı Adı"
+                value={formData.username}
+                onChange={(e) => handleChange("username", e.target.value)}
+                onKeyDown={handleKeyDown}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {formData.username ? (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "red" }} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+              <Input
+                fullWidth
+                placeholder="Şifre"
+                type="password"
+                value={formData.password}
+                onChange={(e) => handleChange("password", e.target.value)}
+                onKeyDown={handleKeyDown}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {formData.password.length >= 4 ? (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "red" }} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+              <Input
+                fullWidth
+                placeholder="Şifre Tekrar"
+                type="password"
+                value={formData.password2}
+                onChange={(e) => handleChange("password2", e.target.value)}
+                onKeyDown={handleKeyDown}
+                endAdornment={
+                  <InputAdornment position="end">
+                    {formData.password2 === formData.password &&
+                    formData.password2 ? (
+                      <CheckCircleIcon style={{ color: "green" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "red" }} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+            </motion.div>
+          )}
 
-        <div className="w-full flex justify-center items-center mt-4">
-          <Button
-            variant="contained"
-            onClick={handleSignUp}
-            className="flex bg-blue-400 justify-center p-3 w-3/12 rounded-lg"
-          >
-            Kayıt Ol
+          {step === 3 && (
+            <motion.div
+              key="step3"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              className="space-y-4"
+            >
+              <MuiTelInput
+                fullWidth
+                defaultCountry="TR"
+                value={formData.phone}
+                onChange={(val) => handleChange("phone", val)}
+              />
+              <Input
+                fullWidth
+                placeholder="Adres"
+                value={formData.address}
+                onChange={(e) => handleChange("address", e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <FormControl>
+                <FormLabel className="text-gray-700">Cinsiyet</FormLabel>
+                <RadioGroup
+                  row
+                  value={formData.gender}
+                  onChange={(e) => handleChange("gender", e.target.value)}
+                >
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Erkek"
+                  />
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Kadın"
+                  />
+                  <FormControlLabel
+                    value="other"
+                    control={<Radio />}
+                    label="Diğer"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="flex justify-between mt-8">
+          <Button variant="outlined" disabled={step === 1} onClick={handleBack}>
+            Geri
           </Button>
+          {step < 3 ? (
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={step === 1 && !isStepOneValid()}
+            >
+              İleri
+            </Button>
+          ) : (
+            <Button variant="contained" onClick={handleSubmit}>
+              Kaydı Tamamla
+            </Button>
+          )}
         </div>
-        <div className="w-full flex justify-center mt-5">
-          <Link to={"/signIn"} component={RouterLink}>
-            <span className="text-black text-xl font-bold">
-              Zaten bir hesabınız var mı? Giriş yapın.
-            </span>
-          </Link>
+
+        <div className="mt-6 text-center">
+          <Typography variant="body1">
+            Zaten bir hesabınız var mı?{" "}
+            <Link component={RouterLink} to="/signIn" underline="hover">
+              Giriş yapın
+            </Link>
+          </Typography>
         </div>
+
+        <Snackbar
+          open={errorOpen}
+          autoHideDuration={3000}
+          onClose={() => setErrorOpen(false)}
+          message={errorMessage}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          ContentProps={{ sx: { backgroundColor: "#d32f2f", color: "white" } }}
+          action={<ErrorOutlineIcon sx={{ mr: 1 }} />}
+        />
+
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={1000}
+          onClose={() => setSuccessOpen(false)}
+          message="Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz..."
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          ContentProps={{ sx: { backgroundColor: "#2e7d32", color: "white" } }}
+          action={<CheckCircleOutlineIcon sx={{ mr: 1 }} />}
+        />
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default SignUpStepper;
