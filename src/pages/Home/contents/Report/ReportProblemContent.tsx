@@ -24,7 +24,7 @@ const ReportProblemContent = () => {
   return (
     <div
       className={`flex flex-col h-full w-full transition-colors duration-300 ${
-        darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
       }`}
     >
       <div className="flex flex-col lg:flex-row gap-4 flex-grow px-4 py-6 items-center justify-center">
@@ -39,13 +39,13 @@ const ReportProblemContent = () => {
             }`}
           >
             <div className="flex flex-col h-full w-4/5 items-center justify-center">
-              <Input
+              <textarea
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`w-3/4 mb-8 h-12 px-4 rounded-md transition-colors duration-300 ${
+                className={`w-3/4 h-12 mb-8 resize-none rounded-md p-4 text-sm transition-colors duration-300 overflow-hidden ${
                   darkMode
                     ? "bg-gray-700 text-white border border-gray-600"
-                    : "bg-white border border-indigo-300"
+                    : "bg-white border border-indigo-300 text-black"
                 }`}
                 placeholder="Lütfen Mail Adresinizi Giriniz"
               />
@@ -59,7 +59,7 @@ const ReportProblemContent = () => {
                     : "bg-white border border-indigo-300 text-black"
                 }`}
                 placeholder="Lütfen yaşadığınız problemi detaylı bir şekilde yazınız."
-              ></textarea>
+              />
 
               <div className="w-full md:w-3/4 mt-4 flex justify-end">
                 <Button variant="contained" onClick={sendButton}>

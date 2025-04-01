@@ -110,12 +110,10 @@ const DiscoverContent = () => {
   return (
     <div
       className={`flex flex-col h-full w-full transition-colors duration-300 ${
-        darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
       }`}
     >
-      {/* Main Content */}
       <div className="flex flex-col lg:flex-row gap-4 flex-grow px-4 py-6">
-        {/* Gönderiler */}
         <div
           className={`flex-1 shadow-md rounded-md p-4 overflow-y-auto max-h-[88svh] transition-colors duration-300 ${
             darkMode ? "bg-gray-800" : "bg-white"

@@ -41,7 +41,7 @@ const Navbar = () => {
   return (
     <div
       className={`${
-        darkMode ? "bg-black text-white" : "bg-white text-black"
+        darkMode ? "bg-gray-700 text-white" : "bg-white text-black"
       } flex flex-row w-full h-16 font-bold shadow transition-colors duration-300`}
     >
       <h1 className="w-5/6 text-3xl flex items-center justify-center font-semibold py-4">

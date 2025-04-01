@@ -66,7 +66,7 @@ const Sidebar = () => {
   return (
     <div
       className={`group relative h-screen border-r transition-all duration-300 select-none ${
-        darkMode ? "bg-black text-white" : "bg-white text-black"
+        darkMode ? "bg-gray-700 text-white" : "bg-white text-black"
       } w-[4.5rem] hover:w-72`}
     >
       {/* Logo */}
