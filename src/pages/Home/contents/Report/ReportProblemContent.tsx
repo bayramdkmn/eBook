@@ -2,6 +2,7 @@ import { Input, Button } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { sendProblem } from "./ReportProblemAPI";
 
 const ReportProblemContent = () => {
   const { darkMode } = useTheme();
@@ -12,11 +13,14 @@ const ReportProblemContent = () => {
   const [email, setEmail] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
-  const sendButton = () => {
+  
+  async function handleSendProblem() {
+    
     if (email && description) {
-      alert(t("reportProblem.success"));
+      await sendProblem(email, description, "Report");
       setEmail("");
       setDescription("");
+      alert(t("reportProblem.success"));
     } else if (!email && description) {
       alert(t("reportProblem.emailRequired"));
     } else if (email && !description) {
@@ -24,7 +28,7 @@ const ReportProblemContent = () => {
     } else {
       alert(t("reportProblem.allFieldsRequired"));
     }
-  };
+  }
 
   return (
     <div
@@ -67,7 +71,7 @@ const ReportProblemContent = () => {
               />
 
               <div className="w-full md:w-3/4 mt-4 flex justify-end">
-                <Button variant="contained" onClick={sendButton}>
+                <Button variant="contained" onClick={handleSendProblem}>
                   {t("reportProblem.send")}
                 </Button>
               </div>
