@@ -8,9 +8,14 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const SuggestionContent = () => {
-  const { darkMode } = useTheme(); // 👈 dark mode hook
+  const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
+
   const [selected, setSelected] = useState<"öneri" | "şikayet">("öneri");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -18,11 +23,10 @@ const SuggestionContent = () => {
 
   const handleSubmit = () => {
     if (!email || !message) {
-      alert("Lütfen tüm alanları doldurun.");
+      alert(t("suggest.fillAllFields"));
       return;
     }
 
-    // API işlemi olsaydı burada yapılırdı
     setOpenSnackbar(true);
     setEmail("");
     setMessage("");
@@ -46,14 +50,16 @@ const SuggestionContent = () => {
             onChange={(_, value) => value && setSelected(value)}
             color="primary"
           >
-            <ToggleButton value="öneri">Öneri</ToggleButton>
-            <ToggleButton value="şikayet">Şikayet</ToggleButton>
+            <ToggleButton value="öneri">{t("suggest.suggestion")}</ToggleButton>
+            <ToggleButton value="şikayet">
+              {t("suggest.complaint")}
+            </ToggleButton>
           </ToggleButtonGroup>
         </div>
 
         <div className="flex flex-col items-center gap-6">
           <TextField
-            label="E-mail adresiniz"
+            label={t("suggest.email")}
             variant="outlined"
             className="w-full md:w-2/3"
             value={email}
@@ -71,9 +77,11 @@ const SuggestionContent = () => {
           />
           <TextField
             label={
-              selected === "öneri" ? "Önerinizi yazın" : "Şikayetinizi yazın"
+              selected === "öneri"
+                ? t("suggest.suggestionLabel")
+                : t("suggest.complaintLabel")
             }
-            placeholder="Size en kısa sürede dönüş sağlayacağız."
+            placeholder={t("suggest.placeholder")}
             multiline
             rows={6}
             variant="outlined"
@@ -93,7 +101,7 @@ const SuggestionContent = () => {
           />
           <div className="w-full md:w-2/3 flex justify-end">
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Gönder
+              {t("suggest.send")}
             </Button>
           </div>
         </div>
@@ -107,8 +115,8 @@ const SuggestionContent = () => {
       >
         <Alert severity="success" onClose={() => setOpenSnackbar(false)}>
           {selected === "öneri"
-            ? "Öneriniz iletildi, teşekkür ederiz!"
-            : "Şikayetiniz iletildi, kısa sürede dönüş sağlayacağız."}
+            ? t("suggest.successSuggestion")
+            : t("suggest.successComplaint")}
         </Alert>
       </Snackbar>
     </div>

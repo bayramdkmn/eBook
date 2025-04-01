@@ -1,9 +1,14 @@
 import { Button, Rating, Snackbar, Alert } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const PopularBooksContent = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string, options?: Record<string, any>) => string;
+  };
+
   const [rating, setRating] = useState<number | null>(4);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -73,7 +78,7 @@ const PopularBooksContent = () => {
                   darkMode ? "text-gray-300" : "text-gray-600"
                 }`}
               >
-                Yazar: {post.author}
+                {t("popularBooks.author")}: {post.author}
               </p>
               <p
                 className={`text-sm mb-4 ${
@@ -91,7 +96,7 @@ const PopularBooksContent = () => {
                 variant="contained"
                 className="bg-indigo-600 hover:bg-indigo-700 text-white transition duration-300"
               >
-                İstek Listeme Ekle
+                {t("popularBooks.addToWishlist")}
               </Button>
             </div>
           </div>
@@ -103,7 +108,7 @@ const PopularBooksContent = () => {
               onClick={handleShowMore}
               className="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition duration-300"
             >
-              Daha Fazla Göster
+              {t("popularBooks.showMore")}
             </button>
           </div>
         )}
@@ -120,7 +125,7 @@ const PopularBooksContent = () => {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Kitap başarıyla istek listene eklendi!
+          {t("popularBooks.addedMessage")}
         </Alert>
       </Snackbar>
     </div>

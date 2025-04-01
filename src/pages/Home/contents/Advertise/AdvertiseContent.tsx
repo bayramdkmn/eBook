@@ -1,9 +1,11 @@
 import { Input } from "@mui/joy";
 import { Button } from "@mui/material";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const AdvertiseContent = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
 
   return (
     <div
@@ -25,7 +27,7 @@ const AdvertiseContent = () => {
             <div className="flex h-full flex-col w-4/5 items-center justify-center">
               <Input
                 className="w-3/4 mb-10 h-12"
-                placeholder="Lütfen e-mail adresinizi giriniz."
+                placeholder={t("advertise.emailPlaceholder")}
                 variant="soft"
                 color={darkMode ? "neutral" : "primary"}
               />
@@ -35,11 +37,11 @@ const AdvertiseContent = () => {
                     ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-300"
                     : "bg-white border-gray-300 text-black focus:ring-blue-500"
                 }`}
-                placeholder="Lütfen teklifinizi yazınız. Size en kısa sürede dönüş sağlayacağız."
+                placeholder={t("advertise.messagePlaceholder")}
               />
               <div className="w-full md:w-3/4 flex justify-end">
                 <Button className="w-24" variant="contained" color="primary">
-                  GÖNDER
+                  {t("advertise.send")}
                 </Button>
               </div>
             </div>

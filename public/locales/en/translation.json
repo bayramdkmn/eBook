@@ -1,0 +1,230 @@
+{
+    "login": {
+      "title": "Sign In",
+      "usernameOrEmail": "Username or Email",
+      "password": "Password",
+      "button": "Sign In",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account yet?",
+      "signup": "Sign up now",
+      "success": "Login successful.",
+      "error": "Login failed. Please check your credentials."
+    },
+     "signup": {
+          "title": "Sign Up ({{step}}/3)",
+          "name": "First Name",
+          "surname": "Last Name",
+          "email": "Email",
+          "username": "Username",
+          "password": "Password",
+          "repeatPassword": "Repeat Password",
+          "phone": "Phone",
+          "address": "Address",
+          "gender": "Gender",
+          "male": "Male",
+          "female": "Female",
+          "other": "Other",
+          "back": "Back",
+          "next": "Next",
+          "submit": "Complete Registration",
+          "haveAccount": "Already have an account?",
+          "login": "Log in",
+          "success": "Registration successful! Redirecting to login page...",
+          "error": "An error occurred during registration",
+          "missingFields": "Missing fields",
+          "passwordMismatch": "Passwords do not match"
+    },
+    "navbar": {
+    "explore": "Explore",
+    "eventMap": "Event Map",
+    "readingBooks": "Reading Books",
+    "wishList": "Wishlist",
+    "popularBooks": "Popular Books",
+    "advertise": "Advertise",
+    "reportProblem": "Report a Problem",
+    "suggest": "Suggestion / Complaint",
+    "default": "E-Book",
+    "account": "My Account",
+    "profile": "Profile",
+    "language": "Language Settings",
+    "logout": "Log Out",
+    "login": "Log In"
+  },
+  "sidebar": {
+    "eventMap": "Event Map",
+    "explore": "Explore",
+    "readingBooks": "Reading Books",
+    "wishList": "Wishlist",
+    "popularBooks": "Popular Books",
+    "advertise": "Advertise",
+    "reportProblem": "Report Problem",
+    "suggest": "Suggestion / Complaint",
+    "addPost": "Add Post",
+    "darkMode": "Dark Mode"
+  },
+  "about": {
+    "title": "ABOUT US",
+    "paragraph1": "E-Kitap is a social cataloging and networking platform focused on books, founded in Turkey on September 1, 2024. It helps you choose your next book, allows you to meet other readers through shared reading spaces, and provides services like library booking and book inquiries. It helps you discover similar readers and authors, and lets you follow the latest updates about them.",
+    "paragraph2": "On E-Kitap, readers mark the books they've read or want to read. While doing so, they can rate the books out of 5, add comments, and express their opinions. This creates profile pages for readers, books, and authors. As users socialize and share content, these profiles become richer in content for others to explore.",
+    "paragraph3": "The first version of E-Kitap started development in September 2024 and was launched on June 1, 2025. Its main goal is to encourage reading, offer early insights about books, and reduce costs via book exchanges. It will continue to evolve based on user feedback."
+  },
+  "chat": {
+    "title": "Chat Screen",
+    "sampleMessage": "This is an example of the first post content...",
+    "inputPlaceholder": "Type a message..."
+  },
+  "addPost": {
+    "title": "ADD POST",
+    "bookNamePlaceholder": "Enter the name of the book (if any)",
+    "descriptionPlaceholder": "Add a description or comment",
+    "addPhoto": "Add Photo",
+    "maxPhotosAlert": "You can add up to 2 photos.",
+    "sharedAlert": "Post shared!",
+    "next": "Next",
+    "back": "Back",
+    "share": "Share",
+    "close": "Close",
+    "rating": {
+      "1": "Do Not Recommend",
+      "2": "Bad",
+      "3": "Average",
+      "4": "Good",
+      "5": "Excellent"
+    }
+  },
+  "advertise": {
+    "emailPlaceholder": "Please enter your email address.",
+    "messagePlaceholder": "Please write your proposal. We will get back to you as soon as possible.",
+    "send": "SEND"
+  },
+  "discover": {
+    "showMore": "Show More",
+    "follow": "Follow",
+    "followers": "Followers"
+  },
+  "eventList": {
+    "searchBook": "📘 Search Book",
+    "enterBookName": "Enter book name...",
+    "bookNotFound": "❌ Book not found.",
+    "foundLibraries": "📍 Libraries Found",
+    "proceed": "Continue",
+    "appointmentScreenTitle": "📅 Appointment Selection Screen",
+    "selectDate": "Select Date:",
+    "selectTime": "Select Time:",
+    "confirmAppointment": "✅ Confirm Appointment",
+    "appointmentConfirmed": "✅ Appointment Set:\n📅 {{date}} - ⏰ {{time}}",
+    "selectDateTimeWarning": "⚠️ Please select a date and time.",
+    "locationError": "Could not retrieve location. Please check your browser's location permissions.",
+    "getDirections": "Get Directions"
+  },
+  "popularBooks": {
+  "author": "Author",
+  "addToWishlist": "Add to Wishlist",
+  "showMore": "Show More",
+  "addedMessage": "Book successfully added to your wishlist!"
+},
+"readingBooks": {
+  "removeFromList": "Remove from List",
+  "fillAllFields": "Please fill out all fields!",
+  "closeAddForm": "Close Add Form",
+  "addBookButton": "Add Book",
+  "addNewBook": "Add New Book",
+  "bookTitle": "Book Title",
+  "bookAuthor": "Author",
+  "bookImage": "Image URL",
+  "noBooks": "You haven't added any books yet."
+},
+"reportProblem": {
+  "emailPlaceholder": "Please enter your email address",
+  "descriptionPlaceholder": "Please describe the problem in detail.",
+  "send": "Send",
+  "success": "Success",
+  "emailRequired": "Email cannot be empty!",
+  "descriptionRequired": "Description cannot be empty!",
+  "allFieldsRequired": "Please fill in all fields."
+},
+"suggest": {
+  "suggestion": "Suggestion",
+  "complaint": "Complaint",
+  "email": "Your email address",
+  "suggestionLabel": "Write your suggestion",
+  "complaintLabel": "Write your complaint",
+  "placeholder": "We will get back to you as soon as possible.",
+  "send": "Send",
+  "fillAllFields": "Please fill in all fields.",
+  "successSuggestion": "Your suggestion has been sent. Thank you!",
+  "successComplaint": "Your complaint has been sent. We will respond shortly."
+},
+"addSwap": {
+  "title": "ADD SWAP POST",
+  "bookNamePlaceholder": "Enter the book name if you want to share one",
+  "descriptionPlaceholder": "Add a description or comment",
+  "addPhoto": "Add Photo",
+  "maxPhotosAlert": "You can upload up to 2 photos.",
+  "next": "Next",
+  "back": "Go Back",
+  "share": "Share",
+  "close": "Close"
+},
+"swapContent": {
+  "addSwap": "Add Swap Post",
+  "bookName": "BOOK NAME",
+  "author": "AUTHOR",
+  "bookRating": "BOOK RATING",
+  "city": "CITY: (Example City)",
+  "contact": "Contact",
+  "showMore": "Show More",
+  "fetchError": "Error fetching the swap list",
+  "unknownAuthor": "Unknown Author",
+  "noContent": "No content"
+},
+"wishlist": {
+  "addBook": "Add Book",
+  "closeAddForm": "Close Add Form",
+  "addNewBook": "Add New Book",
+  "bookTitle": "Book Title",
+  "author": "Author",
+  "imageURL": "Image URL",
+  "addBookButton": "Add Book",
+  "fillAllFields": "Please fill in all fields!",
+  "successfullyAdded": "The book has been successfully added to your read books list.",
+  "remove": "Remove",
+  "read": "Read",
+  "noBooks": "You have no books added yet."
+},
+"profile": {
+    "title": "My Profile",
+    "profileAlt": "Profile",
+    "edit": "Edit",
+    "fullName": "Full Name",
+    "phone": "Phone",
+    "email": "Email",
+    "gender": "Gender",
+    "address": "Address",
+    "password": "Password",
+    "save": "Save",
+    "cancel": "Cancel",
+    "profileUpdated": "Profile updated!",
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    }
+  },
+  "resetPassword": {
+    "title": "Password Reset Screen",
+    "emailPlaceholder": "Enter your email address",
+    "codePlaceholder": "Enter the verification code",
+    "newPasswordPlaceholder": "New password",
+    "confirmPasswordPlaceholder": "New password (repeat)",
+    "sendMail": "Send Email",
+    "verifyCode": "Verify Code",
+    "updatePassword": "Update Password",
+    "mailError": "Failed to send email.",
+    "codeError": "Code verification failed.",
+    "passwordMismatch": "Passwords do not match!",
+    "passwordUpdated": "Your password has been successfully updated!",
+    "passwordUpdateError": "Failed to update password."
+  }
+}
+  

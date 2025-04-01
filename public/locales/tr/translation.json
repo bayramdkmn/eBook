@@ -1,0 +1,232 @@
+{
+    "login": {
+      "title": "Giriş Yap",
+      "usernameOrEmail": "Kullanıcı adı veya E-mail",
+      "password": "Şifre",
+      "button": "Giriş Yap",
+      "forgotPassword": "Şifrenizi mi Unuttunuz?",
+      "noAccount": "Henüz hesabınız yok mu?",
+      "signup": "Hemen kaydolun",
+      "success": "Giriş başarılı.",
+      "error": "Giriş başarısız. Lütfen bilgilerinizi kontrol edin."
+    },
+    "signup": {
+          "title": "Kayıt Ol ({{step}}/3)",
+          "name": "İsim",
+          "surname": "Soyisim",
+          "email": "E-posta",
+          "username": "Kullanıcı Adı",
+          "password": "Şifre",
+          "repeatPassword": "Şifre Tekrar",
+          "phone": "Telefon",
+          "address": "Adres",
+          "gender": "Cinsiyet",
+          "male": "Erkek",
+          "female": "Kadın",
+          "other": "Diğer",
+          "back": "Geri",
+          "next": "İleri",
+          "submit": "Kaydı Tamamla",
+          "haveAccount": "Zaten bir hesabınız var mı?",
+          "login": "Giriş yapın",
+          "success": "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...",
+          "error": "Kayıt sırasında hata oluştu",
+          "missingFields": "Eksik alanlar",
+          "passwordMismatch": "Şifreler uyuşmuyor"
+    },
+    "navbar": {
+    "explore": "Keşfet",
+    "eventMap": "Etkinlik Haritası",
+    "readingBooks": "Okuduğum Kitaplar",
+    "wishList": "İstek Listem",
+    "popularBooks": "Popüler Kitaplar",
+    "advertise": "Reklam Ver",
+    "reportProblem": "Sorun Bildir",
+    "suggest": "Öneri / Şikayet",
+    "default": "E-Kitap",
+    "account": "Hesabım",
+    "profile": "Profil",
+    "language": "Dil Ayarları",
+    "logout": "Çıkış Yap",
+    "login": "Giriş Yap"
+  },
+    "sidebar": {
+      "eventMap": "Etkinlik Haritası",
+      "explore": "Keşfet",
+      "readingBooks": "Okuduğum Kitaplar",
+      "wishList": "İstek Listem",
+      "popularBooks": "Popüler Kitaplar",
+      "advertise": "Reklam Ver",
+      "reportProblem": "Sorun Bildir",
+      "suggest": "Öneri / Şikayet",
+      "addPost": "Gönderi Ekle",
+      "darkMode": "Gece Modu"
+    },
+    "about": {
+    "title": "HAKKIMIZDA",
+    "paragraph1": "E-Kitap, 1 Eylül 2024'de Türkiye'de kurulmuş, kitap odaklı bir sosyal kataloglama ve sosyal ağıdır. E-Kitap, bir sonraki okuyacağınız kitabı seçmenize yardımcı olur, diğer insanlarla ortak okuma alanları sayesinde tanışma fırsatı sunar, ayrıca belirli kütüphanelere randevu ve kitap sorgulama hizmeti sunar. Okuma zevkinizin benzediği okurları, farklı yazarları keşfetmenizi sağlar. Akış sayesinde takip ettiğiniz okurlar, yazarlar ve kitaplar ile ilgili son güncellemeleri takip etmenizi sağlar.",
+    "paragraph2": "E-Kitap'ta okurlar okudukları ve okumak istedikleri kitapları profillerine işaretlerler. Bunu işaretlerken kitabı beğenip beğenmediklerini, 5 üzerinden kaç puan verdiklerini ve isterse kitap hakkındaki görüşlerini ekleyebilir. Bu sayede her okurun, her kitabın ve her yazarın bir profil sayfası oluşur. E-Kitap'ta okurlar sosyalleşip gönderi paylaştıkça, kitap ve yazar profilleri daha fazla bilgiyle dolar. Bu da diğer okurlar için daha zengin bir kaynak sağlar.",
+    "paragraph3": "E-Kitap'ın ilk sürümü, Eylül 2024'de kodlanmaya başlanmış ve 1 Haziran 2025'de yayına alınmıştır. Amacı, kullanıcıları kitap okumaya teşvik etmek, alınacak kitap hakkında ön bilgi sağlamak ve kitap takası ile maliyeti azaltmaktır. Gelecekte kullanıcı geri bildirimlerine göre geliştirilmeye devam edecektir."
+  },
+  "chat": {
+    "title": "Sohbet Ekranı",
+    "sampleMessage": "İlk gönderi içerik örneği...",
+    "inputPlaceholder": "Mesaj Yaz..."
+  },
+  "addPost": {
+    "title": "GÖNDERİ EKLEME",
+    "bookNamePlaceholder": "Eğer Varsa Paylaşmak İstediğiniz Kitap Adını Giriniz",
+    "descriptionPlaceholder": "Açıklama veya Yorumunuzu Ekleyin",
+    "addPhoto": "Fotoğraf Ekle",
+    "maxPhotosAlert": "En fazla 2 fotoğraf ekleyebilirsiniz.",
+    "sharedAlert": "Gönderi paylaşıldı!",
+    "next": "İlerle",
+    "back": "Geri Git",
+    "share": "Paylaş",
+    "close": "Kapat",
+    "rating": {
+      "1": "Tavsiye Etmem",
+      "2": "Kötü",
+      "3": "Orta Halli",
+      "4": "İyi",
+      "5": "Muhteşem"
+    }
+  },
+  "advertise": {
+    "emailPlaceholder": "Lütfen e-mail adresinizi giriniz.",
+    "messagePlaceholder": "Lütfen teklifinizi yazınız. Size en kısa sürede dönüş sağlayacağız.",
+    "send": "GÖNDER"
+  },
+  "discover": {
+    "showMore": "Daha Fazla Göster",
+    "follow": "Takip Et",
+    "followers": "Takipçi"
+  },
+  "eventList":{
+    "searchBook": "📘 Kitap Ara",
+    "enterBookName": "Kitap ismi girin...",
+    "bookNotFound": "❌ Kitap bulunamadı.",
+    "foundLibraries": "📍 Bulunan Kütüphaneler",
+    "proceed": "İlerle",
+    "appointmentScreenTitle": "📅 Randevu Seçim Ekranı",
+    "selectDate": "Tarih Seçin:",
+    "selectTime": "Saat Seçin:",
+    "confirmAppointment": "✅ Randevuyu Onayla",
+    "appointmentConfirmed": "✅ Randevu Ayarlandı:\n📅 {{date}} - ⏰ {{time}}",
+    "selectDateTimeWarning": "⚠️ Lütfen tarih ve saat seçin.",
+    "locationError": "Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin.",
+    "getDirections": "Yol Tarifi Al"
+  },
+  "popularBooks": {
+  "author": "Yazar",
+  "addToWishlist": "İstek Listeme Ekle",
+  "showMore": "Daha Fazla Göster",
+  "addedMessage": "Kitap başarıyla istek listene eklendi!"
+},
+"readingBooks": {
+  "removeFromList": "Listeden Çıkar",
+  "fillAllFields": "Lütfen tüm alanları doldurun!",
+  "closeAddForm": "Ekleme Alanını Kapat",
+  "addBookButton": "Kitap Ekle",
+  "addNewBook": "Yeni Kitap Ekle",
+  "bookTitle": "Kitap Başlığı",
+  "bookAuthor": "Yazar",
+  "bookImage": "Resim URL'si",
+  "noBooks": "Henüz eklediğiniz kitap yok."
+},
+"reportProblem": {
+  "emailPlaceholder": "Lütfen Mail Adresinizi Giriniz",
+  "descriptionPlaceholder": "Lütfen yaşadığınız problemi detaylı bir şekilde yazınız.",
+  "send": "Gönder",
+  "success": "Başarılı",
+  "emailRequired": "Email boş bırakılamaz!",
+  "descriptionRequired": "Açıklama boş bırakılmamalı!",
+  "allFieldsRequired": "Lütfen tüm alanları doldurun."
+},
+"suggest": {
+  "suggestion": "Öneri",
+  "complaint": "Şikayet",
+  "email": "E-mail adresiniz",
+  "suggestionLabel": "Önerinizi yazın",
+  "complaintLabel": "Şikayetinizi yazın",
+  "placeholder": "Size en kısa sürede dönüş sağlayacağız.",
+  "send": "Gönder",
+  "fillAllFields": "Lütfen tüm alanları doldurun.",
+  "successSuggestion": "Öneriniz iletildi, teşekkür ederiz!",
+  "successComplaint": "Şikayetiniz iletildi, kısa sürede dönüş sağlayacağız."
+},
+"addSwap": {
+  "title": "TAKAS İLANI EKLEME",
+  "bookNamePlaceholder": "Eğer Varsa Paylaşmak İstediğiniz Kitap Adını Giriniz",
+  "descriptionPlaceholder": "Açıklama veya Yorumunuzu Ekleyin",
+  "addPhoto": "Fotoğraf Ekle",
+  "maxPhotosAlert": "En fazla 2 fotoğraf ekleyebilirsiniz.",
+  "next": "İlerle",
+  "back": "Geri Git",
+  "share": "Paylaş",
+  "close": "Kapat"
+},
+"swapContent": {
+  "addSwap": "Takas İlanı Ekle",
+  "bookName": "KİTAP ADI",
+  "author": "YAZAR",
+  "bookRating": "KİTAP PUANI",
+  "city": "İL: (Örnek İl)",
+  "contact": "İletişime Geç",
+  "showMore": "Daha Fazla Göster",
+  "fetchError": "Swap listesi alınırken hata oluştu",
+  "unknownAuthor": "Bilinmeyen Yazar",
+  "noContent": "İçerik yok"
+},
+"wishlist": {
+  "addBook": "Kitap Ekle",
+  "closeAddForm": "Ekleme Alanını Kapat",
+  "addNewBook": "Yeni Kitap Ekle",
+  "bookTitle": "Kitap Başlığı",
+  "author": "Yazar",
+  "imageURL": "Resim URL'si",
+  "addBookButton": "Kitap Ekle",
+  "fillAllFields": "Lütfen tüm alanları doldurun!",
+  "successfullyAdded": "Kitap başarıyla okuduğunuz kitaplar listesine eklendi.",
+  "remove": "Sil",
+  "read": "Okundu",
+  "noBooks": "Henüz eklediğiniz kitap yok."
+},
+"profile": {
+    "title": "Profilim",
+    "profileAlt": "Profil",
+    "edit": "Düzenle",
+    "fullName": "Ad Soyad",
+    "phone": "Telefon",
+    "email": "Email",
+    "gender": "Cinsiyet",
+    "address": "Adres",
+    "password": "Şifre",
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "profileUpdated": "Profil güncellendi!",
+    "genderOptions": {
+      "male": "Erkek",
+      "female": "Kadın",
+      "other": "Diğer"
+    }
+  },
+  "resetPassword": {
+    "title": "Parola Sıfırlama Ekranı",
+    "emailPlaceholder": "E-mail adresinizi girin",
+    "codePlaceholder": "Doğrulama kodunu girin",
+    "newPasswordPlaceholder": "Yeni şifre",
+    "confirmPasswordPlaceholder": "Yeni şifre (tekrar)",
+    "sendMail": "Mail Yolla",
+    "verifyCode": "Kodu Kontrol Et",
+    "updatePassword": "Şifreyi Güncelle",
+    "mailError": "Mail gönderilemedi.",
+    "codeError": "Kod doğrulanamadı.",
+    "passwordMismatch": "Şifreler eşleşmiyor!",
+    "passwordUpdated": "Şifreniz başarıyla güncellendi!",
+    "passwordUpdateError": "Şifre güncellenemedi."
+  }
+
+}
+    
+  

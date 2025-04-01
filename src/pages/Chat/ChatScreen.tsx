@@ -2,14 +2,17 @@ import { AccountCircle } from "@mui/icons-material";
 import { Avatar, Box, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const ChatScreen = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
+
   const [posts, setPosts] = useState([
     {
       id: 1,
       author: "Bayram Dikmen",
-      content: "İlk gönderi içerik örneği...",
+      content: t("chat.sampleMessage"),
     },
   ]);
 
@@ -24,7 +27,7 @@ const ChatScreen = () => {
           darkMode ? "bg-gray-800 text-white" : "bg-slate-400 text-black"
         }`}
       >
-        <span className="text-xl font-bold">Chat Screen</span>
+        <span className="text-xl font-bold">{t("chat.title")}</span>
       </div>
 
       <div className="flex flex-row w-full">
@@ -60,7 +63,6 @@ const ChatScreen = () => {
           </div>
         </div>
 
-        {/* Sağ Panel - Mesaj Girişi */}
         <div
           className={`flex w-3/4 items-center px-4 transition-colors duration-300 ${
             darkMode ? "bg-gray-900 text-white" : "bg-slate-700 text-white"
@@ -76,7 +78,7 @@ const ChatScreen = () => {
             />
             <TextField
               id="input-with-sx"
-              label="Mesaj Yaz..."
+              label={t("chat.inputPlaceholder")}
               variant="standard"
               fullWidth
               InputLabelProps={{

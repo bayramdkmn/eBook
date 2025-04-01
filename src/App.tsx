@@ -4,10 +4,10 @@ import { LoadScript } from "@react-google-maps/api";
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import { ThemeProvider, useTheme } from "./context/ThemeContext"; // 👈 useTheme import edildi
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import "./App.css";
+import "./i18n";
 
-// Ayrı bir component olarak içeriği taşıyoruz
 const Layout = () => {
   const { darkMode } = useTheme();
   const location = useLocation();

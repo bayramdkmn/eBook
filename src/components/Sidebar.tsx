@@ -12,6 +12,7 @@ import { RiAdvertisementLine, RiCompassDiscoverLine } from "react-icons/ri";
 import { TbBooks } from "react-icons/tb";
 import { GrMapLocation } from "react-icons/gr";
 import { useTheme } from "../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const IconRenderer = (Icon: any) => (props: IconBaseProps) =>
   React.createElement(Icon, props);
@@ -19,7 +20,8 @@ const IconRenderer = (Icon: any) => (props: IconBaseProps) =>
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { darkMode, toggleDarkMode } = useTheme(); // 👈 Context'ten veriyi ve fonksiyonu al
+  const { darkMode, toggleDarkMode } = useTheme();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
 
   const handleMenuClick = (path: string) => {
     navigate(path);
@@ -27,34 +29,42 @@ const Sidebar = () => {
 
   const menuItems = [
     {
-      label: "Etkinlik Haritası",
+      label: t("sidebar.eventMap"),
       path: "/eventMap",
       Icon: IconRenderer(GrMapLocation),
     },
-    { label: "Keşfet", path: "/", Icon: IconRenderer(RiCompassDiscoverLine) },
     {
-      label: "Okuduğum Kitaplar",
+      label: t("sidebar.explore"),
+      path: "/",
+      Icon: IconRenderer(RiCompassDiscoverLine),
+    },
+    {
+      label: t("sidebar.readingBooks"),
       path: "/readingBooks",
       Icon: IconRenderer(BiBookReader),
     },
-    { label: "İstek Listem", path: "/wishList", Icon: IconRenderer(BiBookAdd) },
     {
-      label: "Popüler Kitaplar",
+      label: t("sidebar.wishList"),
+      path: "/wishList",
+      Icon: IconRenderer(BiBookAdd),
+    },
+    {
+      label: t("sidebar.popularBooks"),
       path: "/popularBooks",
       Icon: IconRenderer(TbBooks),
     },
     {
-      label: "Reklam Ver",
+      label: t("sidebar.advertise"),
       path: "/advertise",
       Icon: IconRenderer(RiAdvertisementLine),
     },
     {
-      label: "Sorun Bildir",
+      label: t("sidebar.reportProblem"),
       path: "/reportProblem",
       Icon: IconRenderer(MdOutlineBugReport),
     },
     {
-      label: "Öneri / Şikayet",
+      label: t("sidebar.suggest"),
       path: "/suggest",
       Icon: IconRenderer(BiCommentDetail),
     },
@@ -69,14 +79,12 @@ const Sidebar = () => {
         darkMode ? "bg-gray-700 text-white" : "bg-white text-black"
       } w-[4.5rem] hover:w-72`}
     >
-      {/* Logo */}
       <div className="flex items-center justify-center text-2xl h-20 font-bold whitespace-nowrap overflow-hidden transition-all duration-300 group-hover:justify-start px-6">
         <span className="hidden group-hover:inline">
           E-Kitap<span>.com</span>
         </span>
       </div>
 
-      {/* Gönderi Ekle */}
       <div
         className="cursor-pointer h-20 flex items-center hover:text-xl transition-all duration-200 px-6"
         onClick={() => setOpen(true)}
@@ -84,12 +92,13 @@ const Sidebar = () => {
         <span className="text-2xl">
           <PostIcon size={22} />
         </span>
-        <span className="ml-6 hidden group-hover:inline">Gönderi Ekle</span>
+        <span className="ml-6 hidden group-hover:inline">
+          {t("sidebar.addPost")}
+        </span>
       </div>
 
       <AddPost open={open} onClose={() => setOpen(false)} />
 
-      {/* Menü Listesi */}
       {menuItems.map(({ label, path, Icon }) => (
         <div
           key={path}
@@ -103,15 +112,16 @@ const Sidebar = () => {
         </div>
       ))}
 
-      {/* Gece Modu */}
       <div
         className="cursor-pointer h-16 flex items-center hover:text-xl transition-all duration-200 px-6 absolute bottom-6 w-full"
-        onClick={toggleDarkMode} // 👈 Context üzerinden toggle işlemi
+        onClick={toggleDarkMode}
       >
         <span className="text-2xl">
           <NightModeIcon size={22} color={darkMode ? "white" : "black"} />
         </span>
-        <span className="ml-6 hidden group-hover:inline">Gece Modu</span>
+        <span className="ml-6 hidden group-hover:inline">
+          {t("sidebar.darkMode")}
+        </span>
       </div>
     </div>
   );

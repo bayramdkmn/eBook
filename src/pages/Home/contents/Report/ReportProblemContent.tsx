@@ -1,23 +1,28 @@
 import { Input, Button } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const ReportProblemContent = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
+
   const [email, setEmail] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
   const sendButton = () => {
     if (email && description) {
-      alert("Başarılı");
+      alert(t("reportProblem.success"));
       setEmail("");
       setDescription("");
     } else if (!email && description) {
-      alert("Email boş bırakılamaz!");
+      alert(t("reportProblem.emailRequired"));
     } else if (email && !description) {
-      alert("Açıklama boş bırakılmamalı!");
+      alert(t("reportProblem.descriptionRequired"));
     } else {
-      alert("Lütfen tüm alanları doldurun.");
+      alert(t("reportProblem.allFieldsRequired"));
     }
   };
 
@@ -47,7 +52,7 @@ const ReportProblemContent = () => {
                     ? "bg-gray-700 text-white border border-gray-600"
                     : "bg-white border border-indigo-300 text-black"
                 }`}
-                placeholder="Lütfen Mail Adresinizi Giriniz"
+                placeholder={t("reportProblem.emailPlaceholder")}
               />
 
               <textarea
@@ -58,12 +63,12 @@ const ReportProblemContent = () => {
                     ? "bg-gray-700 text-white border border-gray-600"
                     : "bg-white border border-indigo-300 text-black"
                 }`}
-                placeholder="Lütfen yaşadığınız problemi detaylı bir şekilde yazınız."
+                placeholder={t("reportProblem.descriptionPlaceholder")}
               />
 
               <div className="w-full md:w-3/4 mt-4 flex justify-end">
                 <Button variant="contained" onClick={sendButton}>
-                  Gönder
+                  {t("reportProblem.send")}
                 </Button>
               </div>
             </div>

@@ -2,6 +2,7 @@ import { Input, Button, Typography, Box, Modal } from "@mui/material";
 import React, { useState } from "react";
 import { getSwapList, createSwap } from "../SwapListAPI";
 import { useTheme } from "../../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface AddSwapModalProps {
   open: boolean;
@@ -10,6 +11,9 @@ interface AddSwapModalProps {
 
 const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
 
   const [step, setStep] = useState(1);
   const [bookName, setBookName] = useState("");
@@ -34,7 +38,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
       const file = event.target.files[0];
       setPhotos((prevPhotos) => [...prevPhotos, URL.createObjectURL(file)]);
     } else {
-      alert("En fazla 2 fotoğraf ekleyebilirsiniz.");
+      alert(t("addSwap.maxPhotosAlert"));
     }
   };
 
@@ -73,14 +77,14 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
           }}
         >
           <Typography variant="h5" component="h2" align="center" gutterBottom>
-            TAKAS İLANI EKLEME
+            {t("addSwap.title")}
           </Typography>
 
           {step === 1 && (
             <div>
               <Input
                 className="my-5"
-                placeholder="Kitap Adını Giriniz"
+                placeholder={t("addSwap.bookNamePlaceholder")}
                 value={bookName}
                 onChange={(e) => setBookName(e.target.value)}
                 fullWidth
@@ -98,7 +102,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                İlerle
+                {t("addSwap.next")}
               </Button>
             </div>
           )}
@@ -106,7 +110,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
           {step === 2 && (
             <>
               <Input
-                placeholder="Açıklama veya Yorumunuzu Ekleyin"
+                placeholder={t("addSwap.descriptionPlaceholder")}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 multiline
@@ -125,7 +129,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Fotoğraf Ekle
+                {t("addSwap.addPhoto")}
                 <input type="file" hidden onChange={handleAddPhoto} />
               </Button>
               <Box className="flex mt-2">
@@ -145,7 +149,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Geri Git
+                {t("addSwap.back")}
               </Button>
               <Button
                 variant="contained"
@@ -154,7 +158,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Paylaş
+                {t("addSwap.share")}
               </Button>
             </>
           )}
@@ -167,7 +171,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
               fullWidth
               sx={{ mt: 2 }}
             >
-              Kapat
+              {t("addSwap.close")}
             </Button>
           </div>
         </Box>

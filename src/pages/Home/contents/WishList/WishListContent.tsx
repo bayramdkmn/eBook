@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext"; // 👈 context
+import { useTranslation } from "react-i18next";
 
 const initialBooks = [
   {
@@ -29,7 +30,9 @@ const BookCard = ({
   isBuy: (id: number) => void;
 }) => {
   const { darkMode } = useTheme();
-
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
   return (
     <div
       className={`flex flex-col items-center justify-between rounded-2xl p-5 m-4 w-72 h-[440px] transition hover:scale-105 select-none shadow-xl ${
@@ -55,13 +58,13 @@ const BookCard = ({
           onClick={() => onRemove(id)}
           className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-2 rounded-md shadow"
         >
-          🗑️ Sil
+          🗑️ {t("wishlist.remove")}
         </button>
         <button
           onClick={() => isBuy(id)}
           className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-2 rounded-md shadow"
         >
-          ✅ Okundu
+          ✅ {t("wishlist.read")}
         </button>
       </div>
     </div>
@@ -70,6 +73,9 @@ const BookCard = ({
 
 const WishListContent = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
   const [books, setBooks] = useState(initialBooks);
   const [newBook, setNewBook] = useState({
     title: "",
@@ -84,12 +90,12 @@ const WishListContent = () => {
 
   const isBookBuy = (id: number) => {
     setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
-    alert("Kitap başarıyla okuduğunuz kitaplar listesine eklendi.");
+    alert(t("wishlist.successfullyAdded"));
   };
 
   const handleAddBook = () => {
     if (!newBook.title || !newBook.author || !newBook.image) {
-      alert("Lütfen tüm alanları doldurun!");
+      alert(t("wishlist.fillAllFields"));
       return;
     }
 
@@ -121,7 +127,7 @@ const WishListContent = () => {
           onClick={() => setIsAdding((prev) => !prev)}
           className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
         >
-          {isAdding ? "Ekleme Alanını Kapat" : "Kitap Ekle"}
+          {isAdding ? t("wishlist.closeAddForm") : t("wishlist.addBook")}
         </button>
       </div>
 
@@ -132,10 +138,12 @@ const WishListContent = () => {
             darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
           }`}
         >
-          <h3 className="text-xl font-semibold mb-4">Yeni Kitap Ekle</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            {t("wishlist.addNewBook")}
+          </h3>
           <input
             type="text"
-            placeholder="Kitap Başlığı"
+            placeholder={t("wishlist.bookTitle")}
             value={newBook.title}
             onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
             className={`rounded p-2 w-full mb-3 border ${
@@ -146,7 +154,7 @@ const WishListContent = () => {
           />
           <input
             type="text"
-            placeholder="Yazar"
+            placeholder={t("wishlist.author")}
             value={newBook.author}
             onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
             className={`rounded p-2 w-full mb-3 border ${
@@ -157,7 +165,7 @@ const WishListContent = () => {
           />
           <input
             type="text"
-            placeholder="Resim URL'si"
+            placeholder={t("wishlist.imageURL")}
             value={newBook.image}
             onChange={(e) => setNewBook({ ...newBook, image: e.target.value })}
             className={`rounded p-2 w-full mb-4 border ${
@@ -170,7 +178,7 @@ const WishListContent = () => {
             onClick={handleAddBook}
             className="px-5 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition"
           >
-            Kitap Ekle
+            {t("wishlist.addBookButton")}
           </button>
         </div>
       )}
@@ -192,7 +200,7 @@ const WishListContent = () => {
           ))
         ) : (
           <p className="text-gray-500 text-lg mt-8 select-none">
-            Henüz eklediğiniz kitap yok.
+            {t("wishlist.noBooks")}
           </p>
         )}
       </div>

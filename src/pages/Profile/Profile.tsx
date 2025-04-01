@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const FaUserCircleIcon = FaUserCircle as unknown as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -8,6 +9,7 @@ const FaUserCircleIcon = FaUserCircle as unknown as React.FC<
 
 const Profile = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation() as { t: (key: string) => string };
 
   const [editMode, setEditMode] = useState(false);
   const [profile, setProfile] = useState({
@@ -30,7 +32,7 @@ const Profile = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setEditMode(false);
-    alert("Profil güncellendi!");
+    alert(t("profile.profileUpdated"));
   };
 
   return (
@@ -44,15 +46,14 @@ const Profile = () => {
           darkMode ? "bg-gray-800" : "bg-gray-50"
         }`}
       >
-        <h1 className="text-3xl font-bold mb-8">Profilim</h1>
+        <h1 className="text-3xl font-bold mb-8">{t("profile.title")}</h1>
 
         <div className="flex flex-col md:flex-row gap-10">
-          {/* Profil Resmi */}
           <div className="flex-shrink-0 flex justify-center md:justify-start">
             {profile.profilePicture ? (
               <img
                 src={profile.profilePicture}
-                alt="Profil"
+                alt={t("profile.profileAlt")}
                 className="w-40 h-40 object-cover rounded-full border"
               />
             ) : (
@@ -72,14 +73,16 @@ const Profile = () => {
                   onClick={() => setEditMode(true)}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                 >
-                  Düzenle
+                  {t("profile.edit")}
                 </button>
               )}
             </div>
 
             {/* Ad Soyad */}
             <div>
-              <label className="block text-sm font-medium mb-1">Ad Soyad</label>
+              <label className="block text-sm font-medium mb-1">
+                {t("profile.fullName")}
+              </label>
               {editMode ? (
                 <input
                   type="text"
@@ -99,7 +102,9 @@ const Profile = () => {
 
             {/* Telefon */}
             <div>
-              <label className="block text-sm font-medium mb-1">Telefon</label>
+              <label className="block text-sm font-medium mb-1">
+                {t("profile.phone")}
+              </label>
               {editMode ? (
                 <input
                   type="text"
@@ -119,7 +124,9 @@ const Profile = () => {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label className="block text-sm font-medium mb-1">
+                {t("profile.email")}
+              </label>
               {editMode ? (
                 <input
                   type="email"
@@ -139,7 +146,9 @@ const Profile = () => {
 
             {/* Cinsiyet */}
             <div>
-              <label className="block text-sm font-medium mb-1">Cinsiyet</label>
+              <label className="block text-sm font-medium mb-1">
+                {t("profile.gender")}
+              </label>
               {editMode ? (
                 <select
                   name="gender"
@@ -151,9 +160,15 @@ const Profile = () => {
                       : "bg-white border-gray-300"
                   }`}
                 >
-                  <option value="Erkek">Erkek</option>
-                  <option value="Kadın">Kadın</option>
-                  <option value="Diğer">Diğer</option>
+                  <option value="Erkek">
+                    {t("profile.genderOptions.male")}
+                  </option>
+                  <option value="Kadın">
+                    {t("profile.genderOptions.female")}
+                  </option>
+                  <option value="Diğer">
+                    {t("profile.genderOptions.other")}
+                  </option>
                 </select>
               ) : (
                 <p className="mt-1">{profile.gender}</p>
@@ -162,7 +177,9 @@ const Profile = () => {
 
             {/* Adres */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">Adres</label>
+              <label className="block text-sm font-medium mb-1">
+                {t("profile.address")}
+              </label>
               {editMode ? (
                 <input
                   type="text"
@@ -182,7 +199,9 @@ const Profile = () => {
 
             {/* Şifre */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">Şifre</label>
+              <label className="block text-sm font-medium mb-1">
+                {t("profile.password")}
+              </label>
               {editMode ? (
                 <input
                   type="password"
@@ -207,14 +226,14 @@ const Profile = () => {
                   type="submit"
                   className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
                 >
-                  Kaydet
+                  {t("profile.save")}
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditMode(false)}
                   className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400 transition"
                 >
-                  Vazgeç
+                  {t("profile.cancel")}
                 </button>
               </div>
             )}

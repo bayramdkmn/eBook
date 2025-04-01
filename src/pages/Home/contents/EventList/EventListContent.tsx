@@ -17,6 +17,7 @@ import {
 import Button from "@mui/material/Button";
 import "./customs.css";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 dayjs.locale("tr");
 
@@ -70,6 +71,9 @@ const libraryData = [
 ];
 
 const EventListContent = () => {
+  const { t } = useTranslation() as {
+    t: (key: string, options?: Record<string, any>) => string;
+  };
   const { darkMode } = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedTime, setSelectedTime] = useState<Dayjs | null>(null);
@@ -86,7 +90,7 @@ const EventListContent = () => {
   const [filteredBooks, setFilteredBooks] = useState<string[]>([]);
   const [libraryMarkers, setLibraryMarkers] = useState<any[]>([]);
   const [showFirstForm, setShowFirstForm] = useState(true);
-  const [hasSearched, setHasSearched] = useState(false); // ✅ Arama yapıldı mı?
+  const [hasSearched, setHasSearched] = useState(false);
   const location = useLocation();
 
   const getUserLocation = (retryCount = 0) => {
@@ -100,9 +104,7 @@ const EventListContent = () => {
         if (retryCount < 5) {
           setTimeout(() => getUserLocation(retryCount + 1), 4000);
         } else {
-          alert(
-            "Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin."
-          );
+          alert(t("eventList.locationError"));
         }
       },
       { timeout: 10000, enableHighAccuracy: true, maximumAge: 0 }
@@ -124,7 +126,7 @@ const EventListContent = () => {
   };
 
   const searchBook = (book: string) => {
-    setHasSearched(true); // ✅ İlk arama yapıldı
+    setHasSearched(true);
     let found = false;
     let markers: any[] = [];
     let libraryNames: string[] = [];
@@ -201,7 +203,6 @@ const EventListContent = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* HARİTA */}
       <GoogleMap
         key={location.pathname}
         onLoad={(map) => setMapRef(map)}
@@ -248,7 +249,7 @@ const EventListContent = () => {
                 rel="noopener noreferrer"
                 className="text-blue-600 underline"
               >
-                Yol Tarifi Al
+                {t("eventList.getDirections")}
               </a>
             </div>
           </InfoWindow>
@@ -274,19 +275,15 @@ const EventListContent = () => {
                 darkMode ? "bg-gray-800" : "bg-white"
               } w-full md:w-2/3 p-4 rounded-xl shadow`}
             >
-              <h2
-                className={`${
-                  darkMode ? "text-white" : "text-black"
-                } text-xl font-bold mb-4 text-center  py-2 rounded`}
-              >
-                📘 Kitap Ara
+              <h2 className="text-xl font-bold mb-4 text-center py-2 rounded">
+                {t("eventList.searchBook")}
               </h2>
               <Input
                 className={`w-full mb-4 border rounded px-3 py-2 shadow-sm ${
                   darkMode ? "bg-gray-700 text-white" : "bg-white text-black"
                 }`}
                 type="text"
-                placeholder="Kitap ismi girin..."
+                placeholder={t("eventList.enterBookName")}
                 value={bookName}
                 onChange={(e) => setBookName(e.target.value)}
               />
@@ -307,14 +304,15 @@ const EventListContent = () => {
               </List>
             </div>
 
-            {/* Kütüphaneler */}
             {hasSearched && !bookFound ? (
               <div
                 className={`flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 shadow justify-center text-center ${
                   darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
                 }`}
               >
-                <p className="text-red-500 font-medium">❌ Kitap bulunamadı.</p>
+                <p className="text-red-500 font-medium">
+                  {t("eventList.bookNotFound")}
+                </p>
               </div>
             ) : (
               bookFound &&
@@ -325,13 +323,14 @@ const EventListContent = () => {
                   } flex flex-col w-full md:w-1/3 border-2 border-red-400 rounded-xl p-4 shadow`}
                 >
                   <h2 className="text-xl font-semibold mb-4 text-center">
-                    📍 Bulunan Kütüphaneler
+                    {t("eventList.foundLibraries")}
                   </h2>
                   <div className="flex flex-col gap-3 overflow-y-auto max-h-60">
                     {availableLibraries.map((lib, index) => {
                       const data = libraryData.find((l) => l.name === lib);
                       return (
                         <div
+                          key={index}
                           className={`cursor-pointer border rounded-lg p-3 text-center transition shadow ${
                             darkMode
                               ? "bg-gray-800 text-white hover:bg-gray-700"
@@ -356,7 +355,7 @@ const EventListContent = () => {
                     className="mt-4 bg-gradient-to-r from-red-500 to-pink-500 text-white"
                     disabled={!bookFound || availableLibraries.length === 0}
                   >
-                    İlerle
+                    {t("eventList.proceed")}
                   </Button>
                 </div>
               )
@@ -377,13 +376,13 @@ const EventListContent = () => {
               >
                 <Grid item className="w-full text-center">
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-2 rounded">
-                    📅 Randevu Seçim Ekranı
+                    {t("eventList.appointmentScreenTitle")}
                   </h2>
                 </Grid>
 
                 <Grid item>
                   <h3 className="text-lg font-semibold text-center mt-4">
-                    Tarih Seçin:
+                    {t("eventList.selectDate")}
                   </h3>
                   <DatePicker
                     value={selectedDate}
@@ -395,7 +394,7 @@ const EventListContent = () => {
                 {selectedDate && (
                   <Grid item className="w-full mt-4">
                     <h3 className="text-lg font-semibold text-center mb-2">
-                      Saat Seçin:
+                      {t("eventList.selectTime")}
                     </h3>
                     <div className="flex flex-wrap justify-center gap-2">
                       {timeSlots.map((slot, index) => (
@@ -422,13 +421,14 @@ const EventListContent = () => {
                 onClick={() => {
                   if (selectedDate && selectedTime) {
                     alert(
-                      `✅ Randevu Ayarlandı:\n📅 ${selectedDate.format(
-                        "DD-MM-YYYY"
-                      )} - ⏰ ${selectedTime.format("HH:mm")}`
+                      t("eventList.appointmentConfirmed", {
+                        date: selectedDate.format("DD-MM-YYYY"),
+                        time: selectedTime.format("HH:mm"),
+                      })
                     );
                     resetState();
                   } else {
-                    alert("⚠️ Lütfen tarih ve saat seçin.");
+                    alert(t("eventList.selectDateTimeWarning"));
                   }
                 }}
                 className={`w-full mt-4 py-3 rounded-lg font-semibold ${
@@ -440,7 +440,7 @@ const EventListContent = () => {
                 }`}
                 disabled={!selectedDate || !selectedTime}
               >
-                ✅ Randevuyu Onayla
+                {t("eventList.confirmAppointment")}
               </button>
             </div>
           </div>

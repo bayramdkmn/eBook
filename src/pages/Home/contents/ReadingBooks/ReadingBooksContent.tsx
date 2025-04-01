@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { addReadingBooks } from "./ReadingBookAPI";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const initialBooks = [
   {
@@ -28,6 +29,9 @@ const BookCard = ({
   onRemove: (id: number) => void;
 }) => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
 
   return (
     <div
@@ -53,14 +57,18 @@ const BookCard = ({
         onClick={() => onRemove(id)}
         className="mt-4 bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-2 rounded-md shadow"
       >
-        🗑️ Listeden Çıkar
+        🗑️ {t("readingBooks.removeFromList")}
       </button>
     </div>
   );
 };
 
 const ReadingBooksContent = () => {
-  const { darkMode } = useTheme(); // 👈 Tema bilgisi
+  const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
+
   const [books, setBooks] = useState(initialBooks);
   const [newBook, setNewBook] = useState({
     title: "",
@@ -76,7 +84,7 @@ const ReadingBooksContent = () => {
 
   async function handleAddBook() {
     if (!newBook.title || !newBook.author || !newBook.image) {
-      alert("Lütfen tüm alanları doldurun!");
+      alert(t("readingBooks.fillAllFields"));
       return;
     }
 
@@ -120,7 +128,9 @@ const ReadingBooksContent = () => {
           onClick={() => setIsAdding((prev) => !prev)}
           className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
         >
-          {isAdding ? "Ekleme Alanını Kapat" : "Kitap Ekle"}
+          {isAdding
+            ? t("readingBooks.closeAddForm")
+            : t("readingBooks.addBookButton")}
         </button>
       </div>
 
@@ -130,10 +140,12 @@ const ReadingBooksContent = () => {
             darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
           }`}
         >
-          <h3 className="text-xl font-semibold mb-4">Yeni Kitap Ekle</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            {t("readingBooks.addNewBook")}
+          </h3>
           <input
             type="text"
-            placeholder="Kitap Başlığı"
+            placeholder={t("readingBooks.bookTitle")}
             value={newBook.title}
             onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
             className={`rounded p-2 w-full mb-3 border ${
@@ -144,7 +156,7 @@ const ReadingBooksContent = () => {
           />
           <input
             type="text"
-            placeholder="Yazar"
+            placeholder={t("readingBooks.bookAuthor")}
             value={newBook.author}
             onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
             className={`rounded p-2 w-full mb-3 border ${
@@ -155,7 +167,7 @@ const ReadingBooksContent = () => {
           />
           <input
             type="text"
-            placeholder="Resim URL'si"
+            placeholder={t("readingBooks.bookImage")}
             value={newBook.image}
             onChange={(e) => setNewBook({ ...newBook, image: e.target.value })}
             className={`rounded p-2 w-full mb-4 border ${
@@ -168,7 +180,7 @@ const ReadingBooksContent = () => {
             onClick={handleAddBook}
             className="px-5 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition"
           >
-            Kitap Ekle
+            {t("readingBooks.addBookButton")}
           </button>
         </div>
       )}
@@ -188,7 +200,7 @@ const ReadingBooksContent = () => {
           ))
         ) : (
           <p className="text-gray-500 text-lg mt-8 select-none">
-            Henüz eklediğiniz kitap yok.
+            {t("readingBooks.noBooks")}
           </p>
         )}
       </div>

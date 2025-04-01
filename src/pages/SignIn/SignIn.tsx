@@ -1,18 +1,13 @@
-// SignIn.tsx
-import {
-  Box,
-  Button,
-  TextField,
-  Snackbar,
-  Typography,
-  Link,
-} from "@mui/material";
+import { Button, TextField, Snackbar, Typography, Link } from "@mui/material";
 import React, { useState } from "react";
 import { loginUser } from "./SignInAPI";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [toastOpen, setToastOpen] = useState(false);
@@ -22,29 +17,29 @@ const SignIn = () => {
   async function handleSignIn() {
     try {
       await loginUser(username, password);
-      setToastMessage("Giriş başarılı.");
+      setToastMessage(t("login.success"));
       setToastType("success");
       setToastOpen(true);
       setTimeout(() => navigate("/"), 1000);
     } catch (err) {
-      setToastMessage("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+      setToastMessage(t("login.error"));
       setToastType("error");
       setToastOpen(true);
-      console.log(err);
     }
   }
 
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1740&q=60')] bg-cover bg-center">
+      <LanguageSwitcher isLoginPage={true} />
       <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-md px-10 py-12 m-6 flex flex-col justify-center items-center space-y-6">
         <h2 className="text-3xl font-bold text-center text-gray-800">
-          Giriş Yap
+          {t("login.title")}
         </h2>
 
         <div className="w-full space-y-4">
           <TextField
             fullWidth
-            label="Kullanıcı adı veya E-mail"
+            label={t("login.usernameOrEmail")}
             variant="outlined"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -53,7 +48,7 @@ const SignIn = () => {
 
           <TextField
             fullWidth
-            label="Şifre"
+            label={t("login.password")}
             type="password"
             variant="outlined"
             value={password}
@@ -68,7 +63,7 @@ const SignIn = () => {
           variant="contained"
           className="mt-4"
         >
-          Giriş Yap
+          {t("login.button")}
         </Button>
 
         <Link
@@ -76,13 +71,13 @@ const SignIn = () => {
           to="/resetPassword"
           className="text-blue-600 underline"
         >
-          Şifrenizi mi Unuttunuz?
+          {t("login.forgotPassword")}
         </Link>
 
         <Typography variant="body2" className="text-center">
-          Henüz hesabınız yok mu?{" "}
+          {t("login.noAccount")}{" "}
           <Link component={RouterLink} to="/signUp" underline="hover">
-            Hemen kaydolun
+            {t("login.signup")}
           </Link>
         </Typography>
 

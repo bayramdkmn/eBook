@@ -1,11 +1,4 @@
-import {
-  Input,
-  Button,
-  Typography,
-  Box,
-  Modal,
-  useTheme as useMuiTheme,
-} from "@mui/material";
+import { Input, Button, Typography, Box, Modal } from "@mui/material";
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Rating, { IconContainerProps } from "@mui/material/Rating";
@@ -15,6 +8,8 @@ import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
+import { hover } from "framer-motion";
 
 interface AddPostModalProps {
   open: boolean;
@@ -27,47 +22,44 @@ const StyledRating = styled(Rating)(({ theme }) => ({
   },
 }));
 
-const customIcons: {
-  [index: string]: {
-    icon: React.ReactElement<unknown>;
-    label: string;
-  };
-} = {
-  1: {
-    icon: <SentimentVeryDissatisfiedIcon color="error" />,
-    label: "Tavsiye Etmem",
-  },
-  2: {
-    icon: <SentimentDissatisfiedIcon color="secondary" />,
-    label: "Kötü",
-  },
-  3: {
-    icon: <SentimentSatisfiedIcon color="inherit" />,
-    label: "Orta Halli",
-  },
-  4: {
-    icon: <SentimentSatisfiedAltIcon color="success" />,
-    label: "İyi",
-  },
-  5: {
-    icon: <SentimentVerySatisfiedIcon color="success" />,
-    label: "Muhteşem",
-  },
-};
-
-function IconContainer(props: IconContainerProps) {
-  const { value, ...other } = props;
-  return <span {...other}>{customIcons[value].icon}</span>;
-}
-
 const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
-  const { darkMode } = useTheme(); // 👈 Dark mode bilgisi
+  const { darkMode } = useTheme();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
   const [step, setStep] = useState(1);
   const [bookName, setBookName] = useState("");
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
   const [ratingLabel, setRatingLabel] = useState<string>("");
   const maxPhotos = 2;
+
+  const customIcons: Record<number, { icon: React.ReactNode; label: string }> =
+    {
+      1: {
+        icon: <SentimentVeryDissatisfiedIcon color="error" />,
+        label: t("addPost.rating.1"),
+      },
+      2: {
+        icon: <SentimentDissatisfiedIcon color="secondary" />,
+        label: t("addPost.rating.2"),
+      },
+      3: {
+        icon: <SentimentSatisfiedIcon color="inherit" />,
+        label: t("addPost.rating.3"),
+      },
+      4: {
+        icon: <SentimentSatisfiedAltIcon color="success" />,
+        label: t("addPost.rating.4"),
+      },
+      5: {
+        icon: <SentimentVerySatisfiedIcon color="success" />,
+        label: t("addPost.rating.5"),
+      },
+    };
+
+  function IconContainer(props: IconContainerProps) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
+  }
 
   const handleNextStep = () => setStep((prevStep) => prevStep + 1);
   const handlePreviousStep = () =>
@@ -85,67 +77,74 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
       const file = event.target.files[0];
       setPhotos((prevPhotos) => [...prevPhotos, URL.createObjectURL(file)]);
     } else {
-      alert("En fazla 2 fotoğraf ekleyebilirsiniz.");
+      alert(t("addPost.maxPhotosAlert"));
     }
   };
 
   const handleShare = () => {
-    alert("Gönderi paylaşıldı!");
+    alert(t("addPost.sharedAlert"));
     onClose();
   };
 
   return (
     <Box className="flex flex-col items-center">
-      <Modal
-        open={open}
-        onClose={onClose}
-        aria-labelledby="add-post-modal-title"
-        aria-describedby="add-post-modal-description"
-      >
+      <Modal open={open} onClose={onClose}>
         <Box
           sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: step === 1 ? 500 : step === 2 ? 600 : 500,
-            height: step === 1 ? 300 : step === 2 ? 500 : 400,
-            bgcolor: darkMode ? "#1e1e1e" : "background.paper", // 👈 Tema rengi
-            color: darkMode ? "#fff" : "#000", // 👈 Yazı rengi
-            borderRadius: "8px",
+            // Responsive genişlik; içerik yoğunluğuna göre otomatik yükseklik
+            width: { xs: "90%", sm: "80%", md: "60%" },
+            maxWidth: 600,
+            bgcolor: darkMode ? "#1e1e1e" : "background.paper",
+            color: darkMode ? "#fff" : "#000",
+            borderRadius: 2,
             boxShadow: 24,
             p: 4,
           }}
         >
-          <Typography variant="h5" component="h2" align="center" gutterBottom>
-            GÖNDERİ EKLEME
+          <Typography variant="h5" align="center" gutterBottom>
+            {t("addPost.title")}
           </Typography>
 
           {step === 1 && (
-            <div>
+            <Box>
               <Input
                 className="my-5"
-                placeholder="Eğer Varsa Paylaşmak İstediğiniz Kitap Adını Giriniz"
+                placeholder={t("addPost.bookNamePlaceholder")}
                 value={bookName}
                 onChange={(e) => setBookName(e.target.value)}
                 fullWidth
+                sx={{
+                  bgcolor: darkMode ? "#333" : "#f0f0f0",
+                  borderRadius: 1,
+                  p: 1,
+                  color: darkMode ? "#fff" : "#000",
+                }}
               />
-              <div className="flex flex-col">
+              <Box className="flex flex-col">
                 <StyledRating
+                  sx={{
+                    "& svg": {
+                      fill: darkMode ? "gray" : "#000",
+                      fontSize: "2rem",
+                    },
+                  }}
                   name="highlight-selected-only"
                   IconContainerComponent={IconContainer}
                   onChange={(event, newValue) => {
                     const label =
                       newValue !== null
-                        ? customIcons[newValue]?.label
+                        ? customIcons[newValue as number]?.label
                         : "Unknown";
                     setRatingLabel(label);
                   }}
                   highlightSelectedOnly
                 />
-                <span>{ratingLabel}</span>
-              </div>
-
+                <span className="py-2 text-xl">{ratingLabel}</span>
+              </Box>
               <Button
                 variant="contained"
                 color="primary"
@@ -153,19 +152,25 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                İlerle
+                {t("addPost.next")}
               </Button>
-            </div>
+            </Box>
           )}
 
           {step === 2 && (
             <>
               <Input
-                placeholder="Açıklama veya Yorumunuzu Ekleyin"
+                placeholder={t("addPost.descriptionPlaceholder")}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 multiline
                 rows={4}
+                sx={{
+                  bgcolor: darkMode ? "#333" : "#f0f0f0",
+                  borderRadius: 1,
+                  p: 1,
+                  color: darkMode ? "#fff" : "#000",
+                }}
                 fullWidth
               />
               <Button
@@ -175,16 +180,26 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Fotoğraf Ekle
+                {t("addPost.addPhoto")}
                 <input type="file" hidden onChange={handleAddPhoto} />
               </Button>
-              <Box className="flex mt-2">
+              <Box
+                className="flex mt-2"
+                sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+              >
                 {photos.map((photo, index) => (
-                  <img
+                  <Box
                     key={index}
+                    component="img"
                     src={photo}
                     alt={`Fotoğraf ${index + 1}`}
-                    className="w-20 h-20 m-1 border rounded"
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      border: "1px solid",
+                      borderColor: darkMode ? "#555" : "#ccc",
+                      borderRadius: 1,
+                    }}
                   />
                 ))}
               </Box>
@@ -195,7 +210,7 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Geri Git
+                {t("addPost.back")}
               </Button>
               <Button
                 variant="contained"
@@ -204,22 +219,26 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Paylaş
+                {t("addPost.share")}
               </Button>
             </>
           )}
 
-          <div className="flex w-full fixed bottom-2 left-0">
-            <Button
-              variant="text"
-              color="error"
-              onClick={handleClose}
-              fullWidth
-              sx={{ mt: 2 }}
-            >
-              Kapat
-            </Button>
-          </div>
+          <Button
+            variant="text"
+            color="error"
+            onClick={handleClose}
+            fullWidth
+            // sx={{ mt: 2 }}
+            sx={{
+              bgcolor: "#bf0000",
+              mt: 2,
+              color: "white",
+              "&:hover": { bgcolor: darkMode ? "red" : "" },
+            }}
+          >
+            {t("addPost.close")}
+          </Button>
         </Box>
       </Modal>
     </Box>

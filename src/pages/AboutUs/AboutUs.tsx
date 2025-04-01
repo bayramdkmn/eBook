@@ -1,8 +1,10 @@
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const AboutUs = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
 
   return (
     <div
@@ -10,13 +12,12 @@ const AboutUs = () => {
         darkMode ? "bg-black text-white" : "bg-gray-100 text-black"
       }`}
     >
-      {/* Header */}
       <div
         className={`h-16 flex items-center justify-center px-4 shadow-md ${
           darkMode ? "bg-gray-800 text-white" : "bg-slate-400 text-black"
         }`}
       >
-        <span className="text-xl font-bold">ABOUT US</span>
+        <span className="text-xl font-bold">{t("about.title")}</span>
       </div>
 
       <div
@@ -28,38 +29,9 @@ const AboutUs = () => {
             darkMode ? "bg-gray-800 text-white" : "bg-slate-300 text-black"
           }`}
         >
-          <span>
-            <span className="font-bold">E-Kitap</span>, 1 Eylül 2024'de
-            Türkiye'de kurulmuş, kitap odaklı bir sosyal kataloglama ve sosyal
-            ağıdır. <span className="font-bold">E-Kitap</span>, bir sonraki
-            okuyacağınız kitabı seçmenize yardımcı olur, diğer insanlarla ortak
-            okuma alanları sayesinde tanışma fırsatı sunar, ayrıca belirli
-            kütüphanelere randevu ve kitap sorgulama hizmeti sunar. Okuma
-            zevkinizin benzediği okurları, farklı yazarları keşfetmenizi sağlar.
-            Akış sayesinde takip ettiğiniz okurlar, yazarlar ve kitaplar ile
-            ilgili son güncellemeleri takip etmenizi sağlar.
-          </span>
-          <span>
-            <span className="font-bold">E-Kitap</span>'ta okurlar okudukları ve
-            okumak istedikleri kitapları profillerine işaretlerler. Bunu
-            işaretlerken kitabı beğenip beğenmediklerini, 5 üzerinden kaç puan
-            verdiğini ve isterse de kitap hakkındaki görüşlerini ekleyebilir. Bu
-            sayede her okurun, her kitabın ve her yazarın bir profil sayfası
-            oluşur. <span className="font-bold">E-Kitap</span>'ta okurlar
-            sosyalleşip, gönderi paylaştıkça kitap ve yazar profilleri daha
-            fazla bilgi ile dolar. Bu sayede de o kitap ve yazarları incelemek
-            isteyen okurlar için daha fazla bilgi oluşur.
-          </span>
-          <span>
-            <span className="font-bold">E-Kitap</span>'ın ilk sürümü İlk olarak
-            Eylül 2024'de kodlanmaya başlanan ve 1 Haziran 2025'de yayına giren{" "}
-            <span className="font-bold">E-Kitap</span>'ın şuan için amacı
-            yukarıda bahsedildiği gibi kullanıcıları kitap okumaya teşvik etme,
-            alınacak kitap hakkında ön bilgi sahibi olma, kitap takası yaparak
-            fazladan ücret ödemekten kaçınma gibi birçok alandaki kullanıcı
-            dostu olmaktır. Ancak ilerleyen zamanlarda kullanıcıların
-            isteklerine göre geliştirmeler sağlanacaktır.
-          </span>
+          <span>{t("about.paragraph1")}</span>
+          <span>{t("about.paragraph2")}</span>
+          <span>{t("about.paragraph3")}</span>
 
           <div
             className={`flex border-2 flex-row rounded-2xl ${

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { createSwap, getSwapList } from "./SwapListAPI";
 import AddSwap from "./AddSwap/addSwap";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface Post {
   id: number;
@@ -15,7 +16,11 @@ interface Post {
 }
 
 const SwapContent = () => {
-  const { darkMode } = useTheme(); // 👈 Tema bilgisi
+  const { darkMode } = useTheme();
+  const { t } = useTranslation() as {
+    t: (key: string) => string;
+  };
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,28 +42,28 @@ const SwapContent = () => {
           swapOwnerName: `${item.requester.name} ${item.requester.surname}`,
           swapOwnerAvatar: item.requester.avatar,
           bookName: item.offeredBook.title,
-          author: item.offeredBook.author || "Bilinmeyen Yazar",
-          content: item.content || "İçerik yok",
+          author: item.offeredBook.author || t("swapContent.unknownAuthor"),
+          content: item.content || t("swapContent.noContent"),
           img: item.offeredBook.image || null,
         }));
         setPosts(formattedPosts);
       } catch (err) {
-        console.error("Swap listesi alınırken hata:", err);
+        console.error(t("swapContent.fetchError"), err);
       }
     };
 
     fetchSwapList();
-  }, []);
+  }, [t]);
 
   async function tikla() {
     try {
       const data = {
         content: "Test swap request",
-        bookTitle: "saatleri ayarlama enstitüsü",
+        bookTitle: "Saatleri Ayarlama Enstitüsü",
       };
       await createSwap(data);
     } catch (err) {
-      console.log("hata", err);
+      console.log(t("swapContent.swapError"), err);
     }
   }
 
@@ -78,7 +83,7 @@ const SwapContent = () => {
           onClick={handleOpen}
           className="bg-blue-500 text-white px-6 py-2 rounded-xl hover:bg-blue-600 transition"
         >
-          Takas İlanı Ekle
+          {t("swapContent.addSwap")}
         </button>
         <AddSwap open={open} onClose={handleClose} />
       </div>
@@ -146,26 +151,26 @@ const SwapContent = () => {
                 >
                   <div className="flex flex-col gap-2">
                     <div className="text-xl font-semibold w-fit">
-                      KİTAP ADI:
+                      {t("swapContent.bookName")}:
                       <span className="text-lg font-normal ml-1">
                         {post.bookName}
                       </span>
                     </div>
                     <div>
-                      YAZAR:
+                      {t("swapContent.author")}:
                       <span className="text-lg font-normal ml-1">
                         {post.author}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      KİTAP PUANI:
+                      {t("swapContent.bookRating")}:
                       <Rating name="book-rating" value={rating} readOnly />
                     </div>
-                    <div>İL: (Örnek İl)</div>
+                    <div>{t("swapContent.city")}</div>
                   </div>
                   <div className="flex justify-end mt-3">
                     <Button variant="contained" onClick={tikla}>
-                      İletişime Geç
+                      {t("swapContent.contact")}
                     </Button>
                   </div>
                 </div>
@@ -179,7 +184,7 @@ const SwapContent = () => {
                 onClick={handleShowMore}
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
               >
-                Daha Fazla Göster
+                {t("swapContent.showMore")}
               </button>
             </div>
           )}

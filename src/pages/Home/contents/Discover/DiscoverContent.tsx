@@ -1,9 +1,12 @@
 import { Avatar } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const DiscoverContent = () => {
   const { darkMode } = useTheme();
+  const { t } = useTranslation("common") as { t: (key: string) => string };
+
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -152,13 +155,14 @@ const DiscoverContent = () => {
               )}
             </div>
           ))}
+
           {visiblePosts < posts.length && (
             <div className="text-center mt-4">
               <button
                 onClick={handleShowMore}
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
-                Daha Fazla Göster
+                {t("discover.showMore")}
               </button>
             </div>
           )}
@@ -174,10 +178,12 @@ const DiscoverContent = () => {
             <Avatar sx={{ width: 60, height: 60 }} src="/pp.jpeg" />
             <div className="ml-4">
               <div className="font-bold text-lg">Bayram Dikmen</div>
-              <div className="text-sm text-gray-500">1000 Takipçi</div>
+              <div className="text-sm text-gray-500">
+                1000 {t("discover.followers")}
+              </div>
             </div>
             <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl hover:bg-blue-600">
-              Takip Et
+              {t("discover.follow")}
             </button>
           </div>
         </div>

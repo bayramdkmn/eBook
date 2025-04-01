@@ -22,8 +22,13 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { createUser } from "./SignUpAPI";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
 
 const SignUpStepper = () => {
+  const { t } = useTranslation("common") as {
+    t: (key: string, options?: any) => string;
+  };
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -74,18 +79,21 @@ const SignUpStepper = () => {
 
   const handleSubmit = async () => {
     const missingFields = [];
-    if (!formData.username) missingFields.push("Kullanıcı adı");
-    if (!formData.password || !formData.password2) missingFields.push("Şifre");
+    if (!formData.username) missingFields.push(t("signup.username"));
+    if (!formData.password || !formData.password2)
+      missingFields.push(t("signup.password"));
     if (formData.password !== formData.password2) {
-      setErrorMessage("Şifreler uyuşmuyor");
+      setErrorMessage(t("signup.passwordMismatch"));
       setErrorOpen(true);
       return;
     }
-    if (!formData.phone) missingFields.push("Telefon");
-    if (!formData.address) missingFields.push("Adres");
+    if (!formData.phone) missingFields.push(t("signup.phone"));
+    if (!formData.address) missingFields.push(t("signup.address"));
 
     if (missingFields.length > 0) {
-      setErrorMessage(`Eksik alanlar: ${missingFields.join(", ")}`);
+      setErrorMessage(
+        `${t("signup.missingFields")}: ${missingFields.join(", ")}`
+      );
       setErrorOpen(true);
       return;
     }
@@ -95,7 +103,7 @@ const SignUpStepper = () => {
       setSuccessOpen(true);
       setTimeout(() => navigate("/signIn"), 1000);
     } catch (error) {
-      setErrorMessage("Kayıt sırasında hata oluştu");
+      setErrorMessage(t("signup.error"));
       setErrorOpen(true);
     }
   };
@@ -104,9 +112,10 @@ const SignUpStepper = () => {
 
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1740&q=80')] bg-cover bg-center">
+      <LanguageSwitcher isLoginPage={true} />
       <div className="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-2xl p-10 m-6 flex flex-col justify-center">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Kayıt Ol ({step}/3)
+          {t("signup.title", { step })}
         </h2>
         <LinearProgress
           variant="determinate"
@@ -125,7 +134,7 @@ const SignUpStepper = () => {
             >
               <Input
                 fullWidth
-                placeholder="İsim"
+                placeholder={t("signup.name")}
                 value={formData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -141,7 +150,7 @@ const SignUpStepper = () => {
               />
               <Input
                 fullWidth
-                placeholder="Soyisim"
+                placeholder={t("signup.surname")}
                 value={formData.surname}
                 onChange={(e) => handleChange("surname", e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -157,7 +166,7 @@ const SignUpStepper = () => {
               />
               <Input
                 fullWidth
-                placeholder="E-mail"
+                placeholder={t("signup.email")}
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -184,7 +193,7 @@ const SignUpStepper = () => {
             >
               <Input
                 fullWidth
-                placeholder="Kullanıcı Adı"
+                placeholder={t("signup.username")}
                 value={formData.username}
                 onChange={(e) => handleChange("username", e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -200,7 +209,7 @@ const SignUpStepper = () => {
               />
               <Input
                 fullWidth
-                placeholder="Şifre"
+                placeholder={t("signup.password")}
                 type="password"
                 value={formData.password}
                 onChange={(e) => handleChange("password", e.target.value)}
@@ -217,7 +226,7 @@ const SignUpStepper = () => {
               />
               <Input
                 fullWidth
-                placeholder="Şifre Tekrar"
+                placeholder={t("signup.repeatPassword")}
                 type="password"
                 value={formData.password2}
                 onChange={(e) => handleChange("password2", e.target.value)}
@@ -252,13 +261,15 @@ const SignUpStepper = () => {
               />
               <Input
                 fullWidth
-                placeholder="Adres"
+                placeholder={t("signup.address")}
                 value={formData.address}
                 onChange={(e) => handleChange("address", e.target.value)}
                 onKeyDown={handleKeyDown}
               />
               <FormControl>
-                <FormLabel className="text-gray-700">Cinsiyet</FormLabel>
+                <FormLabel className="text-gray-700">
+                  {t("signup.gender")}
+                </FormLabel>
                 <RadioGroup
                   row
                   value={formData.gender}
@@ -267,17 +278,17 @@ const SignUpStepper = () => {
                   <FormControlLabel
                     value="male"
                     control={<Radio />}
-                    label="Erkek"
+                    label={t("signup.male")}
                   />
                   <FormControlLabel
                     value="female"
                     control={<Radio />}
-                    label="Kadın"
+                    label={t("signup.female")}
                   />
                   <FormControlLabel
                     value="other"
                     control={<Radio />}
-                    label="Diğer"
+                    label={t("signup.other")}
                   />
                 </RadioGroup>
               </FormControl>
@@ -287,7 +298,7 @@ const SignUpStepper = () => {
 
         <div className="flex justify-between mt-8">
           <Button variant="outlined" disabled={step === 1} onClick={handleBack}>
-            Geri
+            {t("signup.back")}
           </Button>
           {step < 3 ? (
             <Button
@@ -295,20 +306,20 @@ const SignUpStepper = () => {
               onClick={handleNext}
               disabled={step === 1 && !isStepOneValid()}
             >
-              İleri
+              {t("signup.next")}
             </Button>
           ) : (
             <Button variant="contained" onClick={handleSubmit}>
-              Kaydı Tamamla
+              {t("signup.submit")}
             </Button>
           )}
         </div>
 
         <div className="mt-6 text-center">
           <Typography variant="body1">
-            Zaten bir hesabınız var mı?{" "}
+            {t("signup.haveAccount")}{" "}
             <Link component={RouterLink} to="/signIn" underline="hover">
-              Giriş yapın
+              {t("signup.login")}
             </Link>
           </Typography>
         </div>
@@ -327,7 +338,7 @@ const SignUpStepper = () => {
           open={successOpen}
           autoHideDuration={1000}
           onClose={() => setSuccessOpen(false)}
-          message="Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz..."
+          message={t("signup.success")}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           ContentProps={{ sx: { backgroundColor: "#2e7d32", color: "white" } }}
           action={<CheckCircleOutlineIcon sx={{ mr: 1 }} />}
