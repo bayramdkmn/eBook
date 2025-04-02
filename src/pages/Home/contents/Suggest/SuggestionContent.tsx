@@ -25,10 +25,9 @@ const SuggestionContent = () => {
   async function handleSendSuggest() {
     if (email && message) {
       if (selected == "öneri") {
-        await sendSuggestion(email, message, 'Suggestion');
-      }
-      else {
-        await sendSuggestion(email, message, 'Complaint');
+        await sendSuggestion(email, message, "Suggestion");
+      } else {
+        await sendSuggestion(email, message, "Complaint");
       }
       setOpenSnackbar(true);
       setEmail("");
@@ -61,10 +60,12 @@ const SuggestionContent = () => {
             color="primary"
           >
             <ToggleButton value="öneri">{t("suggest.suggestion")}</ToggleButton>
-            <ToggleButton value="şikayet">{t("suggest.complaint")}</ToggleButton>
+            <ToggleButton value="şikayet">
+              {t("suggest.complaint")}
+            </ToggleButton>
           </ToggleButtonGroup>
         </div>
-  
+
         <div className="flex flex-col items-center gap-6 w-full">
           <div className="w-full max-w-[700px]">
             <TextField
@@ -85,7 +86,7 @@ const SuggestionContent = () => {
               }}
             />
           </div>
-  
+
           <div className="w-full max-w-[700px]">
             <TextField
               fullWidth
@@ -112,15 +113,19 @@ const SuggestionContent = () => {
               }}
             />
           </div>
-  
+
           <div className="w-full max-w-[700px] flex justify-end">
-            <Button variant="contained" color="primary" onClick={handleSendSuggest}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSendSuggest}
+            >
               {t("suggest.send")}
             </Button>
           </div>
         </div>
       </div>
-  
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
@@ -135,6 +140,6 @@ const SuggestionContent = () => {
       </Snackbar>
     </div>
   );
-};  
+};
 
 export default SuggestionContent;

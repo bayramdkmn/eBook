@@ -25,11 +25,13 @@ const AdvertiseContent = () => {
             }`}
           >
             <div className="flex h-full flex-col w-4/5 items-center justify-center">
-              <Input
-                className="w-3/4 mb-10 h-12"
+              <textarea
+                className={`${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-300"
+                    : "bg-white border-gray-300 text-black focus:ring-blue-500"
+                } w-3/4 mb-10 h-12 rounded-xl p-3`}
                 placeholder={t("advertise.emailPlaceholder")}
-                variant="soft"
-                color={darkMode ? "neutral" : "primary"}
               />
               <textarea
                 className={`w-3/4 h-2/5 p-3 mb-10 border rounded-md resize-none focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors duration-300 ${

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { GoogleMap, Marker, Circle, InfoWindow } from "@react-google-maps/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/tr";
 import Grid from "@mui/material/Grid";
@@ -94,7 +94,7 @@ const EventListContent = () => {
   const [showFirstForm, setShowFirstForm] = useState(true);
   const [hasSearched, setHasSearched] = useState(false);
   const location = useLocation();
-
+  const navigate = useNavigate();
   const getUserLocation = (retryCount = 0) => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -207,10 +207,16 @@ const EventListContent = () => {
 
   if (!isUserLogin) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex items-center justify-center w-full h-full flex-col">
         <h1 className="text-2xl font-bold text-center">
           {t("eventList.loginRequired")}
         </h1>
+        <button
+          onClick={() => navigate("/signIn")}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+        >
+          {t("login.title")}
+        </button>
       </div>
     );
   }

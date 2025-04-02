@@ -134,7 +134,7 @@ const Navbar = () => {
           </div>
         ) : (
           <span
-            className="cursor-pointer text-lg font-medium"
+            className="cursor-pointer border-2 hover:bg-cyan-300 py-2 px-4 rounded-lg text-lg font-semibold hover:text-xl transition-all duration-200 ease-in-out"
             onClick={() => {
               navigate("/signIn");
             }}

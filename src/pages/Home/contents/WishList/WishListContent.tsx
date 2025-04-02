@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext"; // 👈 context
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const initialBooks = [
   {
@@ -33,6 +35,7 @@ const BookCard = ({
   const { t } = useTranslation() as {
     t: (key: string) => string;
   };
+
   return (
     <div
       className={`flex flex-col items-center justify-between rounded-2xl p-5 m-4 w-72 h-[440px] transition hover:scale-105 select-none shadow-xl ${
@@ -72,7 +75,9 @@ const BookCard = ({
 };
 
 const WishListContent = () => {
+  const { isUserLogin } = useUserContext();
   const { darkMode } = useTheme();
+  const navigate = useNavigate();
   const { t } = useTranslation() as {
     t: (key: string) => string;
   };
@@ -115,14 +120,29 @@ const WishListContent = () => {
     setIsAdding(false);
   };
 
+  if (!isUserLogin) {
+    return (
+      <div className="flex items-center justify-center w-full h-full flex-col">
+        <h1 className="text-2xl font-bold text-center">
+          {t("eventList.loginRequired")}
+        </h1>
+        <button
+          onClick={() => navigate("/signIn")}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+        >
+          {t("login.title")}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`flex flex-col min-h-screen w-full p-6 transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-white" : "bg-[#f5f7fa] text-black"
       }`}
     >
-      {/* Ekle butonu */}
-      <div className="flex justify-end mb-4">
+      <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => setIsAdding((prev) => !prev)}
           className="px-5 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
@@ -131,7 +151,6 @@ const WishListContent = () => {
         </button>
       </div>
 
-      {/* Kitap ekleme formu */}
       {isAdding && (
         <div
           className={`flex flex-col items-center rounded-xl p-6 mb-6 w-full md:w-2/3 lg:w-1/2 mx-auto shadow-md transition-colors duration-300 ${
@@ -183,7 +202,6 @@ const WishListContent = () => {
         </div>
       )}
 
-      {/* Kitaplar */}
       <div className="flex flex-wrap items-center justify-center gap-4">
         {books.length > 0 ? (
           books.map((book) => (

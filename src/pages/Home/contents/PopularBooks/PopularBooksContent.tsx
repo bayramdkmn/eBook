@@ -2,13 +2,14 @@ import { Button, Rating, Snackbar, Alert } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../../../../context/UserContext";
 
 const PopularBooksContent = () => {
   const { darkMode } = useTheme();
   const { t } = useTranslation() as {
     t: (key: string, options?: Record<string, any>) => string;
   };
-
+  const { isUserLogin } = useUserContext();
   const [rating, setRating] = useState<number | null>(4);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -90,7 +91,7 @@ const PopularBooksContent = () => {
               <Rating name="book-rating" value={rating} readOnly />
             </div>
 
-            <div className="ml-4">
+            <div className={`${isUserLogin ? "flex" : "hidden"} ml-4`}>
               <Button
                 onClick={() => addWishList(post.id)}
                 variant="contained"

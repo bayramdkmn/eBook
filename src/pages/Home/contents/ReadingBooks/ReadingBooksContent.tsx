@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { addReadingBooks } from "./ReadingBookAPI";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const initialBooks = [
   {
@@ -77,7 +79,8 @@ const ReadingBooksContent = () => {
     image: "",
   });
   const [isAdding, setIsAdding] = useState(false);
-
+  const { isUserLogin } = useUserContext();
+  const navigate = useNavigate();
   const handleRemove = (id: number) => {
     setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
   };
@@ -115,6 +118,22 @@ const ReadingBooksContent = () => {
 
     setNewBook({ title: "", author: "", image: "", genre: "roman" });
     setIsAdding(false);
+  }
+
+  if (!isUserLogin) {
+    return (
+      <div className="flex items-center justify-center w-full h-full flex-col">
+        <h1 className="text-2xl font-bold text-center">
+          {t("eventList.loginRequired")}
+        </h1>
+        <button
+          onClick={() => navigate("/signIn")}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+        >
+          {t("login.title")}
+        </button>
+      </div>
+    );
   }
 
   return (

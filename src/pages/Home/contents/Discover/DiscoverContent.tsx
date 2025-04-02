@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "../../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const DiscoverContent = () => {
   const { darkMode } = useTheme();
   const { isUserLogin } = useUserContext();
   const { t } = useTranslation("common") as { t: (key: string) => string };
-
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -113,7 +114,19 @@ const DiscoverContent = () => {
   };
 
   if (!isUserLogin) {
-    return <h1 className="text-center text-2xl font-bold mt-10">Giriş yap</h1>;
+    return (
+      <div className="flex items-center justify-center w-full h-full flex-col">
+        <h1 className="text-2xl font-bold text-center">
+          {t("eventList.loginRequired")}
+        </h1>
+        <button
+          onClick={() => navigate("/signIn")}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition"
+        >
+          {t("login.title")}
+        </button>
+      </div>
+    );
   }
 
   return (
