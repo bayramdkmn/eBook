@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconBaseProps } from "react-icons";
 import AddPost from "../pages/Home/contents/AddPost/AddPost";
@@ -18,6 +18,7 @@ const IconRenderer = (Icon: any) => (props: IconBaseProps) =>
   React.createElement(Icon, props);
 
 const Sidebar = () => {
+  const [isUserJoin, setIsUserJoin] = useState(true);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useTheme();
@@ -27,46 +28,61 @@ const Sidebar = () => {
     navigate(path);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setIsUserJoin(false);
+    }
+  }, []);
+
   const menuItems = [
     {
       label: t("sidebar.eventMap"),
       path: "/eventMap",
       Icon: IconRenderer(GrMapLocation),
+      protected: true, // sadece giriş yapan kullanıcılar görebilecek
     },
     {
       label: t("sidebar.explore"),
       path: "/",
       Icon: IconRenderer(RiCompassDiscoverLine),
+      protected: true,
     },
     {
       label: t("sidebar.readingBooks"),
       path: "/readingBooks",
       Icon: IconRenderer(BiBookReader),
+      protected: true,
     },
     {
       label: t("sidebar.wishList"),
       path: "/wishList",
       Icon: IconRenderer(BiBookAdd),
+      protected: true,
     },
     {
       label: t("sidebar.popularBooks"),
       path: "/popularBooks",
       Icon: IconRenderer(TbBooks),
+      protected: false,
     },
     {
       label: t("sidebar.advertise"),
       path: "/advertise",
       Icon: IconRenderer(RiAdvertisementLine),
+      protected: false,
     },
     {
       label: t("sidebar.reportProblem"),
       path: "/reportProblem",
       Icon: IconRenderer(MdOutlineBugReport),
+      protected: false,
     },
     {
       label: t("sidebar.suggest"),
       path: "/suggest",
       Icon: IconRenderer(BiCommentDetail),
+      protected: false,
     },
   ];
 
@@ -85,32 +101,34 @@ const Sidebar = () => {
         </span>
       </div>
 
-      <div
-        className="cursor-pointer h-20 flex items-center hover:text-xl transition-all duration-200 px-6"
-        onClick={() => setOpen(true)}
-      >
-        <span className="text-2xl">
-          <PostIcon size={22} />
-        </span>
-        <span className="ml-6 hidden group-hover:inline">
-          {t("sidebar.addPost")}
-        </span>
-      </div>
-
-      <AddPost open={open} onClose={() => setOpen(false)} />
-
-      {menuItems.map(({ label, path, Icon }) => (
+      {isUserJoin && (
         <div
-          key={path}
-          className="cursor-pointer h-16 flex items-center hover:text-xl transition-all duration-200 px-6"
-          onClick={() => handleMenuClick(path)}
+          className="cursor-pointer h-20 flex items-center hover:text-xl transition-all duration-200 px-6"
+          onClick={() => setOpen(true)}
         >
           <span className="text-2xl">
-            <Icon size={22} />
+            <PostIcon size={22} />
           </span>
-          <span className="ml-6 hidden group-hover:inline">{label}</span>
+          <span className="ml-6 hidden group-hover:inline">
+            {t("sidebar.addPost")}
+          </span>
         </div>
-      ))}
+      )}
+      <AddPost open={open} onClose={() => setOpen(false)} />
+      {menuItems
+        .filter((item) => isUserJoin || !item.protected)
+        .map(({ label, path, Icon }) => (
+          <div
+            key={path}
+            className="cursor-pointer h-16 flex items-center hover:text-xl transition-all duration-200 px-6"
+            onClick={() => handleMenuClick(path)}
+          >
+            <span className="text-2xl">
+              <Icon size={22} />
+            </span>
+            <span className="ml-6 hidden group-hover:inline">{label}</span>
+          </div>
+        ))}
 
       <div
         className="cursor-pointer h-16 flex items-center hover:text-xl transition-all duration-200 px-6 absolute bottom-6 w-full"

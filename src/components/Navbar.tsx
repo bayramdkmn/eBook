@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ const Navbar = () => {
     t: (key: string) => string;
     i18n: any;
   };
-  const [isUserJoin, setIsUserJoin] = useState(true);
+  const [isUserJoin, setIsUserJoin] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,6 +19,21 @@ const Navbar = () => {
     clearTimeout(timer);
     setShowAccountMenu(true);
   };
+
+  const logOut = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("requesterId");
+    setIsUserJoin(false);
+    navigate("/signIn");
+  };
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsUserJoin(true);
+    } else {
+      setIsUserJoin(false);
+    }
+  }, [location.pathname]);
 
   const handleMouseLeave = () => {
     timer = setTimeout(() => {
@@ -47,7 +62,6 @@ const Navbar = () => {
     >
       <div className="flex-1">{/* İsteğe bağlı logo */}</div>
 
-      {/* Orta bölüm: Sayfa başlığı */}
       <div className="flex-1 text-center">
         <h1 className="text-2xl font-semibold">{pageTitle}</h1>
       </div>
@@ -80,6 +94,7 @@ const Navbar = () => {
                 </div>
                 <div
                   onClick={() => {
+                    logOut();
                     setShowAccountMenu(false);
                   }}
                   className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
@@ -89,7 +104,6 @@ const Navbar = () => {
 
                 <div className="border-t border-gray-300 my-2"></div>
 
-                {/* Dil Seçici */}
                 <div className="px-4 py-2">
                   <p className="mb-2 text-lg ">{t("navbar.language")}</p>
                   <div className="flex space-x-2">
@@ -119,7 +133,12 @@ const Navbar = () => {
             )}
           </div>
         ) : (
-          <span className="cursor-pointer text-lg font-medium">
+          <span
+            className="cursor-pointer text-lg font-medium"
+            onClick={() => {
+              navigate("/signIn");
+            }}
+          >
             {t("navbar.login")}
           </span>
         )}

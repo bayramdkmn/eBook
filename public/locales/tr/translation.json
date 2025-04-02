@@ -115,7 +115,8 @@
     "appointmentConfirmed": "✅ Randevu Ayarlandı:\n📅 {{date}} - ⏰ {{time}}",
     "selectDateTimeWarning": "⚠️ Lütfen tarih ve saat seçin.",
     "locationError": "Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin.",
-    "getDirections": "Yol Tarifi Al"
+    "getDirections": "Yol Tarifi Al",
+    "loginRequired": "Lütfen Önce Giriş Yapınız..."
   },
   "popularBooks": {
   "author": "Yazar",

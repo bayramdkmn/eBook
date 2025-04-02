@@ -2,9 +2,11 @@ import { Avatar } from "@mui/material";
 import React, { useState } from "react";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../../../../context/UserContext";
 
 const DiscoverContent = () => {
   const { darkMode } = useTheme();
+  const { isUserLogin } = useUserContext();
   const { t } = useTranslation("common") as { t: (key: string) => string };
 
   const [posts, setPosts] = useState([
@@ -109,6 +111,10 @@ const DiscoverContent = () => {
   const handleShowMore = () => {
     setVisiblePosts((prev) => prev + 15);
   };
+
+  if (!isUserLogin) {
+    return <h1 className="text-center text-2xl font-bold mt-10">Giriş yap</h1>;
+  }
 
   return (
     <div

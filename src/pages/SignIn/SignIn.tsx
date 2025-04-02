@@ -4,6 +4,7 @@ import { loginUser } from "./SignInAPI";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useUserContext } from "../../context/UserContext";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -13,10 +14,11 @@ const SignIn = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState<"success" | "error">("error");
-
+  const { setIsUserLogin } = useUserContext();
   async function handleSignIn() {
     try {
       await loginUser(username, password);
+      setIsUserLogin(true);
       setToastMessage(t("login.success"));
       setToastType("success");
       setToastOpen(true);

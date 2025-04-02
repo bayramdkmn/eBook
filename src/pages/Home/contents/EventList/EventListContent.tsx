@@ -18,6 +18,7 @@ import Button from "@mui/material/Button";
 import "./customs.css";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../../../../context/UserContext";
 
 dayjs.locale("tr");
 
@@ -71,6 +72,7 @@ const libraryData = [
 ];
 
 const EventListContent = () => {
+  const { isUserLogin } = useUserContext();
   const { t } = useTranslation() as {
     t: (key: string, options?: Record<string, any>) => string;
   };
@@ -112,7 +114,9 @@ const EventListContent = () => {
   };
 
   useEffect(() => {
-    getUserLocation();
+    if (isUserLogin) {
+      getUserLocation();
+    }
   }, []);
 
   const getAddress = (lat: number, lng: number) => {
@@ -200,6 +204,16 @@ const EventListContent = () => {
     setSelectedLocation(null);
     setSelectedMarker(null);
   };
+
+  if (!isUserLogin) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <h1 className="text-2xl font-bold text-center">
+          {t("eventList.loginRequired")}
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full h-full">

@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import "./App.css";
 import "./i18n";
+import { UserProvider } from "./context/UserContext";
 
 const Layout = () => {
   const { darkMode } = useTheme();
@@ -40,9 +41,11 @@ const Layout = () => {
 function App() {
   return (
     <LoadScript googleMapsApiKey="AIzaSyDRHhcR_1wef7UhABZGnuuzvA7sGvqq82M">
-      <ThemeProvider>
-        <Layout />
-      </ThemeProvider>
+      <UserProvider>
+        <ThemeProvider>
+          <Layout />
+        </ThemeProvider>
+      </UserProvider>
     </LoadScript>
   );
 }

@@ -115,7 +115,9 @@
     "appointmentConfirmed": "✅ Appointment Set:\n📅 {{date}} - ⏰ {{time}}",
     "selectDateTimeWarning": "⚠️ Please select a date and time.",
     "locationError": "Could not retrieve location. Please check your browser's location permissions.",
-    "getDirections": "Get Directions"
+    "getDirections": "Get Directions",
+    "loginRequired": "Please Login First..."
+
   },
   "popularBooks": {
   "author": "Author",
