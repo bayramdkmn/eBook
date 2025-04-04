@@ -1,9 +1,8 @@
-import axios, { AxiosError } from "axios";
-import { API_URL } from "../../constants/index";
+import api from "../../api/axios";
 
 export async function loginUser(email: string, password: string) {
   try {
-    const response = await axios.post(`${API_URL}/api/user/login`, {
+    const response = await api.post("/api/user/login", {
       email,
       password,
     });
@@ -15,20 +14,20 @@ export async function loginUser(email: string, password: string) {
       localStorage.setItem('requesterId', response.data.requesterId);
       console.log("Requester ID saved:", response.data.requesterId);
 
-      const tokenCheck = localStorage.getItem('authToken');
-      console.log("Token kaydedildikten sonra:", tokenCheck);
+      const base64Payload = response.data.token.split('.')[1];
+      const decodedPayload = JSON.parse(atob(base64Payload));
+      const expiration = decodedPayload.exp;
+
+      localStorage.setItem('authTokenExp', expiration.toString());
+      console.log("Token expires at (timestamp):", expiration);
 
       return response.data;
     } else {
       console.error("Login failed, no token received.");
       throw new Error("Login failed, no token received.");
     }
-  } catch (err: AxiosError | any) {
-    if (axios.isAxiosError(err)) {
-      console.error("Axios error: ", err.response?.data);
-    } else {
-      console.error("Error: ", err.message);
-    }
+  } catch (err: any) {
+    console.error("Login error:", err.response?.data || err.message);
     throw err;
   }
 }

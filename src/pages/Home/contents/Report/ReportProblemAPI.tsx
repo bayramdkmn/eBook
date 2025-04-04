@@ -1,26 +1,25 @@
-import axios, { AxiosError } from "axios";
-import { API_URL } from "../../../../constants/index";
+import api from "../../../../api/axios";
 
-export async function sendProblem(email: string, problem: string, type: string) {
-    try {
-      const response = await axios.post(`${API_URL}/api/user/sendReport`, {
-        email,
-        problem,
-        type
-      });
-  
-      if (response.data) {
-        return response.data;
-      } else {
-        console.error("Problem could not be sent!");
-        throw new Error("Problem could not be sent!");
-      }
-    } catch (err: AxiosError | any) {
-      if (axios.isAxiosError(err)) {
-        console.error("Axios error: ", err.response?.data);
-      } else {
-        console.error("Error: ", err.message);
-      }
-      throw err;
+export async function sendProblem(
+  email: string,
+  problem: string,
+  type: string
+) {
+  try {
+    const response = await api.post("/api/user/sendReport", {
+      email,
+      problem,
+      type,
+    });
+
+    if (response.data) {
+      return response.data;
+    } else {
+      console.error("Problem could not be sent!");
+      throw new Error("Problem could not be sent!");
     }
+  } catch (err: any) {
+    console.error("sendProblem error:", err.response?.data || err.message);
+    throw err;
+  }
 }

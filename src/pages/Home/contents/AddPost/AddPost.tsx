@@ -9,11 +9,13 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import { hover } from "framer-motion";
+import { addUserPost } from "./AddPostAPI";
+import { useUserContext } from "../../../../context/UserContext";
 
 interface AddPostModalProps {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 const StyledRating = styled(Rating)(({ theme }) => ({
@@ -22,7 +24,8 @@ const StyledRating = styled(Rating)(({ theme }) => ({
   },
 }));
 
-const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
+const AddPost: React.FC<AddPostModalProps> = ({ open, onClose, onSuccess }) => {
+  const { fetchPosts } = useUserContext();
   const { darkMode } = useTheme();
   const { t } = useTranslation("common") as { t: (key: string) => string };
   const [step, setStep] = useState(1);
@@ -81,9 +84,18 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
     }
   };
 
-  const handleShare = () => {
-    alert(t("addPost.sharedAlert"));
-    onClose();
+  const handleShare = async () => {
+    try {
+      if (!bookName || !description) return;
+
+      await addUserPost(bookName, description);
+      fetchPosts(); // ← gönderi sonrası listeyi güncelle
+
+      alert(t("addPost.sharedAlert"));
+      handleClose();
+    } catch (err) {
+      console.error("Gönderi eklenemedi:", err);
+    }
   };
 
   return (
@@ -95,7 +107,6 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            // Responsive genişlik; içerik yoğunluğuna göre otomatik yükseklik
             width: { xs: "90%", sm: "80%", md: "60%" },
             maxWidth: 600,
             bgcolor: darkMode ? "#1e1e1e" : "background.paper",
@@ -229,7 +240,6 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose }) => {
             color="error"
             onClick={handleClose}
             fullWidth
-            // sx={{ mt: 2 }}
             sx={{
               bgcolor: "#bf0000",
               mt: 2,

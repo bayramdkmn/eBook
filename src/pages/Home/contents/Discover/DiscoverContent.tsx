@@ -6,107 +6,10 @@ import { useUserContext } from "../../../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const DiscoverContent = () => {
+  const { posts, isUserLogin } = useUserContext();
   const { darkMode } = useTheme();
-  const { isUserLogin } = useUserContext();
   const { t } = useTranslation("common") as { t: (key: string) => string };
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: "Bayram Dikmen",
-      content: "İlk gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 2,
-      author: "Bayram Dikmen",
-      content: "İkinci gönderi içerik örneği.",
-    },
-    {
-      id: 3,
-      author: "Bayram Dikmen",
-      content: "İlk gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 4,
-      author: "Bayram Dikmen",
-      content: "İlk gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 5,
-      author: "Bayram Dikmen",
-      content: "s gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 6,
-      author: "Bayram Dikmen",
-      content: "s gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 7,
-      author: "Bayram Dikmen",
-      content: "yedi gönderi içerik örneği.",
-    },
-    {
-      id: 8,
-      author: "Bayram Dikmen",
-      content: "sekizinci gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 9,
-      author: "Bayram Dikmen",
-      content: "dokuzuncu gönderi içerik örneği.",
-    },
-    {
-      id: 10,
-      author: "Bayram Dikmen",
-      content: "onuncu gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 11,
-      author: "Bayram Dikmen",
-      content: "on birinci gönderi içerik örneği.",
-    },
-    {
-      id: 12,
-      author: "Bayram Dikmen",
-      content: "on ikinci gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 13,
-      author: "Bayram Dikmen",
-      content: "on üçüncü gönderi içerik örneği.",
-    },
-    {
-      id: 14,
-      author: "Bayram Dikmen",
-      content: "on dördüncü gönderi içerik örneği.",
-      img: "/logo192.png",
-    },
-    {
-      id: 15,
-      author: "Bayram Dikmen",
-      content: "on beşinci gönderi içerik örneği.",
-    },
-    {
-      id: 16,
-      author: "Bayram Dikmen",
-      content: "on altıncı gönderi içerik örneği.",
-    },
-    {
-      id: 17,
-      author: "Bayram Dikmen",
-      content: "on yedinci gönderi içerik örneği.",
-    },
-  ]);
-
   const [visiblePosts, setVisiblePosts] = useState(15);
 
   const handleShowMore = () => {
@@ -155,19 +58,25 @@ const DiscoverContent = () => {
                   <Avatar
                     className="mr-4"
                     sx={{ width: 60, height: 60 }}
-                    src="/pp.jpeg"
+                    src={post.user?.avatar || ""}
                   />
-                  <div className="font-bold text-lg">{post.author}</div>
+                  <div className="font-bold text-lg">
+                    {post.user.name} {post.user.surname}
+                  </div>
                 </div>
-                <div className="text-gray-500">...</div>
+                <div className="text-gray-500 text-sm">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </div>
               </div>
+
               <div className="mt-2 text-sm">{post.content}</div>
-              {post.img && (
+
+              {post.images && (
                 <div className="mt-4">
                   <img
                     className="w-full rounded-md object-cover"
                     style={{ height: 200, width: 200 }}
-                    src={post.img}
+                    src={post.images[0]}
                     alt="Post"
                   />
                 </div>
@@ -199,6 +108,19 @@ const DiscoverContent = () => {
               <div className="font-bold text-lg">Bayram Dikmen</div>
               <div className="text-sm text-gray-500">
                 1000 {t("discover.followers")}
+              </div>
+            </div>
+            <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl hover:bg-blue-600">
+              {t("discover.follow")}
+            </button>
+          </div>
+
+          <div className="flex items-center mb-6">
+            <Avatar sx={{ width: 60, height: 60 }} />
+            <div className="ml-4">
+              <div className="font-bold text-lg">Güneş Bolçelik</div>
+              <div className="text-sm text-gray-500">
+                2500 {t("discover.followers")}
               </div>
             </div>
             <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl hover:bg-blue-600">

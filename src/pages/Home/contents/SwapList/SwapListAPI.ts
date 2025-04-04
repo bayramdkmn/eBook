@@ -1,64 +1,34 @@
-import axios, { AxiosError } from "axios";
-import { API_URL } from "../../../../constants/index";
+import api from "../../../../api/axios";
 
 export async function getSwapList() {
   try {
-    const token = localStorage.getItem('authToken');
-    console.log("token", token);
-
-    if (!token) {
-      throw new Error('Token bulunamadı');
-    }
-
-    const response = await axios.get(`${API_URL}/api/swapRequest`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
+    const response = await api.get("/api/swapRequest");
     return response.data;
-  } catch (err: AxiosError | any) {
-    if (axios.isAxiosError(err)) {
-      console.error("Axios error: ", err.response?.data);
-    } else {
-      console.error("Error: ", err.message);
-    }
+  } catch (err: any) {
+    console.error("getSwapList error:", err.response?.data || err.message);
     throw err;
   }
 }
 
 export async function createSwap(data: any) {
   try {
-    const token = localStorage.getItem('authToken');
-    const requesterId = localStorage.getItem('requesterId');
-
-    if (!token) {
-      throw new Error('Token bulunamadı');
-    }
+    const requesterId = localStorage.getItem("requesterId");
 
     if (!requesterId) {
-      throw new Error('Requester ID bulunamadı');
+      throw new Error("Requester ID bulunamadı");
     }
-
-    console.log("token", token);
-    console.log("request id", requesterId);
 
     const swapData = {
       ...data,
       requesterId,
     };
 
-    console.log(swapData);
+    console.log("İstek verisi:", swapData);
 
-    const response = await axios.post(`${API_URL}/api/swapRequest/createSwap`, swapData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    });
-
+    const response = await api.post("/api/swapRequest/createSwap", swapData);
     return response.data;
-  } catch (err) {
-    console.error("Error: ", err);
+  } catch (err: any) {
+    console.error("createSwap error:", err.response?.data || err.message);
+    throw err;
   }
 }
