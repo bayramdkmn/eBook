@@ -100,7 +100,11 @@
   "discover": {
     "showMore": "Daha Fazla Göster",
     "follow": "Takip Et",
-    "followers": "Takipçi"
+    "followers": "Takipçi",
+    "suggestedUsers": "Önerilen Kullanıcılar",
+    "noSuggestions": "Önerilen kullanıcı yok",
+    "Followed": "Takip Edildi",
+    "refresh": "Yenile"
   },
   "eventList":{
     "searchBook": "📘 Kitap Ara",

@@ -4,16 +4,32 @@ import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "../../../../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { deleteUserPost } from "./DiscoverAPI";
+import SuggestedUserCard from "./SuggestedUserCard";
 
 const DiscoverContent = () => {
-  const { posts, isUserLogin } = useUserContext();
+  const {
+    posts,
+    isUserLogin,
+    userSuggestions,
+    removePost,
+    fetchUserSuggestions,
+  } = useUserContext();
   const { darkMode } = useTheme();
   const { t } = useTranslation("common") as { t: (key: string) => string };
   const navigate = useNavigate();
+  const currentUserId = localStorage.getItem("requesterId");
   const [visiblePosts, setVisiblePosts] = useState(15);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
   const handleShowMore = () => {
     setVisiblePosts((prev) => prev + 15);
+  };
+
+  const handleRefreshSuggestions = async () => {
+    setLoadingSuggestions(true);
+    await fetchUserSuggestions();
+    setLoadingSuggestions(false);
   };
 
   if (!isUserLogin) {
@@ -60,16 +76,40 @@ const DiscoverContent = () => {
                     sx={{ width: 60, height: 60 }}
                     src={post.user?.avatar || ""}
                   />
-                  <div className="font-bold text-lg">
-                    {post.user.name} {post.user.surname}
+                  <div className="flex flex-col text-sm">
+                    <div className="font-bold text-lg">
+                      {post.user.name} {post.user.surname}
+                    </div>
+                    <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
-                <div className="text-gray-500 text-sm">
-                  {new Date(post.createdAt).toLocaleDateString()}
+                <div className="text-gray-500 text-sm flex flex-col gap-4">
+                  {String(post.user?.id) === currentUserId && (
+                    <button
+                      onClick={async () => {
+                        const confirmDelete = window.confirm(
+                          "Bu gönderiyi silmek istediğine emin misin?"
+                        );
+                        if (!confirmDelete) return;
+
+                        try {
+                          await deleteUserPost(post.id);
+                          removePost(post.id);
+                        } catch (err) {
+                          console.error("Silme başarısız", err);
+                          alert("Gönderi silinirken bir hata oluştu.");
+                        }
+                      }}
+                      className="ml-2 text-red-500 hover:text-red-700"
+                      title="Gönderiyi sil"
+                    >
+                      🗑️
+                    </button>
+                  )}
                 </div>
               </div>
 
-              <div className="mt-2 text-sm">{post.content}</div>
+              <div className="mt-4 text-sm">{post.content}</div>
 
               {post.images && (
                 <div className="mt-4">
@@ -96,37 +136,38 @@ const DiscoverContent = () => {
           )}
         </div>
 
-        {/* Sağ Sidebar */}
         <div
           className={`lg:w-1/4 shadow-md rounded-md p-4 hidden xl:block transition-colors duration-300 ${
             darkMode ? "bg-gray-700 text-white" : "bg-slate-200 text-black"
           }`}
         >
-          <div className="flex items-center mb-6">
-            <Avatar sx={{ width: 60, height: 60 }} src="/pp.jpeg" />
-            <div className="ml-4">
-              <div className="font-bold text-lg">Bayram Dikmen</div>
-              <div className="text-sm text-gray-500">
-                1000 {t("discover.followers")}
-              </div>
-            </div>
-            <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl hover:bg-blue-600">
-              {t("discover.follow")}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">
+              {t("discover.suggestedUsers")}
+            </h2>
+            <button
+              onClick={handleRefreshSuggestions}
+              className="text-sm text-blue-500 hover:underline"
+            >
+              {loadingSuggestions ? t("loading") : t("discover.refresh")}
             </button>
           </div>
 
-          <div className="flex items-center mb-6">
-            <Avatar sx={{ width: 60, height: 60 }} />
-            <div className="ml-4">
-              <div className="font-bold text-lg">Güneş Bolçelik</div>
-              <div className="text-sm text-gray-500">
-                2500 {t("discover.followers")}
-              </div>
-            </div>
-            <button className="ml-auto bg-blue-500 text-white px-4 py-1 rounded-xl hover:bg-blue-600">
-              {t("discover.follow")}
-            </button>
-          </div>
+          {userSuggestions.length > 0 ? (
+            userSuggestions.map((user) => (
+              <SuggestedUserCard
+                key={user.id}
+                id={user.id}
+                name={user.name}
+                surname={user.surname}
+                avatar={user.avatar}
+              />
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">
+              {t("discover.noSuggestions")}
+            </p>
+          )}
         </div>
       </div>
     </div>

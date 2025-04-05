@@ -47,7 +47,7 @@ const AddSwap: React.FC<AddSwapModalProps> = ({ open, onClose }) => {
       const data = { content: description, bookTitle: bookName };
       await createSwap(data);
     } catch (err) {
-      console.log("create swap error", err);
+      console.error("create swap error", err);
     }
     onClose();
   }

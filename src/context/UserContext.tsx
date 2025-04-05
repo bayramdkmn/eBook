@@ -5,7 +5,11 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { fetchUserPosts } from "../pages/Home/contents/Discover/DiscoverAPI";
+import {
+  fetchUserPosts,
+  getFollowedPosts,
+  getUserSuggestions,
+} from "../pages/Home/contents/Discover/DiscoverAPI";
 interface Post {
   id: string;
   title: string;
@@ -13,17 +17,31 @@ interface Post {
   createdAt: string;
   images?: string[];
   user: {
+    id?: string;
     name: string;
     surname: string;
     avatar?: string;
   };
 }
 
+interface User {
+  id: string;
+  name: string;
+  surname: string;
+  avatar?: string;
+}
+
 type UserContextType = {
   isUserLogin: boolean;
   setIsUserLogin: React.Dispatch<React.SetStateAction<boolean>>;
   posts: Post[];
+  removeUserFromSuggestions: (userId: string) => void;
   fetchPosts: () => void;
+  fetchUserSuggestions: () => void;
+  userSuggestions: User[];
+  logout: () => void;
+  login: () => void;
+  removePost: (postId: string) => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -31,14 +49,43 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isUserLogin, setIsUserLogin] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [userSuggestions, setUserSuggestions] = useState<User[]>([]);
+
+  const fetchUserSuggestions = async () => {
+    try {
+      const data = await getUserSuggestions();
+      setUserSuggestions(data);
+    } catch (err) {
+      console.error("Kullanıcı önerileri alınamadı", err);
+    }
+  };
+
+  const removeUserFromSuggestions = (userId: string) => {
+    setUserSuggestions((prev) => prev.filter((user) => user.id !== userId));
+  };
+
+  const removePost = (postId: string) => {
+    setPosts((prev) => prev.filter((post) => post.id !== postId));
+  };
 
   const fetchPosts = async () => {
     try {
-      const data = await fetchUserPosts();
+      const data = await getFollowedPosts();
       setPosts(data);
     } catch (err) {
       console.error("Gönderiler alınamadı", err);
     }
+  };
+
+  const login = () => {
+    setIsUserLogin(true);
+    fetchPosts();
+    fetchUserSuggestions();
+  };
+  const logout = () => {
+    setIsUserLogin(false);
+    setPosts([]);
+    setUserSuggestions([]);
   };
 
   useEffect(() => {
@@ -46,6 +93,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       setIsUserLogin(true);
       fetchPosts();
+      fetchUserSuggestions();
     }
   }, []);
 
@@ -53,9 +101,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     <UserContext.Provider
       value={{
         isUserLogin,
+        removePost,
+        login,
+        logout,
+        removeUserFromSuggestions,
         setIsUserLogin,
         posts,
         fetchPosts,
+        fetchUserSuggestions,
+        userSuggestions,
       }}
     >
       {children}

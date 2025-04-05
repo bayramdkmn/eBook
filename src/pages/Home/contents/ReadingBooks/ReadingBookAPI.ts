@@ -13,13 +13,10 @@ export async function addReadingBooks(data: any) {
       requesterId,
     };
 
-    console.log("backend gidecek data", readingBookData);
-
     const response = await api.post("/api/readingBooks/addReadingBook", readingBookData);
 
     return response.data;
   } catch (err) {
-    console.log("frontend addReadingBooks hata", err);
-    throw err;
+    console.error("frontend addReadingBooks hata", err);
   }
 }

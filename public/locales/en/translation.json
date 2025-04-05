@@ -100,7 +100,11 @@
   "discover": {
     "showMore": "Show More",
     "follow": "Follow",
-    "followers": "Followers"
+    "followers": "Followers",
+    "suggestedUsers":"Suggested Users",
+    "noSuggestions": "No suggestions available.",
+    "followed": "Followed",
+    "refresh": "Refresh"
   },
   "eventList": {
     "searchBook": "📘 Search Book",

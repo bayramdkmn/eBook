@@ -99,8 +99,8 @@ const ReadingBooksContent = () => {
         image: newBook.image,
       };
       await addReadingBooks(data);
-    } catch (err) {
-      console.log("add reading book frontend hata");
+    } catch (err: any) {
+      console.error("add reading book frontend hata", err);
     }
 
     const newId = books.length > 0 ? books[books.length - 1].id + 1 : 1;

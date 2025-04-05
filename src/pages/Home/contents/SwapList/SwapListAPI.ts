@@ -23,7 +23,6 @@ export async function createSwap(data: any) {
       requesterId,
     };
 
-    console.log("İstek verisi:", swapData);
 
     const response = await api.post("/api/swapRequest/createSwap", swapData);
     return response.data;

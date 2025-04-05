@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../context/UserContext";
 
 const Navbar = () => {
+  const { logout } = useUserContext();
   const { darkMode } = useTheme();
   const { t, i18n } = useTranslation("common") as {
     t: (key: string) => string;
@@ -20,10 +22,11 @@ const Navbar = () => {
     setShowAccountMenu(true);
   };
 
-  const logOut = () => {
+  const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("requesterId");
     setIsUserJoin(false);
+    logout();
     navigate("/signIn");
   };
   useEffect(() => {
@@ -94,7 +97,7 @@ const Navbar = () => {
                 </div>
                 <div
                   onClick={() => {
-                    logOut();
+                    handleLogout();
                     setShowAccountMenu(false);
                   }}
                   className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"

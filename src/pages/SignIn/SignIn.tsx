@@ -7,6 +7,7 @@ import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { useUserContext } from "../../context/UserContext";
 
 const SignIn = () => {
+  const { login } = useUserContext();
   const navigate = useNavigate();
   const { t } = useTranslation("common") as { t: (key: string) => string };
   const [username, setUsername] = useState("");
@@ -19,6 +20,7 @@ const SignIn = () => {
     try {
       await loginUser(username, password);
       setIsUserLogin(true);
+      login();
       setToastMessage(t("login.success"));
       setToastType("success");
       setToastOpen(true);

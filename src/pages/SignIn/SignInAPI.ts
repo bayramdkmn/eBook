@@ -9,17 +9,15 @@ export async function loginUser(email: string, password: string) {
 
     if (response.data.token) {
       localStorage.setItem('authToken', response.data.token);
-      console.log("Login successful, token saved.", response.data.token);
 
       localStorage.setItem('requesterId', response.data.requesterId);
-      console.log("Requester ID saved:", response.data.requesterId);
 
       const base64Payload = response.data.token.split('.')[1];
       const decodedPayload = JSON.parse(atob(base64Payload));
       const expiration = decodedPayload.exp;
+      
 
       localStorage.setItem('authTokenExp', expiration.toString());
-      console.log("Token expires at (timestamp):", expiration);
 
       return response.data;
     } else {

@@ -63,7 +63,7 @@ const SwapContent = () => {
       };
       await createSwap(data);
     } catch (err) {
-      console.log(t("swapContent.swapError"), err);
+      console.error(t("swapContent.swapError"), err);
     }
   }
 
