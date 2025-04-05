@@ -6,30 +6,10 @@ import React, {
   ReactNode,
 } from "react";
 import {
-  fetchUserPosts,
   getFollowedPosts,
   getUserSuggestions,
 } from "../pages/Home/contents/Discover/DiscoverAPI";
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  images?: string[];
-  user: {
-    id?: string;
-    name: string;
-    surname: string;
-    avatar?: string;
-  };
-}
-
-interface User {
-  id: string;
-  name: string;
-  surname: string;
-  avatar?: string;
-}
+import { Post, User } from "../types/User.type";
 
 type UserContextType = {
   isUserLogin: boolean;
@@ -86,6 +66,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setIsUserLogin(false);
     setPosts([]);
     setUserSuggestions([]);
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("requesterId");
   };
 
   useEffect(() => {

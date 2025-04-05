@@ -8,6 +8,8 @@ import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import "./App.css";
 import "./i18n";
 import { UserProvider } from "./context/UserContext";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import { AppAPIProvider } from "./context/APIContext";
 
 const Layout = () => {
   const { darkMode } = useTheme();
@@ -41,11 +43,13 @@ const Layout = () => {
 function App() {
   return (
     <LoadScript googleMapsApiKey="AIzaSyDRHhcR_1wef7UhABZGnuuzvA7sGvqq82M">
-      <UserProvider>
-        <ThemeProvider>
-          <Layout />
-        </ThemeProvider>
-      </UserProvider>
+      <AppAPIProvider>
+        <UserProvider>
+          <ThemeProvider>
+            <Layout />
+          </ThemeProvider>
+        </UserProvider>
+      </AppAPIProvider>
     </LoadScript>
   );
 }
