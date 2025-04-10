@@ -93,13 +93,10 @@ const Profile = () => {
 
     try {
       await updatePassword(profile!.id, currentPassword, newPassword);
-      console.log(profile!.id, currentPassword, newPassword);
       setPasswordSuccess("Şifre başarıyla güncellendi.");
-
-      // Şifre değiştiyse kullanıcıyı logout et
       setTimeout(() => {
-        logout(); // UserContext içindeki logout fonksiyonu
-        window.location.href = "/signin"; // Yönlendirme
+        logout();
+        window.location.href = "/signin";
       }, 1500);
     } catch (err: any) {
       const msg = err?.response?.data?.error || "Bir hata oluştu.";
@@ -137,11 +134,7 @@ const Profile = () => {
             )}
           </div>
 
-          <div
-            onSubmit={handleSubmit}
-            className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            {/* Profil Düzenle Butonu */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-2 flex justify-end">
               {!editMode && (
                 <button
@@ -154,145 +147,118 @@ const Profile = () => {
               )}
             </div>
 
-            {/* Ad Soyad */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                {t("profile.fullName")}
-              </label>
-              {editMode ? (
-                <>
+            {editMode ? (
+              <form
+                onSubmit={handleSubmit}
+                className="contents" // özel trick: form içeriği stil bozmasın diye
+              >
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.fullName")}
+                  </label>
                   <input
                     type="text"
                     name="name"
-                    value={profile.name}
+                    value={profile.name || ""}
                     onChange={handleChange}
+                    placeholder="Ad"
                     className={`w-full px-4 py-2 rounded border mt-1 ${
                       darkMode
                         ? "bg-gray-700 text-white border-gray-600"
                         : "bg-white border-gray-300"
                     }`}
-                    placeholder="Ad"
                   />
                   <input
                     type="text"
                     name="surname"
-                    value={profile.surname}
+                    value={profile.surname || ""}
                     onChange={handleChange}
+                    placeholder="Soyad"
                     className={`w-full px-4 py-2 rounded border mt-2 ${
                       darkMode
                         ? "bg-gray-700 text-white border-gray-600"
                         : "bg-white border-gray-300"
                     }`}
-                    placeholder="Soyad"
                   />
-                </>
-              ) : (
-                <p className="mt-1">
-                  {profile.name} {profile.surname}
-                </p>
-              )}
-            </div>
+                </div>
 
-            {/* Telefon */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                {t("profile.phone")}
-              </label>
-              {editMode ? (
-                <input
-                  type="text"
-                  name="phone"
-                  value={profile.phone}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded border ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600"
-                      : "bg-white border-gray-300"
-                  }`}
-                />
-              ) : (
-                <p className="mt-1">{profile.phone}</p>
-              )}
-            </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.phone")}
+                  </label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={profile.phone || ""}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 rounded border ${
+                      darkMode
+                        ? "bg-gray-700 text-white border-gray-600"
+                        : "bg-white border-gray-300"
+                    }`}
+                  />
+                </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                {t("profile.email")}
-              </label>
-              {editMode ? (
-                <input
-                  type="email"
-                  name="email"
-                  value={profile.email}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded border ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600"
-                      : "bg-white border-gray-300"
-                  }`}
-                />
-              ) : (
-                <p className="mt-1">{profile.email}</p>
-              )}
-            </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.email")}
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={profile.email || ""}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 rounded border ${
+                      darkMode
+                        ? "bg-gray-700 text-white border-gray-600"
+                        : "bg-white border-gray-300"
+                    }`}
+                  />
+                </div>
 
-            {/* Cinsiyet */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                {t("profile.gender")}
-              </label>
-              {editMode ? (
-                <select
-                  name="gender"
-                  value={profile.gender}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded border ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600"
-                      : "bg-white border-gray-300"
-                  }`}
-                >
-                  <option value="Erkek">
-                    {t("profile.genderOptions.male")}
-                  </option>
-                  <option value="Kadın">
-                    {t("profile.genderOptions.female")}
-                  </option>
-                  <option value="Diğer">
-                    {t("profile.genderOptions.other")}
-                  </option>
-                </select>
-              ) : (
-                <p className="mt-1">{profile.gender}</p>
-              )}
-            </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.gender")}
+                  </label>
+                  <select
+                    name="gender"
+                    value={profile.gender || ""}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 rounded border ${
+                      darkMode
+                        ? "bg-gray-700 text-white border-gray-600"
+                        : "bg-white border-gray-300"
+                    }`}
+                  >
+                    <option value="Erkek">
+                      {t("profile.genderOptions.male")}
+                    </option>
+                    <option value="Kadın">
+                      {t("profile.genderOptions.female")}
+                    </option>
+                    <option value="Diğer">
+                      {t("profile.genderOptions.other")}
+                    </option>
+                  </select>
+                </div>
 
-            {/* Adres */}
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">
-                {t("profile.address")}
-              </label>
-              {editMode ? (
-                <input
-                  type="text"
-                  name="address"
-                  value={profile.address}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded border ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600"
-                      : "bg-white border-gray-300"
-                  }`}
-                />
-              ) : (
-                <p className="mt-1">{profile.address}</p>
-              )}
-            </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.address")}
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={profile.address || ""}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 rounded border ${
+                      darkMode
+                        ? "bg-gray-700 text-white border-gray-600"
+                        : "bg-white border-gray-300"
+                    }`}
+                  />
+                </div>
 
-            {/* Kaydet / Vazgeç */}
-            {editMode && (
-              <>
                 <div className="col-span-2 flex space-x-4 justify-end">
                   <button
                     type="submit"
@@ -308,89 +274,124 @@ const Profile = () => {
                     {t("profile.cancel")}
                   </button>
                 </div>
-
-                {/* Şifre Güncelleme */}
-                <div className="col-span-2 mt-10">
-                  <h3 className="text-xl font-semibold mb-2">Şifre Güncelle</h3>
-                  <div
-                    onSubmit={handlePasswordSubmit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        Mevcut Şifre
-                      </label>
-                      <input
-                        type="password"
-                        name="currentPassword"
-                        value={passwordData.currentPassword}
-                        onChange={handlePasswordChange}
-                        className={`w-full px-4 py-2 rounded border ${
-                          darkMode
-                            ? "bg-gray-700 text-white border-gray-600"
-                            : "bg-white border-gray-300"
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        Yeni Şifre
-                      </label>
-                      <input
-                        type="password"
-                        name="newPassword"
-                        value={passwordData.newPassword}
-                        onChange={handlePasswordChange}
-                        className={`w-full px-4 py-2 rounded border ${
-                          darkMode
-                            ? "bg-gray-700 text-white border-gray-600"
-                            : "bg-white border-gray-300"
-                        }`}
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium mb-1">
-                        Yeni Şifre (Tekrar)
-                      </label>
-                      <input
-                        type="password"
-                        name="confirmPassword"
-                        value={passwordData.confirmPassword}
-                        onChange={handlePasswordChange}
-                        className={`w-full px-4 py-2 rounded border ${
-                          darkMode
-                            ? "bg-gray-700 text-white border-gray-600"
-                            : "bg-white border-gray-300"
-                        }`}
-                      />
-                    </div>
-
-                    <div className="md:col-span-2 flex justify-end">
-                      <button
-                        type="button"
-                        className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
-                        onClick={handlePasswordSubmit}
-                      >
-                        Şifreyi Güncelle
-                      </button>
-                    </div>
-
-                    {passwordError && (
-                      <div className="md:col-span-2 text-red-500">
-                        {passwordError}
-                      </div>
-                    )}
-                    {passwordSuccess && (
-                      <div className="md:col-span-2 text-green-500">
-                        {passwordSuccess}
-                      </div>
-                    )}
-                  </div>
+              </form>
+            ) : (
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.fullName")}
+                  </label>
+                  <p className="mt-1">
+                    {profile.name} {profile.surname}
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.phone")}
+                  </label>
+                  <p className="mt-1">{profile.phone}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.email")}
+                  </label>
+                  <p className="mt-1">{profile.email}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.gender")}
+                  </label>
+                  <p className="mt-1">{profile.gender}</p>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-1">
+                    {t("profile.address")}
+                  </label>
+                  <p className="mt-1">{profile.address}</p>
                 </div>
               </>
             )}
           </div>
         </div>
+
+        {/* Şifre Güncelleme Formu: dışarı taşındı */}
+        {editMode && (
+          <div className="mt-12">
+            <h3 className="text-xl font-semibold mb-4">Şifre Güncelle</h3>
+            <form
+              onSubmit={handlePasswordSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Mevcut Şifre
+                </label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordChange}
+                  className={`w-full px-4 py-2 rounded border ${
+                    darkMode
+                      ? "bg-gray-700 text-white border-gray-600"
+                      : "bg-white border-gray-300"
+                  }`}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Yeni Şifre
+                </label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordChange}
+                  className={`w-full px-4 py-2 rounded border ${
+                    darkMode
+                      ? "bg-gray-700 text-white border-gray-600"
+                      : "bg-white border-gray-300"
+                  }`}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1">
+                  Yeni Şifre (Tekrar)
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  className={`w-full px-4 py-2 rounded border ${
+                    darkMode
+                      ? "bg-gray-700 text-white border-gray-600"
+                      : "bg-white border-gray-300"
+                  }`}
+                />
+              </div>
+              <div className="md:col-span-2 flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                >
+                  Şifreyi Güncelle
+                </button>
+              </div>
+
+              {passwordError && (
+                <div className="md:col-span-2 text-red-500">
+                  {passwordError}
+                </div>
+              )}
+              {passwordSuccess && (
+                <div className="md:col-span-2 text-green-500">
+                  {passwordSuccess}
+                </div>
+              )}
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
