@@ -21,15 +21,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { createUser } from "./SignUpAPI";
+import { createUser } from "../../services/authService";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useUserContext } from "../../context/UserContext";
 
 const SignUpStepper = () => {
   const { t } = useTranslation("common") as {
     t: (key: string, options?: any) => string;
   };
   const [step, setStep] = useState(1);
+  const { handleLogin } = useUserContext();
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -100,8 +102,9 @@ const SignUpStepper = () => {
 
     try {
       await createUser(formData);
+      await handleLogin(formData.email, formData.password); // ⬅ Giriş işlemi
       setSuccessOpen(true);
-      setTimeout(() => navigate("/signIn"), 1000);
+      setTimeout(() => navigate("/"), 1000); // ⬅ Giriş sonrası ana sayfaya yönlen
     } catch (error) {
       setErrorMessage(t("signup.error"));
       setErrorOpen(true);

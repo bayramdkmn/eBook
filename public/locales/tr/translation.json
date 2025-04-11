@@ -209,6 +209,8 @@
     "password": "Şifre",
     "save": "Kaydet",
     "cancel": "Vazgeç",
+    "followers":"Takipçiler",
+    "following":"Takip Edilenler",
     "profileUpdated": "Profil güncellendi!",
     "genderOptions": {
       "male": "Erkek",
@@ -230,7 +232,15 @@
     "passwordMismatch": "Şifreler eşleşmiyor!",
     "passwordUpdated": "Şifreniz başarıyla güncellendi!",
     "passwordUpdateError": "Şifre güncellenemedi."
-  }
+  },
+  "modal": {
+  "followers": "Takipçiler",
+  "following": "Takip Edilenler",
+  "noUsers": "Hiç kullanıcı bulunamadı.",
+  "follow": "Takip Et",
+  "unfollow": "Takibi Bırak"
+}
+
 
 }
     

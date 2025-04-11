@@ -210,6 +210,8 @@
     "password": "Password",
     "save": "Save",
     "cancel": "Cancel",
+    "followers":"Followers",
+    "following":"Following",
     "profileUpdated": "Profile updated!",
     "genderOptions": {
       "male": "Male",
@@ -231,6 +233,14 @@
     "passwordMismatch": "Passwords do not match!",
     "passwordUpdated": "Your password has been successfully updated!",
     "passwordUpdateError": "Failed to update password."
-  }
+  },
+  "modal": {
+  "followers": "Followers",
+  "following": "Following",
+  "noUsers": "No users found.",
+  "follow": "Follow",
+  "unfollow": "Unfollow"
+}
+
 }
   

@@ -4,6 +4,9 @@ export interface User  {
     surname: string;
     avatar?: string;
 }
+export interface UserWithFollowersCount extends User {
+    followersCount: number;
+  }  
 
 export interface UserProfile {
     id: string;

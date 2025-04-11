@@ -4,7 +4,7 @@ import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "../../../../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { deleteUserPost } from "./DiscoverAPI";
+import { deleteUserPost } from "../../../../services/userService";
 import SuggestedUserCard from "./SuggestedUserCard";
 
 const DiscoverContent = () => {
@@ -161,6 +161,7 @@ const DiscoverContent = () => {
                 name={user.name}
                 surname={user.surname}
                 avatar={user.avatar}
+                followerCount={user.followersCount}
               />
             ))
           ) : (

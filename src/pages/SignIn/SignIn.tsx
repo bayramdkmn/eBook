@@ -1,26 +1,25 @@
 import { Button, TextField, Snackbar, Typography, Link } from "@mui/material";
 import React, { useState } from "react";
-import { loginUser } from "./SignInAPI";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { useUserContext } from "../../context/UserContext";
 
 const SignIn = () => {
-  const { login } = useUserContext();
   const navigate = useNavigate();
-  const { t } = useTranslation("common") as { t: (key: string) => string };
+  const { handleLogin } = useUserContext();
+  const { t } = useTranslation("common") as {
+    t: (key: string, options?: any) => string;
+  };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState<"success" | "error">("error");
-  const { setIsUserLogin } = useUserContext();
-  async function handleSignIn() {
+
+  const handleSignIn = async () => {
     try {
-      await loginUser(username, password);
-      setIsUserLogin(true);
-      login();
+      await handleLogin(username, password);
       setToastMessage(t("login.success"));
       setToastType("success");
       setToastOpen(true);
@@ -30,7 +29,7 @@ const SignIn = () => {
       setToastType("error");
       setToastOpen(true);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1740&q=60')] bg-cover bg-center">

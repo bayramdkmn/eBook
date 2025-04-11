@@ -1,6 +1,5 @@
 import { Avatar } from "@mui/material";
 import React, { useState } from "react";
-import { followUserApi } from "./DiscoverAPI";
 import { useUserContext } from "../../../../context/UserContext";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +8,7 @@ interface SuggestedUserCardProps {
   name: string;
   surname: string;
   avatar?: string;
+  followerCount?: number;
 }
 
 const SuggestedUserCard: React.FC<SuggestedUserCardProps> = ({
@@ -16,14 +16,16 @@ const SuggestedUserCard: React.FC<SuggestedUserCardProps> = ({
   name,
   surname,
   avatar,
+  followerCount,
 }) => {
-  const { removeUserFromSuggestions } = useUserContext();
+  const { removeUserFromSuggestions, followUser, unfollowUser } =
+    useUserContext();
   const { t } = useTranslation("common") as { t: (key: string) => string };
   const [followed, setFollowed] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
 
   const onFollowClick = async () => {
-    const res = await followUserApi(id);
+    const res = await followUser(id);
     if (res) {
       setFollowed(true);
       setTimeout(() => setFadeOut(true), 1000);
@@ -42,7 +44,10 @@ const SuggestedUserCard: React.FC<SuggestedUserCardProps> = ({
         <div className="font-bold text-lg">
           {name} {surname}
         </div>
-        <div className="text-sm text-gray-500">{t("discover.followers")}</div>
+        <div className="flex items-center gap-1 text-sm text-gray-500">
+          <div>{followerCount}</div>
+          <span>{t("discover.followers")}</span>
+        </div>
       </div>
       <button
         onClick={onFollowClick}

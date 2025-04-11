@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useAPI } from "../../context/APIContext";
 import { UserProfile } from "../../types/User.type";
 import { useUserContext } from "../../context/UserContext";
+import ModalFollowersFollowing from "../../components/UserListModal";
 
 const FaUserCircleIcon = FaUserCircle as unknown as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -12,7 +13,13 @@ const FaUserCircleIcon = FaUserCircle as unknown as React.FC<
 
 const Profile = () => {
   const { darkMode } = useTheme();
-  const { logout } = useUserContext();
+  const {
+    logout,
+    userFollowers,
+    userFollowing,
+    fetchFollowers,
+    fetchUserFollowing,
+  } = useUserContext();
   const { t } = useTranslation() as { t: (key: string) => string };
   const { getUserById, updateUserProfile, updatePassword } = useAPI();
 
@@ -26,6 +33,9 @@ const Profile = () => {
   });
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [showModal, setShowModal] = useState<"followers" | "following" | null>(
+    null
+  );
 
   const userId = localStorage.getItem("requesterId") || "";
 
@@ -34,6 +44,8 @@ const Profile = () => {
       try {
         const user = await getUserById(userId);
         setProfile(user);
+        await fetchFollowers();
+        await fetchUserFollowing();
       } catch (error) {
         console.error("Kullanıcı verisi alınamadı:", error);
       } finally {
@@ -41,7 +53,7 @@ const Profile = () => {
       }
     };
     fetchData();
-  }, [getUserById, userId]);
+  }, [getUserById, userId, fetchFollowers, fetchUserFollowing]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -122,7 +134,8 @@ const Profile = () => {
         <h1 className="text-3xl font-bold mb-8">{t("profile.title")}</h1>
 
         <div className="flex flex-col md:flex-row gap-10">
-          <div className="flex-shrink-0 flex justify-center md:justify-start">
+          {/* Avatar ve Takipçi Butonları */}
+          <div className="flex flex-col items-center md:items-start">
             {profile.avatar ? (
               <img
                 src={profile.avatar}
@@ -132,8 +145,24 @@ const Profile = () => {
             ) : (
               <FaUserCircleIcon className="w-40 h-40 text-gray-400" />
             )}
+
+            <div className="flex flex-col gap-2 mt-4">
+              <button
+                onClick={() => setShowModal("followers")}
+                className="text-sm px-4 py-1 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-100"
+              >
+                {t("profile.followers")} ({userFollowers.length})
+              </button>
+              <button
+                onClick={() => setShowModal("following")}
+                className="text-sm px-4 py-1 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-100"
+              >
+                {t("profile.following")} ({userFollowing.length})
+              </button>
+            </div>
           </div>
 
+          {/* Profil Bilgileri ve Şifre Güncelleme */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-2 flex justify-end">
               {!editMode && (
@@ -148,10 +177,8 @@ const Profile = () => {
             </div>
 
             {editMode ? (
-              <form
-                onSubmit={handleSubmit}
-                className="contents" // özel trick: form içeriği stil bozmasın diye
-              >
+              <form onSubmit={handleSubmit} className="contents">
+                {/* Ad Soyad */}
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     {t("profile.fullName")}
@@ -314,7 +341,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Şifre Güncelleme Formu: dışarı taşındı */}
+        {/* Şifre Güncelleme */}
         {editMode && (
           <div className="mt-12">
             <h3 className="text-xl font-semibold mb-4">Şifre Güncelle</h3>
@@ -391,6 +418,13 @@ const Profile = () => {
               )}
             </form>
           </div>
+        )}
+
+        {showModal && (
+          <ModalFollowersFollowing
+            type={showModal}
+            onClose={() => setShowModal(null)}
+          />
         )}
       </div>
     </div>

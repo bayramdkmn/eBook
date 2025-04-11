@@ -4,6 +4,7 @@ import api from "../api/axios";
 
 interface APIContextType {
   getUserById: (id: string) => Promise<UserProfile>;
+
   updateUserProfile: (
     id: string,
     data: Partial<UserProfile>

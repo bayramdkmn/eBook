@@ -7,20 +7,29 @@ import React, {
 } from "react";
 import {
   getFollowedPosts,
+  getUserFollowers,
+  getUserFollowing,
   getUserSuggestions,
-} from "../pages/Home/contents/Discover/DiscoverAPI";
-import { Post, User } from "../types/User.type";
+} from "../services/userService";
+import { loginUser } from "../services/authService";
+import { Post, User, UserWithFollowersCount } from "../types/User.type";
 
 type UserContextType = {
   isUserLogin: boolean;
   setIsUserLogin: React.Dispatch<React.SetStateAction<boolean>>;
   posts: Post[];
+  userFollowers: User[];
+  userFollowing: User[];
   removeUserFromSuggestions: (userId: string) => void;
   fetchPosts: () => void;
+  followUser: (followingId: string) => Promise<boolean>;
+  unfollowUser: (userId: string) => Promise<void>;
+  fetchFollowers: () => void;
   fetchUserSuggestions: () => void;
-  userSuggestions: User[];
+  fetchUserFollowing: () => void;
+  userSuggestions: UserWithFollowersCount[];
   logout: () => void;
-  login: () => void;
+  handleLogin: (email: string, password: string) => Promise<void>;
   removePost: (postId: string) => void;
 };
 
@@ -29,7 +38,38 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isUserLogin, setIsUserLogin] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [userSuggestions, setUserSuggestions] = useState<User[]>([]);
+  const [userFollowers, setUserFollowers] = useState<User[]>([]);
+  const [userFollowing, setUserFollowing] = useState<User[]>([]);
+  const [userSuggestions, setUserSuggestions] = useState<
+    UserWithFollowersCount[]
+  >([]);
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const data = await loginUser(email, password);
+
+      if (data.token) {
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("requesterId", data.requesterId);
+
+        const base64Payload = data.token.split(".")[1];
+        const decodedPayload = JSON.parse(atob(base64Payload));
+        const expiration = decodedPayload.exp;
+        localStorage.setItem("authTokenExp", expiration.toString());
+
+        setIsUserLogin(true);
+        fetchPosts();
+        fetchUserSuggestions();
+        fetchFollowers();
+        fetchUserFollowing();
+      } else {
+        throw new Error("Token alınamadı.");
+      }
+    } catch (err) {
+      console.error("Giriş hatası:", err);
+      throw err;
+    }
+  };
 
   const fetchUserSuggestions = async () => {
     try {
@@ -57,17 +97,60 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const login = () => {
-    setIsUserLogin(true);
-    fetchPosts();
-    fetchUserSuggestions();
+  const fetchFollowers = async () => {
+    try {
+      const data = await getUserFollowers();
+      setUserFollowers(data);
+      localStorage.setItem("userFollowers", JSON.stringify(data));
+    } catch (err) {
+      console.error("Followers alınamadı", err);
+    }
   };
+
+  const fetchUserFollowing = async () => {
+    try {
+      const data = await getUserFollowing();
+      setUserFollowing(data);
+      localStorage.setItem("userFollowing", JSON.stringify(data));
+    } catch (err) {
+      console.error("Takip edilenler alınamadı", err);
+    }
+  };
+
+  const followUser = async (followingId: string) => {
+    try {
+      await fetchFollowers();
+      await fetchUserFollowing();
+      await fetchPosts();
+      return true;
+    } catch (error) {
+      console.error("Takip etme işlemi başarısız", error);
+      throw error;
+    }
+  };
+
+  const unfollowUser = async (userId: string) => {
+    try {
+      await fetchFollowers();
+      await fetchUserFollowing();
+      await fetchPosts();
+    } catch (error) {
+      console.error("Takibi bırakma işlemi başarısız", error);
+      throw error;
+    }
+  };
+
   const logout = () => {
     setIsUserLogin(false);
     setPosts([]);
     setUserSuggestions([]);
+    setUserFollowers([]);
+    setUserFollowing([]);
     localStorage.removeItem("authToken");
     localStorage.removeItem("requesterId");
+    localStorage.removeItem("authTokenExp");
+    localStorage.removeItem("userFollowers");
+    localStorage.removeItem("userFollowing");
   };
 
   useEffect(() => {
@@ -75,6 +158,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       setIsUserLogin(true);
       fetchPosts();
+      fetchFollowers();
+      fetchUserFollowing();
       fetchUserSuggestions();
     }
   }, []);
@@ -83,15 +168,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     <UserContext.Provider
       value={{
         isUserLogin,
-        removePost,
-        login,
-        logout,
-        removeUserFromSuggestions,
         setIsUserLogin,
         posts,
+        userFollowers,
+        userFollowing,
+        removeUserFromSuggestions,
         fetchPosts,
+        followUser,
+        unfollowUser,
+        fetchFollowers,
         fetchUserSuggestions,
+        fetchUserFollowing,
         userSuggestions,
+        logout,
+        handleLogin,
+        removePost,
       }}
     >
       {children}
