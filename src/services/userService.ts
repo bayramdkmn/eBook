@@ -31,4 +31,15 @@ export async function deleteUserPost(postId: string) {
       );
     return response.data;
 }
+
+export async function followUserRequest(followingId: string) {
+    const response = await api.post(`/api/follow/${followingId}`);
+    return response.data;
+  }
+  
+  export async function unfollowUserRequest(userId: string) {
+    const response = await api.delete(`/api/follow/${userId}`);
+    return response.data;
+  }
+  
   

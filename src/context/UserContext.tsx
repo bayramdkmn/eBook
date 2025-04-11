@@ -9,6 +9,8 @@ import {
   getFollowedPosts,
   getUserFollowers,
   getUserFollowing,
+  followUserRequest,
+  unfollowUserRequest,
   getUserSuggestions,
 } from "../services/userService";
 import { loginUser } from "../services/authService";
@@ -119,6 +121,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const followUser = async (followingId: string) => {
     try {
+      await followUserRequest(followingId);
       await fetchFollowers();
       await fetchUserFollowing();
       await fetchPosts();
@@ -131,6 +134,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const unfollowUser = async (userId: string) => {
     try {
+      await unfollowUserRequest(userId);
       await fetchFollowers();
       await fetchUserFollowing();
       await fetchPosts();

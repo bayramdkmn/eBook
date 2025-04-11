@@ -53,7 +53,7 @@ const Profile = () => {
       }
     };
     fetchData();
-  }, [getUserById, userId, fetchFollowers, fetchUserFollowing]);
+  }, [userId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
