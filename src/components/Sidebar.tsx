@@ -17,7 +17,11 @@ import { useTranslation } from "react-i18next";
 const IconRenderer = (Icon: any) => (props: IconBaseProps) =>
   React.createElement(Icon, props);
 
-const Sidebar = () => {
+const Sidebar = ({
+  onHoverChange,
+}: {
+  onHoverChange?: (isHovering: boolean) => void;
+}) => {
   const [isUserJoin, setIsUserJoin] = useState(true);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -91,9 +95,15 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`group relative h-screen border-r transition-all duration-300 select-none ${
+      className={`group fixed h-screen border-r transition-all duration-300 select-none z-50 ${
         darkMode ? "bg-gray-700 text-white" : "bg-white text-black"
       } w-[4.5rem] hover:w-72`}
+      onMouseEnter={() => {
+        onHoverChange?.(true);
+      }}
+      onMouseLeave={() => {
+        onHoverChange?.(false);
+      }}
     >
       <div className="flex items-center justify-center text-2xl h-20 font-bold whitespace-nowrap overflow-hidden transition-all duration-300 group-hover:justify-start px-6">
         <span className="hidden group-hover:inline">

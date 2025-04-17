@@ -35,11 +35,76 @@ export async function deleteUserPost(postId: string) {
 export async function followUserRequest(followingId: string) {
     const response = await api.post(`/api/follow/${followingId}`);
     return response.data;
-  }
+}
   
-  export async function unfollowUserRequest(userId: string) {
+export async function unfollowUserRequest(userId: string) {
     const response = await api.delete(`/api/follow/${userId}`);
     return response.data;
+}
+
+export async function getWishBooks() {
+    try {
+      const response = await api.get("/api/wishBooks");
+      return response.data;
+    } catch (err) {
+      console.error("getWishBooks frontend hata", err);
+      throw err;
+    }
+}
+
+export async function addWishBook(data: {
+    bookTitle: string;
+    author: string;
+    image: string;
+    genre: string;
+  }) {
+    try {
+      const response = await api.post("/api/wishBooks/addWishBook", data);
+      return response.data; 
+    } catch (err) {
+      console.error("frontend addWishBooks hata", err);
+      throw err;
+    }
+}
+
+export async function deleteWishBook(bookId: string) {
+    try {
+      await api.delete(`/api/wishBooks/${bookId}`);
+    } catch (err) {
+      console.error("frontend deleteWishBook hata", err);
+      throw err;
+    }
+}
+
+export async function addReadingBooksById(bookId: string) {
+    try {
+      const response = await api.post("/api/readingBooks/addReadingBookById", {bookId});
+      return response.data; 
+    } catch (err) {
+      console.error("frontend addReadingBooksById hata", err);
+      throw err;
+    }
+}
+
+export async function addWishBookById(bookId: string) {
+  try {
+    const response = await api.post("/api/wishBooks/addWishBookById", {bookId});
+    return response.data; 
+  } catch (err) {
+    console.error("frontend addWishBookById hata", err);
+    throw err;
   }
+}
+
+export async function getAllBooks(){
+  try {
+    const response = await api.get("/api/books");
+    return response.data;
+  } catch (error) {
+    console.error("getAllBooks hata", error);
+    throw error;
+    
+  }
+}
   
   

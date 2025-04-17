@@ -87,9 +87,8 @@ const AddPost: React.FC<AddPostModalProps> = ({ open, onClose, onSuccess }) => {
   const handleShare = async () => {
     try {
       if (!bookName || !description) return;
-
       await addUserPost(bookName, description);
-      fetchPosts(); // ← gönderi sonrası listeyi güncelle
+      fetchPosts();
 
       alert(t("addPost.sharedAlert"));
       handleClose();

@@ -18,6 +18,7 @@ const Layout = () => {
   const hideNavAndMenu = ["/signin", "/signup", "/resetpassword"].includes(
     normalizedPath
   );
+  const [isSidebarHovered, setIsSidebarHovered] = React.useState(false);
 
   if (hideNavAndMenu) {
     return <AppRoutes />;
@@ -29,10 +30,15 @@ const Layout = () => {
         darkMode ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
-      <Sidebar />
+      <Sidebar onHoverChange={setIsSidebarHovered} />
       <div className="flex flex-col flex-1">
         <Navbar />
-        <main className="flex-1 overflow-y-auto">
+        <main
+          className={`flex-1 overflow-y-auto transition-all duration-300 ${
+            isSidebarHovered ? "ml-72" : "ml-[4.5rem]"
+          }`}
+        >
+          {" "}
           <AppRoutes />
         </main>
       </div>

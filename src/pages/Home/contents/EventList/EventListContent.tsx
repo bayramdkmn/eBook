@@ -228,7 +228,7 @@ const EventListContent = () => {
         onLoad={(map) => setMapRef(map)}
         mapContainerStyle={{ width: "100%", height: "500px" }}
         center={currentPosition || defaultCenter}
-        zoom={12}
+        zoom={14}
       >
         {currentPosition && (
           <>

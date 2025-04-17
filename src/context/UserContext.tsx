@@ -73,6 +73,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const logout = () => {
+    setIsUserLogin(false);
+    setPosts([]);
+    setUserSuggestions([]);
+    setUserFollowers([]);
+    setUserFollowing([]);
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("requesterId");
+    localStorage.removeItem("authTokenExp");
+    localStorage.removeItem("userFollowers");
+    localStorage.removeItem("userFollowing");
+  };
+
   const fetchUserSuggestions = async () => {
     try {
       const data = await getUserSuggestions();
@@ -142,19 +155,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.error("Takibi bırakma işlemi başarısız", error);
       throw error;
     }
-  };
-
-  const logout = () => {
-    setIsUserLogin(false);
-    setPosts([]);
-    setUserSuggestions([]);
-    setUserFollowers([]);
-    setUserFollowing([]);
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("requesterId");
-    localStorage.removeItem("authTokenExp");
-    localStorage.removeItem("userFollowers");
-    localStorage.removeItem("userFollowing");
   };
 
   useEffect(() => {

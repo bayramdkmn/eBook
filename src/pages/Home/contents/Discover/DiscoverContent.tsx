@@ -108,8 +108,13 @@ const DiscoverContent = () => {
                   )}
                 </div>
               </div>
-
-              <div className="mt-4 text-sm">{post.content}</div>
+              <div className="flex flex-row gap-2 mt-4 items-center">
+                <span className="font-bold text-base">
+                  {t("discover.postBookName")}:
+                </span>
+                <span className="text-base">{post.title}</span>
+              </div>
+              <div className="mt-4 text-lg">{post.content}</div>
 
               {post.images && (
                 <div className="mt-4">

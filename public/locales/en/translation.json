@@ -104,7 +104,8 @@
     "suggestedUsers":"Suggested Users",
     "noSuggestions": "No suggestions available.",
     "followed": "Followed",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "postBookName": "Book Name"
   },
   "eventList": {
     "searchBook": "📘 Search Book",
@@ -135,6 +136,7 @@
   "closeAddForm": "Close Add Form",
   "addBookButton": "Add Book",
   "addNewBook": "Add New Book",
+  "confirmDelete": "Are you sure you want to delete this book?",
   "bookTitle": "Book Title",
   "bookAuthor": "Author",
   "bookImage": "Image URL",
@@ -190,13 +192,15 @@
   "addNewBook": "Add New Book",
   "bookTitle": "Book Title",
   "author": "Author",
+  "confirmDelete": "Are you sure you want to delete this book?",
   "imageURL": "Image URL",
   "addBookButton": "Add Book",
   "fillAllFields": "Please fill in all fields!",
   "successfullyAdded": "The book has been successfully added to your read books list.",
   "remove": "Remove",
   "read": "Read",
-  "noBooks": "You have no books added yet."
+  "noBooks": "You have no books added yet.",
+  "uploading": "Uploading..."
 },
 "profile": {
     "title": "My Profile",

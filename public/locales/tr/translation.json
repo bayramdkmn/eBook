@@ -103,8 +103,9 @@
     "followers": "Takipçi",
     "suggestedUsers": "Önerilen Kullanıcılar",
     "noSuggestions": "Önerilen kullanıcı yok",
-    "Followed": "Takip Edildi",
-    "refresh": "Yenile"
+    "followed": "Takip Edildi",
+    "refresh": "Yenile",
+    "postBookName": "Kitap Adı"
   },
   "eventList":{
     "searchBook": "📘 Kitap Ara",
@@ -136,6 +137,7 @@
   "addNewBook": "Yeni Kitap Ekle",
   "bookTitle": "Kitap Başlığı",
   "bookAuthor": "Yazar",
+  "confirmDelete": "Bu kitabı listenizden silmek istediğinize emin misiniz?",
   "bookImage": "Resim URL'si",
   "noBooks": "Henüz eklediğiniz kitap yok."
 },
@@ -187,6 +189,7 @@
   "addBook": "Kitap Ekle",
   "closeAddForm": "Ekleme Alanını Kapat",
   "addNewBook": "Yeni Kitap Ekle",
+  "confirmDelete": "Bu kitabı listenizden silmek istediğinize emin misiniz?",
   "bookTitle": "Kitap Başlığı",
   "author": "Yazar",
   "imageURL": "Resim URL'si",
@@ -195,7 +198,8 @@
   "successfullyAdded": "Kitap başarıyla okuduğunuz kitaplar listesine eklendi.",
   "remove": "Sil",
   "read": "Okundu",
-  "noBooks": "Henüz eklediğiniz kitap yok."
+  "noBooks": "Henüz eklediğiniz kitap yok.",
+  "uploading":" Yükleniyor..."
 },
 "profile": {
     "title": "Profilim",
