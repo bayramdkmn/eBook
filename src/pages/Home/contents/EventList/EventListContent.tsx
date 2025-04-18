@@ -173,7 +173,7 @@ const EventListContent = () => {
     setSelectedMarker({ name: libraryName, location });
     if (mapRef) {
       mapRef.panTo(location);
-      mapRef.setZoom(15);
+      mapRef.setZoom(12);
     }
   };
 

@@ -134,7 +134,6 @@ const Profile = () => {
         <h1 className="text-3xl font-bold mb-8">{t("profile.title")}</h1>
 
         <div className="flex flex-col md:flex-row gap-10">
-          {/* Avatar ve Takipçi Butonları */}
           <div className="flex flex-col items-center md:items-start">
             {profile.avatar ? (
               <img
@@ -162,7 +161,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Profil Bilgileri ve Şifre Güncelleme */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-2 flex justify-end">
               {!editMode && (
@@ -178,9 +176,8 @@ const Profile = () => {
 
             {editMode ? (
               <form onSubmit={handleSubmit} className="contents">
-                {/* Ad Soyad */}
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.fullName")}
                   </label>
                   <input
@@ -210,7 +207,7 @@ const Profile = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.phone")}
                   </label>
                   <input
@@ -227,7 +224,7 @@ const Profile = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.email")}
                   </label>
                   <input
@@ -244,7 +241,7 @@ const Profile = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.gender")}
                   </label>
                   <select
@@ -270,7 +267,7 @@ const Profile = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.address")}
                   </label>
                   <input
@@ -305,7 +302,7 @@ const Profile = () => {
             ) : (
               <>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.fullName")}
                   </label>
                   <p className="mt-1">
@@ -313,25 +310,25 @@ const Profile = () => {
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.phone")}
                   </label>
                   <p className="mt-1">{profile.phone}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.email")}
                   </label>
                   <p className="mt-1">{profile.email}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.gender")}
                   </label>
                   <p className="mt-1">{profile.gender}</p>
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-base font-semibold mb-1">
                     {t("profile.address")}
                   </label>
                   <p className="mt-1">{profile.address}</p>
