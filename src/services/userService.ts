@@ -106,5 +106,43 @@ export async function getAllBooks(){
     
   }
 }
+
+export async function getLibrariesWithBooks(){
+  try {
+    const response = await api.get("/api/library");
+    return response.data;
+  } catch (error) {
+    console.error("getLibrariesWithBooks hata", error);
+    throw error;
+  }
+}
+
+export async function fetchAppointments(libraryBookId: string, date: string) {
+  try {
+    const response = await api.get(`/api/appointment`, {
+      params: { libraryBookId, date }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("fetchAppointments hata", error);
+    throw error;
+  }
+}
+
+export async function createAppointment(data: {
+  userId: string;
+  libraryBookId: string;
+  startTime: string; 
+  endTime: string;  
+}) {
+  try {
+    const response = await api.post("/api/appointment", data);
+    return response.data;
+  } catch (error) {
+    console.error("createAppointment hata:", error);
+    throw error;
+  }
+}
+
   
   

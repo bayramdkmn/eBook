@@ -56,7 +56,7 @@ const ReadingBooksContent = () => {
     if (!confirmDelete) return;
 
     try {
-      await deleteReadingBook(id.toString()); // API string bekliyorsa bu önemli
+      await deleteReadingBook(id.toString());
       setBooks((prev) => prev.filter((book) => book.id !== id));
     } catch (err) {
       alert(t("readingBooks.deleteError"));

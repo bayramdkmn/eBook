@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GoogleMap, Marker, Circle, InfoWindow } from "@react-google-maps/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs, { Dayjs } from "dayjs";
@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import {
   Input,
   List,
@@ -19,8 +21,24 @@ import "./customs.css";
 import { useTheme } from "../../../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "../../../../context/UserContext";
+import {
+  createAppointment,
+  fetchAppointments,
+  getLibrariesWithBooks,
+} from "../../../../services/userService";
 
 dayjs.locale("tr");
+
+type LibraryWithBooks = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  books: {
+    id: string;
+    title: string;
+  }[];
+};
 
 const generateTimeSlots = () => {
   const slots = [];
@@ -40,42 +58,13 @@ const defaultCenter = {
   lng: 28.9871,
 };
 
-const libraryData = [
-  {
-    id: 1,
-    name: "Kütüphane A",
-    lat: 41.058,
-    lng: 28.988,
-    books: ["Kitap A", "Kitap B"],
-  },
-  {
-    id: 2,
-    name: "Kütüphane B",
-    lat: 41.059,
-    lng: 28.99,
-    books: ["Kitap A", "Kitap C"],
-  },
-  {
-    id: 3,
-    name: "Kütüphane C",
-    lat: 41.06,
-    lng: 28.991,
-    books: ["Kitap A", "Kitap D"],
-  },
-  {
-    id: 4,
-    name: "Kütüphane D",
-    lat: 41.057,
-    lng: 28.986,
-    books: ["Kitap E", "Kitap F"],
-  },
-];
-
 const EventListContent = () => {
+  const { userId } = useUserContext();
   const { isUserLogin } = useUserContext();
   const { t } = useTranslation() as {
     t: (key: string, options?: Record<string, any>) => string;
   };
+  const [libraryData, setLibraryData] = useState<LibraryWithBooks[]>([]);
   const { darkMode } = useTheme();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedTime, setSelectedTime] = useState<Dayjs | null>(null);
@@ -85,6 +74,10 @@ const EventListContent = () => {
     useState<google.maps.LatLng | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [selectedLibraryBookId, setSelectedLibraryBookId] = useState<
+    string | null
+  >(null);
   const [address, setAddress] = useState<string | null>(null);
   const [bookName, setBookName] = useState<string>("");
   const [availableLibraries, setAvailableLibraries] = useState<string[]>([]);
@@ -95,6 +88,8 @@ const EventListContent = () => {
   const [hasSearched, setHasSearched] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  dayjs.extend(utc); // 🔥
+  dayjs.extend(timezone);
   const getUserLocation = (retryCount = 0) => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -117,6 +112,24 @@ const EventListContent = () => {
     if (isUserLogin) {
       getUserLocation();
     }
+
+    const fetchLibraries = async () => {
+      try {
+        const data = await getLibrariesWithBooks();
+        // setLibraryMarkers(
+        //   data.map((library: Library) => ({
+        //     id: library.id,
+        //     location: new google.maps.LatLng(library.lat, library.lng),
+        //     name: library.name,
+        //   }))
+        // );
+        setLibraryData(data);
+      } catch (error) {
+        console.error("Kütüphane verisi alınamadı:", error);
+      }
+    };
+
+    fetchLibraries();
   }, []);
 
   const getAddress = (lat: number, lng: number) => {
@@ -129,6 +142,31 @@ const EventListContent = () => {
     });
   };
 
+  const handleLibraryClick = (
+    libraryName: string,
+    lat: number,
+    lng: number
+  ) => {
+    const library = libraryData.find((l) => l.name === libraryName);
+    if (library) {
+      const matchedBook = library.books.find((book) => book.title === bookName);
+      if (matchedBook) {
+        setSelectedLibraryBookId(matchedBook.id); // 🔥 Artık doğru ID
+      } else {
+        console.warn("Kitap bu kütüphanede yok");
+      }
+
+      const location = new google.maps.LatLng(lat, lng);
+      setSelectedLocation(location);
+      getAddress(lat, lng);
+      setSelectedMarker({ name: libraryName, location });
+      if (mapRef) {
+        mapRef.panTo(location);
+        mapRef.setZoom(12);
+      }
+    }
+  };
+
   const searchBook = (book: string) => {
     setHasSearched(true);
     let found = false;
@@ -136,7 +174,7 @@ const EventListContent = () => {
     let libraryNames: string[] = [];
 
     libraryData.forEach((library) => {
-      if (library.books.includes(book)) {
+      if (library.books.some((b) => b.title === book)) {
         found = true;
         const location = new google.maps.LatLng(library.lat, library.lng);
         markers.push({ id: library.id, location, name: library.name });
@@ -162,35 +200,45 @@ const EventListContent = () => {
     searchBook(book);
   };
 
-  const handleLibraryClick = (
-    libraryName: string,
-    lat: number,
-    lng: number
-  ) => {
-    const location = new google.maps.LatLng(lat, lng);
-    setSelectedLocation(location);
-    getAddress(lat, lng);
-    setSelectedMarker({ name: libraryName, location });
-    if (mapRef) {
-      mapRef.panTo(location);
-      mapRef.setZoom(12);
-    }
-  };
-
   const handleSubmit = () => {
     setShowFirstForm(false);
   };
 
   useEffect(() => {
+    const fetchAppointmentsForDate = async () => {
+      if (selectedLibraryBookId && selectedDate) {
+        try {
+          const formattedDate = selectedDate.format("YYYY-MM-DD");
+          const response = await fetchAppointments(
+            selectedLibraryBookId,
+            formattedDate
+          );
+          setAppointments(response);
+        } catch (error) {
+          console.error("Randevular çekilemedi", error);
+        }
+      }
+    };
+
+    fetchAppointmentsForDate();
+  }, [selectedLibraryBookId, selectedDate]);
+
+  useEffect(() => {
     if (bookName.trim() !== "") {
       const suggestions = libraryData
         .flatMap((library) => library.books)
-        .filter((book) => book.toLowerCase().includes(bookName.toLowerCase()));
+        .filter((book) =>
+          book.title
+            .toLocaleLowerCase("tr")
+            .includes(bookName.toLocaleLowerCase("tr"))
+        )
+        .map((book) => book.title);
+
       setFilteredBooks(Array.from(new Set(suggestions)));
     } else {
       setFilteredBooks([]);
     }
-  }, [bookName]);
+  }, [bookName, libraryData]);
 
   const resetState = () => {
     setShowFirstForm(true);
@@ -417,19 +465,35 @@ const EventListContent = () => {
                       {t("eventList.selectTime")}
                     </h3>
                     <div className="flex flex-wrap justify-center gap-2">
-                      {timeSlots.map((slot, index) => (
-                        <button
-                          key={index}
-                          className={`text-black py-2 px-4 rounded-lg shadow ${
-                            selectedTime && selectedTime.isSame(slot)
-                              ? "bg-blue-600 text-white"
-                              : "bg-gray-100"
-                          } hover:scale-105 transition`}
-                          onClick={() => setSelectedTime(slot)}
-                        >
-                          {slot.format("HH:mm")}
-                        </button>
-                      ))}
+                      {timeSlots.map((slot, index) => {
+                        const slotDateTime = selectedDate
+                          ? selectedDate.hour(slot.hour()).minute(slot.minute())
+                          : slot; // selectedDate seçilmemişse fallback
+
+                        const isSlotTaken = appointments.some((appt) => {
+                          const apptStart = dayjs.utc(appt.startTime).local();
+                          return apptStart.isSame(slotDateTime, "minute");
+                        });
+
+                        return (
+                          <button
+                            key={index}
+                            className={`text-black py-2 px-4 rounded-lg shadow ${
+                              selectedTime && selectedTime.isSame(slot)
+                                ? "bg-blue-600 text-white"
+                                : isSlotTaken
+                                ? "bg-gray-300 cursor-not-allowed opacity-50"
+                                : "bg-gray-100 hover:scale-105 transition"
+                            }`}
+                            onClick={() =>
+                              !isSlotTaken && setSelectedTime(slot)
+                            }
+                            disabled={isSlotTaken}
+                          >
+                            {slot.format("HH:mm")}
+                          </button>
+                        );
+                      })}
                     </div>
                   </Grid>
                 )}
@@ -438,19 +502,56 @@ const EventListContent = () => {
 
             <div className="mt-6">
               <button
-                onClick={() => {
-                  if (selectedDate && selectedTime) {
-                    alert(
-                      t("eventList.appointmentConfirmed", {
-                        date: selectedDate.format("DD-MM-YYYY"),
-                        time: selectedTime.format("HH:mm"),
-                      })
-                    );
-                    resetState();
+                onClick={async () => {
+                  if (selectedDate && selectedTime && selectedLibraryBookId) {
+                    const start = selectedDate
+                      .hour(selectedTime.hour())
+                      .minute(selectedTime.minute());
+                    const end = start.add(20, "minute");
+
+                    try {
+                      if (!userId) {
+                        alert(
+                          "Kullanıcı bilgisi eksik. Lütfen tekrar giriş yapın."
+                        );
+                        return;
+                      }
+
+                      await createAppointment({
+                        userId: userId,
+                        libraryBookId: selectedLibraryBookId,
+                        startTime: start.toISOString(),
+                        endTime: end.toISOString(),
+                      });
+
+                      alert(
+                        t("eventList.appointmentConfirmed", {
+                          date: selectedDate.format("DD-MM-YYYY"),
+                          time: selectedTime.format("HH:mm"),
+                        })
+                      );
+
+                      resetState();
+                    } catch (error) {
+                      alert("Randevu oluşturulamadı.");
+                    }
                   } else {
                     alert(t("eventList.selectDateTimeWarning"));
                   }
                 }}
+                // onClick={() => {
+                //   if (selectedDate && selectedTime) {
+                //     alert(
+                //       t("eventList.appointmentConfirmed", {
+                //         date: selectedDate.format("DD-MM-YYYY"),
+                //         time: selectedTime.format("HH:mm"),
+                //       })
+                //     );
+                //     resetState();
+                //   } else {
+                //     alert(t("eventList.selectDateTimeWarning"));
+                //   }
+                // }}
                 className={`w-full mt-4 py-3 rounded-lg font-semibold ${
                   darkMode ? "text-black" : "text-white"
                 } shadow transition ${

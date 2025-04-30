@@ -33,6 +33,7 @@ type UserContextType = {
   logout: () => void;
   handleLogin: (email: string, password: string) => Promise<void>;
   removePost: (postId: string) => void;
+  userId: string | null;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -40,6 +41,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isUserLogin, setIsUserLogin] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
   const [userFollowers, setUserFollowers] = useState<User[]>([]);
   const [userFollowing, setUserFollowing] = useState<User[]>([]);
   const [userSuggestions, setUserSuggestions] = useState<
@@ -53,7 +55,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (data.token) {
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("requesterId", data.requesterId);
-
+        setUserId(data.requesterId);
         const base64Payload = data.token.split(".")[1];
         const decodedPayload = JSON.parse(atob(base64Payload));
         const expiration = decodedPayload.exp;
@@ -185,6 +187,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         fetchUserFollowing,
         userSuggestions,
         logout,
+        userId,
         handleLogin,
         removePost,
       }}
