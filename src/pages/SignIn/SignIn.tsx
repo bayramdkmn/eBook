@@ -11,7 +11,7 @@ const SignIn = () => {
   const { t } = useTranslation("common") as {
     t: (key: string, options?: any) => string;
   };
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -19,7 +19,7 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     try {
-      await handleLogin(username, password);
+      await handleLogin(email, password);
       setToastMessage(t("login.success"));
       setToastType("success");
       setToastOpen(true);
@@ -44,8 +44,8 @@ const SignIn = () => {
             fullWidth
             label={t("login.usernameOrEmail")}
             variant="outlined"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSignIn()}
           />
 
