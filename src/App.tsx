@@ -8,7 +8,6 @@ import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import "./App.css";
 import "./i18n";
 import { UserProvider } from "./context/UserContext";
-import { APIProvider } from "@vis.gl/react-google-maps";
 import { AppAPIProvider } from "./context/APIContext";
 
 const Layout = () => {
@@ -48,7 +47,9 @@ const Layout = () => {
 
 function App() {
   return (
-    <LoadScript googleMapsApiKey="AIzaSyDRHhcR_1wef7UhABZGnuuzvA7sGvqq82M">
+    <LoadScript
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ""}
+    >
       <AppAPIProvider>
         <UserProvider>
           <ThemeProvider>
