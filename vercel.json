@@ -1,9 +1,9 @@
 {
-    "buildCommand": "SKIP_PREFLIGHT_CHECK=true npm install --legacy-peer-deps && SKIP_PREFLIGHT_CHECK=true npm run build",
-    "outputDirectory": "build",
-    "framework": "create-react-app",
-    "routes": [
-      { "handle": "filesystem" },
-      { "src": "/.*", "dest": "/index.html" }
-    ]
-  }
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
+  "outputDirectory": "build",
+  "framework": "create-react-app",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
